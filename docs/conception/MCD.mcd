@@ -1,0 +1,13 @@
+INGREDIENT: code ingrédient, nom
+
+COMPOSER, 1N RECETTE, 0N INGREDIENT
+
+UTILISATEUR: code utilisateur, nom, prenom, email, mot de passe, role
+CRÉER, 01 RECETTE, 0N UTILISATEUR
+RECETTE: code recette, titre, description, duree, difficulte, illustration, citation, validee
+ASSOCIER, 0N FILM, 01 RECETTE
+FILM: code film, titre, description, annee, lien IMDB
+
+RATTACHER, 0N CATEGORIE, 01 RECETTE
+
+CATEGORIE: code categorie, nom
