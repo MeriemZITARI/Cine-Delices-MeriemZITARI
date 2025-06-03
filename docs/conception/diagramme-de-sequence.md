@@ -18,7 +18,7 @@ Ce qu’il fait (exemple Recette) :
 
 Il NE fait PAS :
 
-- Pas de logique métier complexe (pas de calcul, pas d’accès DB direct)
+- Pas de logique métier complexe (pas de calcul, pas d’accès BDD direct)
 - Pas de gestion profonde de données
 
 ## Le service (service métier)
@@ -27,7 +27,7 @@ Rôle :
 
 - Gère la logique métier (tout ce qui concerne la Recette)
 - Manipule les données, appelle la base de données
-- Contient toute l’intelligence “métier” (règles, calculs, associations…)
+- Contient toute l’intelligence "métier" (règles, calculs, associations…)
 
 Ce qu’il fait (exemple Recette) :
 
