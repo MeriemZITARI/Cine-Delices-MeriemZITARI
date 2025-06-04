@@ -1,3 +1,6 @@
+# MCD
+
+``` MCD
 INGREDIENT: code ingrédient, nom
 
 COMPOSER, 1N RECETTE, 0N INGREDIENT
@@ -11,3 +14,6 @@ FILM: code film, titre, description, annee, lien IMDB
 RATTACHER, 0N CATEGORIE, 01 RECETTE
 
 CATEGORIE: code categorie, nom
+```
+
+![MCD](MCD.svg)
