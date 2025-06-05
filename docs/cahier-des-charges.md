@@ -155,13 +155,18 @@ L’interface étant développée en mobile first, une attention particulière s
 | /recettes | Liste des recettes (+ recherche/filtre) | Visiteur |
 | /recettes/:id | Page de détail d’une recette | Visiteur |
 | /recettes/ajouter | Ajouter une recette (auth requis) | Utilisateur |
+| /recettes/mes-recettes | Gérer mes recettes (auth requis) | Utilisateur |
+| /films | Liste des films (+ recherche) | Visiteur |
 | /connexion | Page de connexion | Visiteur |
 | /inscription | Page d’inscription | Visiteur |
 | /profil | Gestion du profil utilisateur (auth requis) | Utilisateur |
 | /admin | Accès au back-office (admin seulement) | Administrateur |
 | /admin/recettes | Gestion des recettes (admin) | Administrateur |
-| /admin/categories | Gestion des catégories (admin) | Administrateur |
+| /admin/recettes/en-attente | Recettes en attente de validation (admin) | Administrateur |
 | /admin/utilisateurs | Gestion des utilisateurs (admin) | Administrateur |
+| /admin/films | Gestion des films (admin) | Administrateur |
+| /admin/categories | Gestion des catégories (admin) | Administrateur |
+| /admin/ingredients | Gestion des ingredients (admin) | Administrateur |
 
 ## Liste des routes prévues en v1 (API)
 
