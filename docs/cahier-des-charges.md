@@ -184,6 +184,10 @@ L’interface étant développée en mobile first, une attention particulière s
 
 ### Catalogue de recettes
 
+- En tant que visiteur , je peux parcourir le catalogue de recettes afin de découvrir des plats inspirés de films ou de séries.,
+- En tant que visiteur , je peux rechercher une recette par son titre ou par le titre d'un film/série afin de trouver rapidement ce que je veux cuisiner.
+- En tant que visiteur,  je peux filtrer les recettes par catégorie (entrée, plat, dessert…) afin de n’afficher que ce qui m’intéresse.
+
 - En tant qu’utilisateur, je peux parcourir le catalogue de recettes afin de découvrir des plats inspirés de films ou de séries.,
 - En tant qu’utilisateur, je peux rechercher une recette par son titre ou par le titre d'un film/série afin de trouver rapidement ce que je veux cuisiner.
 - En tant qu’utilisateur, je peux filtrer les recettes par catégorie (entrée, plat, dessert…) afin de n’afficher que ce qui m’intéresse.
@@ -195,19 +199,25 @@ L’interface étant développée en mobile first, une attention particulière s
 
 ### Authentification & gestion de profil
 
-- En tant que nouvel utilisateur, je peux créer un compte afin d’accéder à des fonctionnalités réservées aux membres.
+- En tant que visiteur, je peux créer un compte afin d’accéder à des fonctionnalités réservées aux membres.
 - En tant qu’utilisateur, je peux me connecter à mon compte afin de personnaliser mon expérience.
-- En tant qu’utilisateur connecté, je peux gérer les informations de mon profil afin de les mettre à jour si besoin.
+- En tant qu'utilisateur, je peux modifier les informatiosn de mon compte
+- En tant qu’utilisateur, je peux supprimer les informations de mon profil afin de supprimer mes données.
 
-### Ajout de recette
+### Gestion de recettes
 
-- En tant qu’utilisateur connecté, je peux proposer une nouvelle recette afin de la partager avec la communauté.
+- En tant qu’utilisateur, je peux ajouter une nouvelle recette afin de la partager avec la communauté.
+- En tant qu’utilisateur, je peux modfier ma recette afin de l'ameliorer pour la communauté.
+- En tant qu'utilisateur, je peux supprimer une recette afin de mettre à jour les recettes
 
 ### Back-office (administration)
 
-- En tant qu’administrateur, je peux gérer l’ensemble des recettes afin d’en ajouter, modifier ou supprimer pour garantir la qualité du catalogue.
-- En tant qu’administrateur, je peux gérer les catégories afin d’organiser le contenu du site.
-- En tant qu’administrateur, je peux gérer les utilisateurs afin de résoudre d’éventuels problèmes.
+- En tant qu’administrateur, je peux ajouter des catégories afin d'enrichier l'expérience utilisateur
+- en tant qu'administrateur, je peux supprimer les catégoeries afin de retirer les catégories obsoltes
+- En tant qu’administrateur, je peux modifier les catégories afin d’organiser le contenu du site.
+- En tant qu’administrateur, je peux ajouter un ou des utilisateurs afin de résoudre d’éventuels problèmes.
+- En tant qu'administrateur, je peux modifier les utilisateurs afin de modéré les profils anormaux
+- En tant qu'administarteur, je peux supprimer un ou plusieurs utilsateurs afin de bannir les utilsateurs virulents
 
 ## Analyse des risques
 
