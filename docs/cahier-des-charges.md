@@ -48,6 +48,7 @@ Le projet Ciné Délices s’adresse à une audience plutôt adulte, à la crois
 - **Gestion du profil :** affichage et modification des informations du profil (nom, e-mail, mot de passe, …), réservé aux utilisateurs connectés.
 - **Page ajout d’une recette :** formulaire d’ajout d’une nouvelle recette, réservé aux utilisateurs connectés.
 - **Back-office (administration) :** gestion des recettes, catégories et utilisateurs (création, modification, suppression, modération), réservé aux utilisateurs connectés avec droits d’administration.
+- **Gestion des ingrédients** (rappel : en MVP on gère les ingrédients sous forme de texte). Fonctionnalité réservée aux utilisateurs connectés avec droits d’administration.
 
 ## Évolutions potentielles en v2 : fonctionnalités sociales
 
@@ -60,7 +61,6 @@ Le projet Ciné Délices s’adresse à une audience plutôt adulte, à la crois
 
 ## Évolutions potentielles en v3 : fonctionnalités avancées
 
-- **Gestion des ingrédients** (rappel : en MVP on gère les ingrédients sous forme de texte). Fonctionnalité réservée aux utilisateurs connectés avec droits d’administration.
 - **Liste de courses :** possibilité de générer une liste de courses à partir d'une ou plusieurs recettes sélectionnées par l'utilisateur. Fonctionnalité réservée aux utilisateurs connectés.
 - **Catalogue de recettes :** ajouter un filtre supplémentaire (par ingrédient).
 - **Recommandations personnalisées :** système de recommandation de recettes en fonction des recettes, des films/séries, des favoris, des commentaires, etc.

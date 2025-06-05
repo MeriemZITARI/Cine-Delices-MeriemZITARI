@@ -57,7 +57,7 @@
 | Champ | Type | Spécificités | Description |
 | ----- | ---- | ------------ | ----------- |
 | id | VARCHAR(255) | PRIMARY KEY, NOT NULL | L'identifiant de l'ingrédient |
-| name | VARCHAR(255) | NOT NULL | Le titre de l'ingrédient |
+| name | VARCHAR(255) | UNIQUE, NOT NULL | Le titre de l'ingrédient |
 | created_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() | La date de création de l'ingrédient |
 | updated_at | TIMESTAMPTZ | NOT NULL, DEFAULT NOW() | La date de dernière modification de l'ingrédient |
 
