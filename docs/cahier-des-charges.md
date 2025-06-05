@@ -31,8 +31,13 @@ Le projet est aussi l’occasion de mettre en œuvre des compétences techniques
 ### Objectifs – Solutions apportées
 
 1. **Créer une passerelle originale entre culture et gastronomie :** Associer chaque recette à un film ou une série pour rendre l’expérience culinaire plus ludique et narrative.
+
 2. **Proposer un site web moderne, responsive et accessible :** Développé en mobile-first, optimisé pour tous les écrans, conforme aux normes d’accessibilité (WCAG) et permettant aux utilisateurs de trouver des recettes selon différents critères (titre, œuvre, type de plat…).
 3. **Poser les bases d’un projet évolutif basé sur la contribution et l’interactivité :** Rendre la publication de recettes accessible aux utilisateurs connectés tout en prévoyant des évolutions comme des fonctionnalités sociales, des recommandations, ou une liste de courses à générer automatiquement.
+
+## Public cible
+
+Le projet Ciné Délices s’adresse à une audience plutôt adulte, à la croisée des chemins entre les passionnés de cinéma et les amateurs de cuisine maison, avec une appétence particulière pour les expériences culturelles originales et immersives.
 
 ## Besoins Fonctionnels (Minimum Viable Product - MVP)
 
@@ -98,12 +103,9 @@ Ce découpage garantit :
 | | Dotenv | Gestion des variables d’environnement | Sécurise les clés sensibles, permet de séparer code et config |
 | | Prisma | ORM pour accéder à la base de données | Génère automatiquement les types TypeScript, requêtes intuitives, migrations faciles |
 | Frontend | React | Interface utilisateur (SPA) | Expérience fluide, composantielle, mobile first |
+| | TypeScript | Typage statique | Meilleure maintenabilité, réduction des bugs |
 | Conteneurisation / Déploiement | Docker | Conteneurisation de l’environnement | Facilite le déploiement, isole les environnements, reproductibilité assurée |
 | Collaboration / Versionnage | Git & GitHub | Versionnage et travail collaboratif | Suivi des modifications, gestion des branches, pull requests, etc. |
-
-## Public cible
-
-Le projet Ciné Délices s’adresse à une audience plutôt adulte, à la croisée des chemins entre les passionnés de cinéma et les amateurs de cuisine maison, avec une appétence particulière pour les expériences culturelles originales et immersives.
 
 ### Ergonomie pensée pour la diversité des utilisateurs
 
@@ -121,13 +123,13 @@ Afin d’assurer une accessibilité optimale et une expérience utilisateur flui
 
 ### Navigateurs ciblés (compatibilité garantie)
 
-| Navigateur | Plateforme |
-| ---------- | ---------- |
-| Google Chrome | Windows, macOS, Android |
-| Mozilla Firefox | Windows, macOS, Linux |
-| Microsoft Edge | Windows |
-| Safari | macOS, iOS |
-| Opera | Windows, macOS |
+| Navigateur | Version | Plateforme |
+| ---------- | ------- | ---------- |
+| Google Chrome | 137.0 | Windows, macOS, Android |
+| Mozilla Firefox | 139.0 | Windows, macOS, Linux |
+| Microsoft Edge | 134.0 | Windows |
+| Safari | 18.4 | macOS, iOS |
+| Opera | 119.0 | Windows, macOS |
 
 ### Détails techniques
 
@@ -147,19 +149,19 @@ L’interface étant développée en mobile first, une attention particulière s
 
 ## Arborescence de l'application v1 (front)
 
-| URL | Rôle |
-| --- | ---- |
-| / | Page d’accueil avec catalogue des recettes |
-| /recettes | Liste des recettes (+ recherche/filtre) |
-| /recettes/:id | Page de détail d’une recette |
-| /recettes/ajouter | Ajouter une recette (auth requis) |
-| /connexion | Page de connexion |
-| /inscription | Page d’inscription |
-| /profil | Gestion du profil utilisateur (auth requis) |
-| /admin | Accès au back-office (admin seulement) |
-| /admin/recettes | Gestion des recettes (admin) |
-| /admin/categories | Gestion des catégories (admin) |
-| /admin/utilisateurs | Gestion des utilisateurs (admin) |
+| URL | Rôle | Accessible à |
+| --- | ---- | ------------ |
+| / | Page d’accueil avec catalogue des recettes | Visiteur |
+| /recettes | Liste des recettes (+ recherche/filtre) | Visiteur |
+| /recettes/:id | Page de détail d’une recette | Visiteur |
+| /recettes/ajouter | Ajouter une recette (auth requis) | Utilisateur |
+| /connexion | Page de connexion | Visiteur |
+| /inscription | Page d’inscription | Visiteur |
+| /profil | Gestion du profil utilisateur (auth requis) | Utilisateur |
+| /admin | Accès au back-office (admin seulement) | Administrateur |
+| /admin/recettes | Gestion des recettes (admin) | Administrateur |
+| /admin/categories | Gestion des catégories (admin) | Administrateur |
+| /admin/utilisateurs | Gestion des utilisateurs (admin) | Administrateur |
 
 ## Liste des routes prévues en v1 (API)
 
@@ -184,40 +186,75 @@ L’interface étant développée en mobile first, une attention particulière s
 
 ### Catalogue de recettes
 
-- En tant que visiteur , je peux parcourir le catalogue de recettes afin de découvrir des plats inspirés de films ou de séries.,
-- En tant que visiteur , je peux rechercher une recette par son titre ou par le titre d'un film/série afin de trouver rapidement ce que je veux cuisiner.
-- En tant que visiteur,  je peux filtrer les recettes par catégorie (entrée, plat, dessert…) afin de n’afficher que ce qui m’intéresse.
+En tant que visiteur, je peux parcourir le catalogue de recettes afin de découvrir des plats inspirés de films ou de séries.
 
-- En tant qu’utilisateur, je peux parcourir le catalogue de recettes afin de découvrir des plats inspirés de films ou de séries.,
-- En tant qu’utilisateur, je peux rechercher une recette par son titre ou par le titre d'un film/série afin de trouver rapidement ce que je veux cuisiner.
-- En tant qu’utilisateur, je peux filtrer les recettes par catégorie (entrée, plat, dessert…) afin de n’afficher que ce qui m’intéresse.
+En tant que visiteur, je peux rechercher une recette par son titre afin de trouver rapidement ce que je veux cuisiner.
+
+En tant que visiteur, je peux rechercher une recette par le titre d'un film/série afin de trouver des plats en rapport avec un film/série spécifique.
+
+En tant que visiteur, je peux filtrer les recettes par catégorie (entrée, plat, dessert…) afin de n’afficher que ce qui m’intéresse.
+
+En tant qu’utilisateur connecté, je peux parcourir le catalogue de recettes afin de découvrir des plats inspirés de films ou de séries.
+
+En tant qu’utilisateur connecté, je peux rechercher une recette par son titre afin de trouver rapidement ce que je veux cuisiner.
+
+En tant qu’utilisateur connecté, je peux rechercher une recette par le titre d'un film/série afin de trouver des plats en rapport avec un film/série spécifique.
+
+En tant qu’utilisateur connecté, je peux filtrer les recettes par catégorie (entrée, plat, dessert…) afin de n’afficher que ce qui m’intéresse.
 
 ### Page recette
 
-- En tant qu’utilisateur, je peux consulter le détail d’une recette afin de voir la liste des ingrédients, les instructions et l’œuvre associée.
-- En tant qu’utilisateur, je peux lire des anecdotes ou informations complémentaires liées à la recette afin d’enrichir ma culture ciné-gastronomique.
+En tant qu’utilisateur, je peux consulter le détail d’une recette afin de voir la liste des ingrédients, les instructions et l’œuvre associée.
+
+En tant qu’utilisateur, je peux lire des anecdotes ou informations complémentaires liées à la recette afin d’enrichir ma culture ciné-gastronomique.
 
 ### Authentification & gestion de profil
 
-- En tant que visiteur, je peux créer un compte afin d’accéder à des fonctionnalités réservées aux membres.
-- En tant qu’utilisateur, je peux me connecter à mon compte afin de personnaliser mon expérience.
-- En tant qu'utilisateur, je peux modifier les informatiosn de mon compte
-- En tant qu’utilisateur, je peux supprimer les informations de mon profil afin de supprimer mes données.
+En tant que visiteur, je peux créer un compte afin d’accéder à des fonctionnalités réservées aux membres.
 
-### Gestion de recettes
+En tant qu’utilisateur, je peux me connecter à mon compte afin de personnaliser mon expérience et d'accéder à mes informations.
 
-- En tant qu’utilisateur, je peux ajouter une nouvelle recette afin de la partager avec la communauté.
-- En tant qu’utilisateur, je peux modfier ma recette afin de l'ameliorer pour la communauté.
-- En tant qu'utilisateur, je peux supprimer une recette afin de mettre à jour les recettes
+En tant qu'utilisateur ayant oublié son mot de passe, je peux demander à le réinitialiser afin de récupérer l'accès à mon compte.
 
-### Back-office (administration)
+En tant qu’utilisateur connecté, je peux modifier les informations de mon compte (ex: email, mot de passe, nom d'utilisateur) afin de les mettre à jour.
 
-- En tant qu’administrateur, je peux ajouter des catégories afin d'enrichier l'expérience utilisateur
-- en tant qu'administrateur, je peux supprimer les catégoeries afin de retirer les catégories obsoltes
-- En tant qu’administrateur, je peux modifier les catégories afin d’organiser le contenu du site.
-- En tant qu’administrateur, je peux ajouter un ou des utilisateurs afin de résoudre d’éventuels problèmes.
-- En tant qu'administrateur, je peux modifier les utilisateurs afin de modéré les profils anormaux
-- En tant qu'administarteur, je peux supprimer un ou plusieurs utilsateurs afin de bannir les utilsateurs virulents
+En tant qu’utilisateur connecté, je peux supprimer mon compte afin de retirer définitivement mes informations personnelles et mes contributions du site (selon les politiques de conservation).
+
+### Gestion de recettes (par l'utilisateur)
+
+En tant qu’utilisateur connecté, je peux proposer une nouvelle recette (titre, description, ingrédients, étapes, photo, film/série associé(e)) afin de la partager avec la communauté.
+
+En tant qu’utilisateur connecté, je peux modifier les recettes que j'ai proposées (tant qu'elles ne sont pas encore validées par un administrateur, ou selon conditions) afin de les corriger ou de les améliorer.
+
+En tant qu’utilisateur connecté, je peux supprimer une de mes recettes proposées (si elle n'est pas encore validée ou selon conditions) afin de gérer mes contributions.
+
+### Back-office (Administration)
+
+#### Gestion des catégories
+
+En tant qu’administrateur, je peux ajouter de nouvelles catégories afin d'enrichir et d'organiser le contenu pour les utilisateurs.
+
+En tant qu’administrateur, je peux modifier les catégories existantes (ex: changer leur nom, leur description) afin d’optimiser l'organisation du contenu.
+
+En tant qu’administrateur, je peux supprimer des catégories afin de retirer celles qui sont obsolètes ou non pertinentes.
+
+#### Gestion des recettes
+
+En tant qu'administrateur, je peux valider les recettes proposées par les utilisateurs afin de les rendre visibles à tous.
+
+En tant qu'administrateur, je peux modifier n'importe quelle recette (y compris celles des utilisateurs) afin de garantir la qualité, la cohérence ou corriger des erreurs.
+
+En tant qu'administrateur, je peux supprimer n'importe quelle recette (même celles déjà publiées) afin de maintenir un catalogue pertinent et de qualité.
+
+#### Gestion des utilisateurs
+
+En tant qu’administrateur, je peux consulter la liste de tous les utilisateurs et leurs informations de profil.
+
+En tant qu’administrateur, je peux modifier les informations ou les rôles des utilisateurs (ex: passer un utilisateur en modérateur, corriger une adresse email erronée).
+
+En tant qu’administrateur, je peux suspendre temporairement un compte utilisateur en cas de non-respect des règles.
+
+En tant qu’administrateur, je peux supprimer (bannir) définitivement un compte utilisateur en cas de violations graves ou répétées.
 
 ## Analyse des risques
 
@@ -233,7 +270,7 @@ L’interface étant développée en mobile first, une attention particulière s
 | Risque | Description | Mesures préventives |
 | ------ | ----------- | ------------------- |
 | Bugs ou régressions | Une nouvelle fonctionnalité casse une existante. | Tests automatisés (unitaires + d’intégration), CI/CD, relecture de code. |
-| Erreurs de sécurité | Faille d'authentification, injection, XSS, etc. | Validation des données, chiffrement, tests de sécurité, usage de frameworks éprouvés. |
+| Erreurs de sécurité | Faille d'authentification, injection SQL ou XSS, notamment au niveau des zones de saisie de texte | Validation des données, chiffrement, tests de sécurité, usage de frameworks éprouvés. |
 | API non scalable | Mauvaise gestion de la charge (ex. nombreux appels GET). | Optimisation des requêtes, pagination, mise en cache, stress tests. |
 | Perte de données | Mauvaise manipulation des bases de données. | Sauvegardes régulières, environnement de test séparé de la prod. |
 | Non-conformité aux normes REST | Incohérences dans les routes ou les statuts HTTP. | Mise en place de conventions API dès le départ, documentation claire (ex : Swagger/OpenAPI). |
