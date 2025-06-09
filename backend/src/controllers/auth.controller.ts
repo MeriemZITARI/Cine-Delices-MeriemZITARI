@@ -1,21 +1,25 @@
+// Fichier: src/controllers/auth.controller.ts
+
 import { Request, Response, NextFunction } from 'express';
+// On importe la fonction spécifique de notre service
 import { registerNewUser } from '../services/auth.service';
-import { RegisterSchema } from '../validations/register'; // On utilise toujours le type
+// On importe notre TYPE, pas le schéma de validation.
+import type { RegisterInput } from '../validations/register';
 
 export async function handleRegister(
-  // Le corps de la requête est déjà validé, donc on peut le typer en toute confiance
-  req: Request<{}, {}, RegisterSchema>, 
-  res: Response, 
+  // On utilise notre type 'RegisterInput' pour typer le corps de la requête
+  req: Request<{}, {}, RegisterInput>,
+  res: Response,
   next: NextFunction
 ) {
   try {
-    // Il n'y a plus de validation ici. On passe directement à l'action.
-    // On sait que req.body est sûr.
+    // Ici, req.body est déjà validé ET il est maintenant parfaitement typé.
+    // Si tu tapes `req.body.` VS Code te proposera `email`, `password`, etc.
     const newUser = await registerNewUser(req.body);
 
     res.status(201).json(newUser);
   } catch (error) {
-    // On passe l'erreur du service (ex: email déjà pris) au gestionnaire global
+    // On passe l'erreur au middleware de gestion des erreurs
     next(error);
   }
 }

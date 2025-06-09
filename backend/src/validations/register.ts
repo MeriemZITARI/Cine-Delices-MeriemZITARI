@@ -29,4 +29,4 @@ export const registerSchema = z.object({
                 )
         });
 
-export type RegisterSchema = z.infer<typeof registerSchema>;
+        export type RegisterInput = z.infer<typeof registerSchema>;
