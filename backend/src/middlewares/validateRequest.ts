@@ -1,28 +1,24 @@
-// Fichier: src/middlewares/validateRequest.ts
-import { Request, Response, NextFunction } from 'express';
-import { AnyZodObject } from 'zod'; // Important: on accepte n'importe quel schéma Zod
+// src/middlewares/validateRequest.ts
+import type { Request, Response, NextFunction } from 'express';
+import type { ZodSchema } from 'zod';
 
-// Ce middleware est utilisé pour valider les requêtes entrantes
+export const validateRequest =
+  (schema: ZodSchema) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    // Debug : montre bien le corps reçu
+    console.log('🍪 BODY À VALIDER →', req.body);
 
-export const validateRequest = (schema: AnyZodObject) =>
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      // On demande à Zod de valider la requête entière (body, query, params)
-      // par rapport au schéma fourni. Si une partie manque (ex: pas de query),
-      // Zod l'ignore, ce qui est parfait.
-      await schema.parseAsync({
-        body: req.body,
-        query: req.query,
-        params: req.params,
-      });
+    // On parse *en mémoire*, sans lancer d’erreur
+    const result = schema.safeParse(req.body);
 
-      // Si la validation réussit, on appelle next() pour passer au prochain
-      // middleware dans la chaîne (ou au contrôleur).
-      return next();
-    } catch (error) {
-      // Si Zod lance une erreur de validation (ZodError), on ne la gère pas ici.
-      // On la passe à notre gestionnaire d'erreurs global (errorHandler)
-      // qui saura comment la formater en une belle réponse 400.
-      return next(error);
+    if (!result.success) {
+      // Affiche clairement ce qui bloque
+      console.error('🔴 Zod a trouvé ces issues →', result.error.issues);
+      // Passe l’erreur à ton errorHandler (qui renverra du JSON)
+      return next(result.error);
     }
+
+    // Là, result.data contient l’objet typé correctement
+    req.body = result.data;
+    next();
   };

@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from 'express';
 // On importe la fonction spécifique de notre service
 import { registerNewUser } from '../services/auth.service';
 // On importe notre TYPE, pas le schéma de validation.
-import type { RegisterInput } from '../validations/register';
+import type { RegisterInput } from '../validations/register.js';
 
 export async function handleRegister(
   // On utilise notre type 'RegisterInput' pour typer le corps de la requête
