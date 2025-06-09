@@ -1,0 +1,43 @@
+# Fichier généré pour un projet Node.js / TypeScript / Frontend
+
+### Fichiers de Dépendances ###
+# Ne jamais sauvegarder les dépendances, chaque développeur les installe localement.
+/backend/node_modules
+/frontend/node_modules
+node_modules
+
+### Fichiers de Production/Build ###
+# Ne jamais sauvegarder le code compilé, seulement le code source.
+/backend/dist
+/frontend/dist
+/frontend/build
+/frontend/.next
+# Pour les projets React Native, on ignore le dossier de build.
+
+### Fichiers de Logs ###
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+### Fichiers d'Environnement (TRÈS IMPORTANT) ###
+# Contient les secrets (mots de passe, clés d'API). Ne doit JAMAIS être sur Git.
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+### Fichiers Système d'Exploitation ###
+.DS_Store
+Thumbs.db
+
+### Fichiers d'Éditeur de Code ###
+# On peut ignorer le dossier .vscode, sauf les recommandations d'extensions.
+.vscode/*
+!.vscode/extensions.json
+
+### Fichiers Prisma ###
+# Le client Prisma est généré dans node_modules, qui est déjà ignoré.
+# On ne met rien de plus ici, les migrations doivent être versionnées.

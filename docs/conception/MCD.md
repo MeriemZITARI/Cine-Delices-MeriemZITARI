@@ -16,4 +16,4 @@ RATTACHER, 0N CATEGORIE, 01 RECETTE
 CATEGORIE: code categorie, nom
 ```
 
-![MCD](MCD.svg)
+![MCD](images/MCD.svg)
