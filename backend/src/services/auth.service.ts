@@ -3,7 +3,7 @@ import { prisma } from '../client/prismaClient';
 import type { RegisterSchema } from '../validations/register';
 
 
-export async function registerUser(data: RegisterSchema) {
+export async function registerNewUser(data: RegisterSchema) {
 //avant vérification des données, on vérifie si l'utilisateur existe déjà
     // On utilise Prisma pour vérifier si un utilisateur avec le même email existe déjà
     // Si c'est le cas, on lance une erreur

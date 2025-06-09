@@ -12,6 +12,7 @@ node_modules
 /frontend/dist
 /frontend/build
 /frontend/.next
+/backend/generated
 # Pour les projets React Native, on ignore le dossier de build.
 
 ### Fichiers de Logs ###
