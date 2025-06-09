@@ -24,7 +24,8 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.0",
-    "prisma": "^6.9.0"
+    "prisma": "^6.9.0",
+    "zod": "^3.25.56"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",

@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- Modèles de l'application ---
+
+model User {
+  id        String   @id @default(cuid()) // Identifiant unique de type string
+  lastName  String
+  firstName String
+  email     String   @unique
+  password  String
+  isAdmin   Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Un utilisateur peut créer plusieurs recettes
+  recipes Recipe[]
+}
+
+model Movie {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text
+  imdbLink    String   @db.Text
+  releaseDate DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Un film peut être associé à plusieurs recettes
+  recipes Recipe[]
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Une catégorie peut contenir plusieurs recettes
+  recipes Recipe[]
+}
+
+model Recipe {
+  id          String   @id @default(cuid())
+  title       String
+  description String   @db.Text // Description de la recette
+  duration    Int // Durée en minutes
+  difficulty  Int // Difficulté sur 5
+  image       String
+  quote       String
+  isValidated Boolean  @default(false) // Indique si la recette a été validée par un admin
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation avec User (l'auteur)
+  userId String
+  author User   @relation(fields: [userId], references: [id])
+
+  // Relation avec Category
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  // Relation optionnelle avec Movie
+  movieId String? // Le '?' signifie que ce champ peut être vide (NULL)
+  movie   Movie?  @relation(fields: [movieId], references: [id])
+
+  // Relation plusieurs-à-plusieurs avec Ingredient
+  ingredients RecipeHasIngredient[]
+}
+
+model Ingredient {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relation plusieurs-à-plusieurs avec Recipe
+  recipes RecipeHasIngredient[]
+}
+
+// Table de liaison pour la relation Recipe <-> Ingredient
+model RecipeHasIngredient {
+  id        String   @id @default(cuid())
+  unit      String // ex: "g", "ml", "unité"
+  quantity  Int      @default(1)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Liens vers les deux tables
+  recipeId     String
+  recipe       Recipe     @relation(fields: [recipeId], references: [id])
+  ingredientId String
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  // Contrainte pour éviter de mettre deux fois le même ingrédient dans la même recette
+  @@unique([recipeId, ingredientId])
+}
