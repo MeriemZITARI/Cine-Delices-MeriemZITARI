@@ -5,8 +5,8 @@ import Button from "../Button/Button";
 const Header: React.FC = () => {
   const location = useLocation();
   return (
-    <header className="bg-white text-black py-4 shadow-md flex justify-between">
-      <div className="container mx-auto flex items-center flex-start px-4 gap-4">
+    <header className="bg-white text-black px-4 py-2 shadow-md flex justify-between">
+      <div className="container mx-auto flex items-center flex-start gap-4">
         <Link
           to="/"
           className="text-2xl font-bold font-broadway tracking-wider"
@@ -14,6 +14,7 @@ const Header: React.FC = () => {
           <img
             src="/images/logo/logo.png"
             alt="Ciné Délices Logo"
+            className="w-24"
           />
         </Link>
         <nav>
@@ -31,7 +32,7 @@ const Header: React.FC = () => {
           </NavLink>
         </nav>
       </div>
-      <div>
+      <div className="flex items-center">
         <Button text="Se connecter / S'inscrire" />
       </div>
     </header>
