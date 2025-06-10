@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 
 const errorHandler = (
-  error,      // TS ne râlera plus
+  error,    
   req, 
   res, 
   next
@@ -14,6 +14,8 @@ const errorHandler = (
     return res.status(400).json({
       message: 'Les données fournies sont invalides.',
       errors: error.flatten().fieldErrors,
+      // flatten() permet de transformer les erreurs en un objet et fields
+      // fieldErrors contient les erreurs par champ
     });
   }
 

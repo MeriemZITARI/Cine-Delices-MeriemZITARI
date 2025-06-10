@@ -1,9 +1,16 @@
 // Fichier: src/routes/index.ts
 import { Router } from 'express';
-import authRoutes from './authRoutes/auth.routes'; // Make sure this file exists: src/routes/authRoutes/auth.routes.ts
+import authRoutes from './authRoutes/auth.routes'; 
+import recipeRoutes from './recipeRoutes/recipe.routes'; 
+
 
 const router = Router();
-// Import des routes d'authentification
+// routes d'authentification
 router.use('/auth', authRoutes);
+
+
+// routes de recettes
+router.use('/recipes', recipeRoutes);
+
 
 export default router;
