@@ -16,7 +16,7 @@ export const createRecipeSchema = z.object({
     difficulty: z.number().min(1, "La difficulté doit être au moins 1").max(5, "La difficulté ne doit pas dépasser 5"),
         
         image: z.string().url("L'URL de l'image doit être valide"),
-        quote: z.string().max(200, "La citation ne doit pas dépasser 255 caractères"),
+        quote: z.string().max(255, "La citation ne doit pas dépasser 255 caractères"),
         isValidated: z.boolean().default(false),
     
         // relations

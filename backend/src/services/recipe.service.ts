@@ -43,7 +43,7 @@ export async function createRecipeService(data: CreateRecipeInput, userId: strin
     // Inclure les relations pour une réponse plus complète
     include: {
       author: {
-        select: { id: true, firstName: true, lastName: true, email: true } // Sélectionnez les champs que vous voulez retourner
+        select: { id: true, firstName: true, lastName: true,} // Sélectionnez les champs que vous voulez retourner
       },
       category: true,
       movie: true, // Inclure le film si présent
