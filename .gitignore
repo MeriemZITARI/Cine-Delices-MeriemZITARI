@@ -5,6 +5,8 @@
 /backend/node_modules
 /frontend/node_modules
 node_modules
+# Prisma generated client
+/src/generated/
 
 ### Fichiers de Production/Build ###
 # Ne jamais sauvegarder le code compilé, seulement le code source.

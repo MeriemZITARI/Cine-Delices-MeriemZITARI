@@ -1,25 +1,28 @@
-// Fichier: src/controllers/auth.controller.ts
+// src/controllers/auth.controller.ts
 
 import { Request, Response, NextFunction } from 'express';
-// On importe la fonction spécifique de notre service
 import { registerNewUser } from '../services/auth.service';
-// On importe notre TYPE, pas le schéma de validation.
 import type { RegisterInput } from '../validations/register.js';
 
 export async function handleRegister(
-  // On utilise notre type 'RegisterInput' pour typer le corps de la requête
   req: Request<{}, {}, RegisterInput>,
   res: Response,
   next: NextFunction
 ) {
   try {
-    // Ici, req.body est déjà validé ET il est maintenant parfaitement typé.
-    // Si tu tapes `req.body.` VS Code te proposera `email`, `password`, etc.
-    const newUser = await registerNewUser(req.body);
+    const { user, token } = await registerNewUser(req.body); // On Récupère le user ET le token
 
-    res.status(201).json(newUser);
+    //  Enregistrer le token dans un cookie ---
+    res.cookie('access_token', token, {
+      httpOnly: true, // Empêche l'accès via JavaScript côté client
+      secure: process.env.NODE_ENV === 'production', // N'envoyer le cookie que via HTTPS en production
+      sameSite: 'strict', // Protège contre les attaques CSRF
+      maxAge: 3600000 // Durée de vie du cookie en ms (1 heure ici, qui correspond à l'expiration du JWT)
+    });
+
+    //  réponse de succès 
+    res.status(201).json({ message: 'Utilisateur enregistré et connecté avec succès', user });
   } catch (error) {
-    // On passe l'erreur au middleware de gestion des erreurs
     next(error);
   }
 }
