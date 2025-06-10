@@ -11,7 +11,7 @@ export async function createRecipeService(data: CreateRecipeInput, userId: strin
 
   const recipe = await prisma.recipe.create({
     data: {
-      ...baseRecipeData, // Titre, description, instructions, etc.
+      ...baseRecipeData, // Titre, description, instructions, etc. 
       
       // Connexion à l'auteur
       author: {
