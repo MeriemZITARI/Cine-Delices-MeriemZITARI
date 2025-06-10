@@ -1,5 +1,6 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import Button from "../Button/Button";
 
 const Header: React.FC = () => {
   const location = useLocation();
@@ -10,19 +11,26 @@ const Header: React.FC = () => {
           to="/"
           className="text-2xl font-bold font-broadway tracking-wider"
         >
-          Ciné Délices
+          <img
+            src="/path/to/cinedelices_logo.png"
+            alt="Ciné Délices Logo"
+            className="h-10" // Ajustez la hauteur selon vos besoins
+          />
         </Link>
         <nav className="space-x-4">
-          <Link to="/" className={location.pathname === "/" ? "underline" : ""}>
+          <NavLink to="/" className={location.pathname === "/" ? "underline" : ""}>
             Accueil
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to="/recettes"
             className={location.pathname === "/recettes" ? "underline" : ""}
           >
             Recettes
-          </Link>
+          </NavLink>
         </nav>
+      </div>
+      <div>
+        <Button text="Se connecter / S'inscrire" />
       </div>
     </header>
   );

@@ -1,0 +1,206 @@
+{
+    "recipes": [
+      {
+        "id": "1",
+        "title": "Lasagnes",
+        "description": "Une délicieuse recette de lasagnes inspirée du film 'Garfield'",
+        "duration": 60,
+        "difficulty": "Moyen",
+        "image": "/images/recipes/lasagnes.jpg",
+        "anecdote": "Dans le film Garfield, une scène amusante montre Garfield prêt à tout pour manger des lasagnes. Un jour, alors qu'on prépare un grand plat de lasagnes pour lui offrir, Garfield met en place tout un stratagème pour détourner l'attention, et profitant d'un moment d'inattention de Jon, s'empare discrètement du plat et le dévore en un temps record, prouvant une fois de plus que rien ne peut se mettre entre lui et ses lasagnes préférées!",
+        "author": "Jean-Jacques Marley",
+        "ingredients": [
+          "Feuilles de lasagne - 12",
+          "Viande hachée - 800g",
+          "Oignon - 1",
+          "Tomates - 2",
+          "Sauce tomate - 2 cuillères à soupe",
+          "Beurre - 50g",
+          "Farine - 50g",
+          "Lait - 50cl",
+          "Fromage râpé (emmental, parmesan...) - 200g",
+          "Sel, poivre, herbes de Provence - selon goût"
+        ],
+        "instructions": "Faites revenir l'oignon et l'ail émincés dans l'huile d'olive, puis ajoutez la viande hachée et faites la cuire. Incorporez les tomates coupées en dés. Laissez mijoter 20 minutes. Pendant ce temps, préparez la béchamel : faites fondre le beurre dans une casserole, ajoutez la farine, puis versez le lait petit à petit, en remuant jusqu'à épaississement. Salez et poivrez. Dans un plat à gratin, disposez une couche de sauce, une couche de pâtes, puis à nouveau une couche de sauce. Parsemez de fromage râpé. Répétez l'opération jusqu'à épuisement des ingrédients, en terminant par de la béchamel et du fromage. Enfournez à 180°C pendant 30 à 40 minutes.",
+      "movie": {
+          "id": "1",
+          "title": "Garfield",
+          "year": 2004,
+          "poster": ""
+        },
+        "category": {
+          "id": "2",
+          "name": "Plat principal"
+        }
+      },
+      {
+        "id": "2",
+        "title": "Ratatouille",
+        "description": "La célèbre ratatouille du film d'animation de Pixar",
+        "duration": 45,
+        "difficulty": "Facile",
+        "image": "/images/recipes/ratatouille.jpg",
+        "anecdote": "Dans le film Ratatouille, le plat éponyme qui impressionne tant le critique gastronomique Anton Ego n'est pas une ratatouille traditionnelle, mais plutôt un \"confit byaldi\", une version moderne créée par le chef Thomas Keller. Cette recette stylisée présente les légumes en fines tranches disposées en cercles concentriques, pour un résultat aussi esthétique que savoureux.",
+        "author": "Marie Dubois",
+        "ingredients": [
+          "Aubergine - 1",
+          "Courgette - 2",
+          "Poivron rouge - 1",
+          "Poivron jaune - 1",
+          "Tomates - 4",
+          "Oignon - 1",
+          "Gousse d'ail - 2",
+          "Huile d'olive - 4 cuillères à soupe",
+          "Herbes de Provence - 1 cuillère à café",
+          "Sel et poivre - selon goût"
+        ],
+        "instructions": "Lavez et coupez tous les légumes en rondelles fines. Dans une poêle, faites revenir l'oignon et l'ail hachés dans l'huile d'olive. Dans un plat à gratin huilé, alternez des couches de chaque légume en les disposant en rosace. Saupoudrez d'herbes de Provence, salez et poivrez. Versez un filet d'huile d'olive. Couvrez avec du papier aluminium et enfournez à 180°C pendant 30-35 minutes. Retirez le papier et poursuivez la cuisson encore 10 minutes. Servez chaud ou tiède.",
+        "movie": {        "id": "2",
+          "title": "Ratatouille",
+          "year": 2007,
+          "poster": ""
+        },
+        "category": {
+          "id": "2",
+          "name": "Plat principal"
+        }
+      },
+      {
+        "id": "3",
+        "title": "Croque Monsieur de l'Espace",
+        "description": "Le sandwich parfait inspiré par 'Les Gardiens de la Galaxie'",
+        "duration": 15,
+        "difficulty": "Facile",
+        "image": "/images/recipes/croque-monsieur.jpg",
+        "anecdote": "Dans 'Les Gardiens de la Galaxie', Star-Lord (Peter Quill) est particulièrement attaché à la nourriture terrienne qu'il a emportée dans l'espace. Ce croque-monsieur cosmique est inspiré de cette nostalgie pour les saveurs de la Terre, avec une touche galactique !",
+        "author": "Sophie Martin",
+        "ingredients": [
+          "Pain de mie - 8 tranches",
+          "Jambon - 4 tranches",
+          "Fromage (emmental, gruyère) - 200g",
+          "Beurre - 50g",
+          "Lait - 20cl",
+          "Farine - 20g",
+          "Muscade - 1 pincée",
+          "Poivre galactique (poivre noir) - selon goût"
+        ],
+        "instructions": "Préparez une béchamel légère : faites fondre 20g de beurre, ajoutez la farine, mélangez, puis versez le lait petit à petit en remuant. Assaisonnez de sel, poivre et muscade. Beurrez les tranches de pain, puis disposez sur 4 d'entre elles une tranche de jambon et du fromage râpé. Recouvrez avec les autres tranches de pain. Tartinez le dessus de béchamel et parsemez de fromage râpé. Enfournez à 200°C pendant 10-15 minutes jusqu'à ce que le fromage soit bien doré.",
+      "movie": {
+          "id": "3",
+          "title": "Les Gardiens de la Galaxie",
+          "year": 2014,
+          "poster": ""
+        },
+        "category": {
+          "id": "1",
+          "name": "Entrée"
+        }
+      },
+      {
+        "id": "4",
+        "title": "Gâteau au chocolat 'Matilda'",
+        "description": "Le gâteau au chocolat le plus tentant du cinéma",
+        "duration": 50,
+        "difficulty": "Moyen",
+        "image": "/images/recipes/chocolate-cake.jpg",
+        "anecdote": "Dans le film 'Matilda', le directeur Trunchbull force l'élève Bruce Bogtrotter à manger un énorme gâteau au chocolat devant toute l'école comme punition pour en avoir volé une part. Contre toute attente, Bruce réussit à terminer entièrement le gâteau sous les acclamations de ses camarades. Cette scène est devenue culte et a donné envie à des générations d'enfants de goûter ce fameux gâteau !",
+        "author": "Pierre Dupont",
+        "ingredients": [
+          "Chocolat noir - 200g",
+          "Beurre - 200g",
+          "Œufs - 4",
+          "Sucre - 200g",
+          "Farine - 100g",
+          "Cacao en poudre - 2 cuillères à soupe",
+          "Crème fraîche - 100g",
+          "Vanille - 1 gousse"
+        ],
+        "instructions": "Préchauffez le four à 180°C. Faites fondre le chocolat et le beurre au bain-marie. Dans un saladier, battez les œufs et le sucre jusqu'à ce que le mélange blanchisse. Ajoutez le chocolat fondu et mélangez bien. Incorporez la farine tamisée et le cacao en poudre. Ajoutez la crème fraîche et les grains de vanille. Versez la préparation dans un moule beurré et fariné. Enfournez pendant 25-30 minutes. Vérifiez la cuisson avec la pointe d'un couteau qui doit ressortir légèrement humide. Laissez refroidir avant de démouler.",
+        "movie": {
+          "id": "4",
+          "title": "Matilda",
+          "year": 1996,
+          "poster": "/images/movies/matilda.jpg"
+        },
+        "category": {
+          "id": "3",
+          "name": "Dessert"
+        }
+      }
+    ],
+    "categories": [
+      {
+        "id": "1",
+        "name": "Entrée"
+      },
+      {
+        "id": "2",
+        "name": "Plat principal"
+      },
+      {
+        "id": "3",
+        "name": "Dessert"
+      },
+      {
+        "id": "4",
+        "name": "Boisson"
+      },
+      {
+        "id": "5",
+        "name": "Snack"
+      }
+    ],
+    "movies": [
+      {
+        "id": "1",
+        "title": "Garfield",
+        "description": "Garfield, le chat paresseux et gourmand, adore les lasagnes et déteste le lundi.",
+        "year": 2004,
+        "poster": "/images/movies/garfield.jpg",
+        "imdb_link": "https://www.imdb.com/title/tt0356634/"
+      },
+      {
+        "id": "2",
+        "title": "Ratatouille",
+        "description": "Un rat qui rêve de devenir un grand chef s'associe avec un jeune commis de cuisine dans un prestigieux restaurant parisien.",
+        "year": 2007,
+        "poster": "/images/movies/ratatouille.jpg",
+        "imdb_link": "https://www.imdb.com/title/tt0382932/"
+      },
+      {
+        "id": "3",
+        "title": "Les Gardiens de la Galaxie",
+        "description": "Une bande improbable de héros galactiques s'unit pour sauver l'univers.",
+        "year": 2014,
+        "poster": "/images/movies/guardians.jpg",
+        "imdb_link": "https://www.imdb.com/title/tt2015381/"
+      },
+      {
+        "id": "4",
+        "title": "Matilda",
+        "description": "Une jeune fille surdouée développe des pouvoirs télékinésiques qui l'aident à faire face à sa famille dysfonctionnelle et à une directrice d'école tyrannique.",
+        "year": 1996,
+        "poster": "/images/movies/matilda.jpg",
+        "imdb_link": "https://www.imdb.com/title/tt0117008/"
+      }
+    ],
+    "users": [
+      {
+        "id": "1",
+        "first_name": "Jean",
+        "last_name": "Dupont",
+        "email": "jean.dupont@example.com",
+        "role": "admin",
+        "created_at": "2025-01-15T10:30:00Z"
+      },
+      {
+        "id": "2",
+        "first_name": "Marie",
+        "last_name": "Martin",
+        "email": "marie.martin@example.com",
+        "role": "user",
+        "created_at": "2025-02-20T14:45:00Z"
+      }
+    ]
+  }
+  
