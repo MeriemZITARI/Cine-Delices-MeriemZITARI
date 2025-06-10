@@ -534,8 +534,8 @@ const HomePage: React.FC = () => {
         </div>
       )}
 
-      <div className="container mx-auto px-4 mt-8">
-        <hr className="border-t-2 border-red-400 my-6 sm:my-8" />
+      <div className="container mx-auto px-4 mt-8 hidden sm:block">
+        <hr className="border-t-2 border-red-400 my-6 sm:my-8 bg-red-400" style={{height:'4px', border:0, borderRadius:'2px'}} />
       </div>
     </div>
   );
