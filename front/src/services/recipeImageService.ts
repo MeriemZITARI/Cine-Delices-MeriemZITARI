@@ -1,6 +1,6 @@
-import croquemonsieurImage from "@/assets/recipe/croque-monsieur.jpg";
-import lasagnesImage from "@/assets/recipe/lasagnes.jpg";
-import ratatouilleImage from "@/assets/recipe/ratatouille.jpg";
+import croquemonsieurImage from "@/assets/recipes/croque-monsieur.jpg";
+import lasagnesImage from "@/assets/recipes/lasagnes.jpg";
+import ratatouilleImage from "@/assets/recipes/ratatouille.jpg";
 
 // Service pour récupérer des images de recettes
 const RecipeImageService = {
