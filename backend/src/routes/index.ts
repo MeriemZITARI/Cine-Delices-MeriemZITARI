@@ -11,6 +11,7 @@ router.use('/auth', authRoutes);
 // routes de recettes
 router.use('/recipes', recipeRoutes);
 
+
 // Import des routes de connexion
 router.use('/auth', loginRoutes); // Ajoutez cette ligne pour inclure les routes de connexion
 
