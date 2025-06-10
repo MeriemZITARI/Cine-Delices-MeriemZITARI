@@ -19,7 +19,7 @@ console.log('--- Fin du débogage ---');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-app.use(express.json());
+app.use(express.json({ strict: false }));
 
 // Middlewares globaux
 app.use(helmet());

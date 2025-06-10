@@ -2,7 +2,8 @@
 import { Router } from 'express';
 import recipeRoutes from './recipeRoutes/recipe.routes'; 
 import authRoutes from './authRoutes/auth.routes'; // Make sure this file exists: src/routes/authRoutes/auth.routes.ts
-import loginRoutes from './authRoutes/login.routes'; // Importez votre nouvelle route login.routes.ts
+import loginRoutes from './authRoutes/login.routes'; 
+import logoutRoutes from './authRoutes/logout.routes';
 const router = Router();
 // routes d'authentification
 router.use('/auth', authRoutes);
@@ -11,7 +12,9 @@ router.use('/auth', authRoutes);
 // routes de recettes
 router.use('/recipes', recipeRoutes);
 
-// Import des routes de connexion
-router.use('/auth', loginRoutes); // Ajoutez cette ligne pour inclure les routes de connexion
+//  routes de connexion
+router.use('/auth', loginRoutes); 
+//route de déconnexion
+router.use('/auth', logoutRoutes); 
 
 export default router;

@@ -2,6 +2,7 @@ import { Router } from "express";
 import { handleLogin } from "../../controllers/login.controller";
 import { loginSchema } from "../../validations/login";
 import { validateRequest } from "../../middlewares/validateRequest";
+import { handleLogout } from "../../controllers/logout.controller";
 
 const loginRouter = Router();
 
