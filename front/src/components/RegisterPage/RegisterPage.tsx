@@ -140,10 +140,9 @@ const RegisterPage: React.FC = () => {
           {/* Message d'erreur */}
           {error && <div className="text-red-500 text-sm mb-3 text-center">{error}</div>}
 
-          {/* Bouton de soumission */}
-          <Button 
+          {/* Bouton de soumission */}          <Button 
             type="submit"
-            className="w-full bg-white border border-gray-400 rounded py-2 text-base font-medium hover:bg-gray-50 transition-colors"
+            className="w-full bg-white border border-gray-400 rounded py-2 text-base font-medium"
           >
             Valider
           </Button>

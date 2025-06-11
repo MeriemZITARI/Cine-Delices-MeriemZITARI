@@ -5,6 +5,7 @@ import HomePage from "./components/HomePage/HomePage";
 import HomePageMobileFinal from "./components/HomePage/HomePage";
 import RecipeDetailPage from "./components/RecipeDetailPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
+import LoginPage from "./components/LoginPage/LoginPage";
 import { SearchModalProvider } from "./context/SearchModalContext";
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<HomePageMobileFinal />} />
             <Route path="/recettes/:id" element={<RecipeDetailPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </main>
         <Footer />
@@ -24,4 +26,5 @@ function App() {
     </SearchModalProvider>
   );
 }
+
 export default App;
