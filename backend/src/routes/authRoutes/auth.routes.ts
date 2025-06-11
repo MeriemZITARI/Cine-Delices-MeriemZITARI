@@ -1,13 +1,17 @@
 import { Router } from "express";
-import { handleRegister } from "../../controllers/auth.controller";
-import { isAuthenticated } from "../../middlewares/isAuthenticated";
 
-import { registerSchema } from "../../validations/register";
+
+import { handleRegister } from "../../controllers/auth.controller"; 
+import { handleLogin } from "../../controllers/login.controller";
+import { handleLogout } from "../../controllers/logout.controller";
+
+
+
 import { validateRequest } from "../../middlewares/validateRequest";
-import { loginSchema } from "validations/login";
-import { handleLogin } from "controllers/login.controller";
-import { handleLogout } from "controllers/logout.controller";
 
+
+import { registerSchema } from "../../validations/register"; // Remonte à src/, puis descend dans validations/
+import { loginSchema } from "../../validations/login";
 
 
 const authRouter = Router();
