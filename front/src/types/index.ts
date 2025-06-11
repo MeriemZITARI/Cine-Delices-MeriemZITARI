@@ -8,16 +8,32 @@
  * Représente une recette avec tous ses détails
  */
 export interface Recipe {
-    id: string;            // Identifiant unique
-    title: string;         // Titre de la recette
-    description: string;   // Description détaillée
-    ingredients: string[]; // Liste des ingrédients
-    instructions: string[]; // Étapes de préparation
-    duration: number;      // Durée en minutes
-    category: Category;    // Catégorie de la recette
-    difficulty: string;    // Niveau de difficulté
-    image?: string;        // URL de l'image
-    movie?: Movie;         // Film associé (optionnel)
+  id: string;
+  title: string;
+  description: string;
+  ingredients: {
+      ingredientId: string;
+      quantity: number;
+      unit: string;
+  }[];
+  instructions: string[];
+  duration: number;
+  difficulty: number;
+  image: string;
+    category?: {
+        id: string;
+        name: string;
+    };
+    movie?: {
+        id: string;
+        title: string;
+        poster?: string;
+    };
+    author?: {
+        id: string;
+        firstName: string;
+        lastName: string;
+    };
   }
   
   /**

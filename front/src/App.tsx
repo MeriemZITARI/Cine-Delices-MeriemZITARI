@@ -7,7 +7,7 @@ import RecipeDetailPage from "./components/RecipeDetailPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
 import LoginPage from "./components/LoginPage/LoginPage";
 import { SearchModalProvider } from "./context/SearchModalContext";
-
+import TestApi from './components/TestApi';
 function App() {
   return (
     <SearchModalProvider>
@@ -16,6 +16,7 @@ function App() {
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<HomePageMobileFinal />} />
+            <Route path="/test-api" element={<TestApi />} />
             <Route path="/recettes/:id" element={<RecipeDetailPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
