@@ -1,0 +1,5 @@
+
+node_modules
+# Prisma Client
+# Le client Prisma est généré dans node_modules, qui est déjà ignoré.
+# On ne met rien de plus ici, les migrations doivent être versionnées.
