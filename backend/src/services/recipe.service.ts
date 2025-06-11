@@ -184,3 +184,64 @@ export async function getRecipeByIdService(recipeId: string) {
     });
     return recipe;
   }
+
+  /**
+ * Service pour RÉCUPÉRER TOUTES les recettes.
+ * C'est une étape du CRUD (Read - toutes les recettes).
+ *
+ * @returns Un tableau de toutes les recettes avec leurs relations.
+ */
+export async function getAllRecipesService() {
+    const recipes = await prisma.recipe.findMany({ // <--- C'est ici que Prisma récupère toutes les recettes
+      include: { // On inclut les relations pour une réponse complète
+        author: { select: { id: true, firstName: true, lastName: true } },
+        category: true,
+        movie: true,
+        ingredients: { include: { ingredient: true } }
+      }
+    });
+    return recipes;
+  }
+
+/**
+ * Service pour SUPPRIMER une recette par son ID.
+ * C'est une étape du CRUD (Delete).
+ * Seul l'auteur ou un administrateur peut supprimer la recette.
+ *
+ * @param recipeId - L'ID de la recette à supprimer.
+ * @param requestingUserId - L'ID de l'utilisateur connecté qui fait la demande.
+ * @returns La recette supprimée ou un message de succès.
+ */
+export async function deleteRecipeService(recipeId: string, requestingUserId: string) {
+  // 1. Vérifier si la recette existe et si l'utilisateur a les droits.
+  const existingRecipe = await prisma.recipe.findUnique({
+    where: { id: recipeId },
+    include: { author: true }, // Inclure l'auteur pour vérifier les droits
+  });
+
+  if (!existingRecipe) {
+    throw new Error('Recette non trouvée.'); // Si la recette n'existe pas, on lève une erreur.
+  }
+
+  // Vérifier si l'utilisateur est l'auteur de la recette OU s'il est administrateur.
+  const isAuthor = existingRecipe.userId === requestingUserId;
+  const requestingUser = await prisma.user.findUnique({ where: { id: requestingUserId } });
+  const isAdmin = requestingUser ? requestingUser.isAdmin : false; // S'assure que isAdmin est false si l'utilisateur n'est pas trouvé
+
+  if (!isAuthor && !isAdmin) {
+    throw new Error('Accès refusé : Seul l\'auteur ou un administrateur peut supprimer cette recette.');
+  }
+    //Supprimer les liaisons d'ingrédients (important pour les relations plusieurs-à-plusieurs).
+    //    On supprime d'abord toutes les entrées dans la table de liaison 'RecipeHasIngredient'
+    //    qui sont liées à cette recette.
+  await prisma.recipeHasIngredient.deleteMany({
+    where: { recipeId: recipeId },
+  });
+  // Supprimer la recette de la base de données.
+  const deletedRecipe = await prisma.recipe.delete({
+    where: { id: recipeId },
+    include: { author: true }, // Inclure l'auteur dans la réponse
+  });
+
+  return deletedRecipe; // Retourne la recette supprimée
+}

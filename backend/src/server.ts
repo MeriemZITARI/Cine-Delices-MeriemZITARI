@@ -7,7 +7,7 @@ import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
-// import errorHandler from './middlewares/errorHandler';
+
 import router from './routes';
 // --- NOTRE SONDE DE DÉBOGAGE ---
 console.log('--- Début du débogage ---');
