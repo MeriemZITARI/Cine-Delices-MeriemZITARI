@@ -32,9 +32,9 @@ const SearchForm: React.FC = () => {
 
   return (
     <div className="w-full">
-      <h3 className="text-base sm:text-lg mb-3 sm:mb-4">Je cherche ..</h3>
+      <h3 className="text-base font-bold sm:text-lg mb-2">Je cherche ..</h3>
       <form onSubmit={handleSubmit} className="mb-4 sm:mb-6">
-        <div className="flex items-center border rounded-md p-2 sm:p-3 mb-4 sm:mb-6">
+        <div className="flex items-center border rounded-md p-2 mb-4 sm:mb-5">
           <div className="flex items-center justify-center text-gray-400 mr-3">
             <Search size={18} />
           </div>
@@ -47,7 +47,7 @@ const SearchForm: React.FC = () => {
           />
         </div>
         
-        <h3 className="text-base sm:text-lg mb-2">J'ai ..</h3>
+        <h3 className="text-base font-bold sm:text-lg mb-2">J'ai ..</h3>
         <div className="mb-3 sm:mb-4">
           <div className="grid grid-cols-2 gap-2 mb-2 sm:mb-3">
             {[15, 30, 45, 60].map((duration) => (
@@ -65,7 +65,7 @@ const SearchForm: React.FC = () => {
         </div>
         </div>
 
-        <h3 className="text-base sm:text-lg mb-2">Je veux préparer</h3>
+        <h3 className="text-base font-bold sm:text-lg mb-2">Je veux préparer</h3>
         <div className="mb-4 sm:mb-6">
           <div className="grid grid-cols-2 gap-2">
             {['entrée', 'plat', 'dessert', 'boisson'].map((type) => (

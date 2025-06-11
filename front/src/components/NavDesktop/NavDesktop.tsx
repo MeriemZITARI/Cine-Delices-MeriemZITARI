@@ -11,7 +11,7 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
   return (
     <header className={`bg-white text-black px-4 py-2 shadow-md relative ${className}`}>
       <div className="container mx-auto flex items-center justify-between h-16">
-        <nav className="flex space-x-8 items-center text-xl" style={{ fontFamily: 'Broadway, sans-serif' }}>
+        <nav className="flex space-x-8 items-center text-2xl" style={{ fontFamily: 'Broadway, sans-serif' }}>
           <Link
             to="/"
             className="flex items-center h-full"

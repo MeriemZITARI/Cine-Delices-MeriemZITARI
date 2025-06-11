@@ -22,6 +22,7 @@ import { cn } from "../../lib/utils";
 // Styles spécifiques pour cette page
 import './HomePage.css';
 import SearchForm from '../SearchForm/SearchForm';
+import Button from '../Button/Button';
 
 /**
  * Composant de la page d'accueil mobile-first
@@ -149,20 +150,12 @@ const HomePage: React.FC = () => {
         );
       }
       
-      if (params.category) {
-        results = results.filter(recipe => recipe.category?.id === params.category);
-      }
-      
-      if (params.minDuration) {
-        results = results.filter(recipe => recipe.duration >= parseInt(params.minDuration!.toString()));
-      }
-      
       if (params.maxDuration) {
         results = results.filter(recipe => recipe.duration <= parseInt(params.maxDuration!.toString()));
       }
       
-      if (params.difficulty) {
-        results = results.filter(recipe => recipe.difficulty === params.difficulty);
+      if (params.category) {
+        results = results.filter(recipe => recipe.category?.id === params.category);
       }
       
       setSearchResults(results);
@@ -177,7 +170,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       {/* Section Top - Recherche et Recette du jour avec bandeau jaune */}      
-      <div className="background-gradient-yellow py-8 sm:py-10">
+      <div className="bg-customYellow py-8 sm:py-10">
         <div className="container mx-auto px-4">
           {/* Formulaire de recherche bureau */}
           {isSearchVisible && (
@@ -191,7 +184,7 @@ const HomePage: React.FC = () => {
           {/* Layout flexible qui change de direction en fonction de la taille d'écran */}
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 desktop-layout">
             {/* Recette du jour - Pleine largeur sur mobile, 4/5 sur desktop */}
-            <div className="w-full lg:w-4/5 bg-black rounded-lg sm:rounded-none overflow-hidden shadow-lg mb-6 lg:mb-0 h-[300px] sm:h-[400px] lg:h-[500px] featured-recipe flex-1">
+            <div className="w-full lg:w-4/5 bg-black rounded-xl sm:rounded-r-none overflow-hidden shadow-lg mb-6 lg:mb-0 h-[300px] sm:h-[400px] lg:h-[450px] featured-recipe flex-1">
               {featuredRecipe && (
                 <Link to={`/recettes/${featuredRecipe.id}`} className="block h-full cursor-pointer">
                   <div className="relative h-full">
@@ -200,11 +193,11 @@ const HomePage: React.FC = () => {
                       alt={featuredRecipe.title} 
                       className="w-full h-full object-cover brightness-[0.35]"
                     />
-                    <div className="absolute inset-0 flex flex-col p-4 sm:p-6">
-                      <h2 className="text-white text-xl sm:text-2xl font-bold font-broadway drop-shadow-lg">La recette du jour !</h2>
-                      <div className="mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-end text-white gap-2 sm:gap-0">
-                        <div className="text-sm sm:text-base font-medium drop-shadow-md">{featuredRecipe.title}</div>
-                        <div className="text-xs sm:text-sm drop-shadow-md">Temps de préparation : {featuredRecipe.duration} min</div>
+                    <div className="absolute inset-0 flex flex-col p-4 sm:py-6 sm:px-8 text-white">
+                      <h2 className="text-xl sm:text-3xl font-bold font-broadway drop-shadow-lg">La recette du jour !</h2>
+                      <div className="mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 sm:gap-0 font-bold">
+                        <div className="text-sm sm:text-lg drop-shadow-md">{featuredRecipe.title}</div>
+                        <div className="text-xs sm:text-lg drop-shadow-md">Temps de préparation : {featuredRecipe.duration} min</div>
                       </div>
                     </div>
                   </div>
@@ -213,7 +206,7 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Formulaire de recherche desktop - Caché sur mobile, visible sur desktop */}            
-            <div className="hidden lg:block w-1/5 bg-white rounded-none shadow-lg p-4 sm:p-6 search-sidebar flex-none w-[23rem]">
+            <div className="hidden lg:block bg-white rounded-none shadow-lg p-4 sm:p-6 search-sidebar flex-none w-[23rem]">
               <SearchForm />
             </div>
           </div>
@@ -226,7 +219,7 @@ const HomePage: React.FC = () => {
           {/* Layout flexible qui change selon la taille d'écran */}
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 mb-8 sm:mb-12 desktop-layout">            
             {/* Film à l'affiche - Pleine largeur sur mobile, 1/5 sur desktop */}
-            <div className="w-full lg:w-1/5 desktop-layout-sidebar">
+            <div className="w-full lg:w-96 desktop-layout-sidebar">
               <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
                 <span className="mr-2">🎬</span>
                 Le film à l'affiche
@@ -253,7 +246,7 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Section dernières recettes - Pleine largeur sur mobile, 4/5 sur desktop */}
-            <div className="w-full lg:w-4/5 desktop-layout-main">
+            <div className="flex-1 desktop-layout-main">
               <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
                 <span className="mr-2">🍽️</span>
                 Les dernières recettes
@@ -368,7 +361,8 @@ const HomePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              )}              <div className="text-center mt-6">
+              )}
+              <div className="text-center mt-6">
                 <Link to="/recettes" className="inline-flex items-center py-1 text-red-500 hover:text-red-700 text-base font-medium transition-colors duration-200 voir-toutes-link">
                   <span>Voir toutes les recettes</span>
                   <ArrowRight size={16} className="ml-1" />
@@ -417,11 +411,10 @@ const HomePage: React.FC = () => {
                 Essayez d'autres termes ou filtres pour votre recherche.
               </p>
               <Button 
+                text="Retour à toutes les recettes"
                 className="mt-4 bg-white hover:bg-gray-100"
                 onClick={() => setHasSearched(false)}
-              >
-                Retour à toutes les recettes
-              </Button>
+              />
             </div>
           )}
         </div>

@@ -64,6 +64,14 @@ const RecipeImage: React.FC<RecipeImageProps> = ({
   }
   return (
     <img src={imageUrl} alt={alt || recipe.title} className={className || ""} />
+    // <div className={`relative ${className || ""}`}>
+    //   <img
+    //     src={imageUrl}
+    //     alt={alt || recipe.title}
+    //     className="w-full h-full object-cover"
+    //   />
+    //   <div className="absolute inset-0 bg-white bg-opacity-40"></div>
+    // </div>
   );
 };
 

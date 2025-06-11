@@ -27,6 +27,7 @@ export interface Recipe {
     movie?: {
         id: string;
         title: string;
+        year: string;
         poster?: string;
     };
     author?: {
