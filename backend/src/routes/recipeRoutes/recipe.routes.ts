@@ -1,6 +1,6 @@
 
 import { Router } from "express";
-import {  handleCreateRecipe, handleUpdateRecipe } from "../../controllers/recipe.controller";
+import {  handleCreateRecipe, handleUpdateRecipe, handleGetRecipeById } from "../../controllers/recipe.controller";
 import { isAuthenticated } from "../../middlewares/isAuthenticated";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { createRecipeSchema, updateRecipeSchema } from "../../validations/recipe";
@@ -12,5 +12,8 @@ recipeRouter.post('/', isAuthenticated, validateRequest(createRecipeSchema), han
 
 // Route pour mettre à jour une recette existante
 recipeRouter.patch('/:id', isAuthenticated, validateRequest(updateRecipeSchema), handleUpdateRecipe);
+
+// route pour recuperer les recettes d'un utilisateur
+recipeRouter.get('/:id', handleGetRecipeById);
 
 export default recipeRouter;

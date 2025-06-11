@@ -163,3 +163,24 @@ export async function updateRecipeService(recipeId: string, requestingUserId: st
   
     return updatedRecipe; // La recette mise à jour.
   }
+
+  /**
+ * Service pour RÉCUPÉRER une recette par son ID.
+ * C'est une étape du CRUD (Read - une seule recette spécifique).
+ * Le but est de récupérer tous les détails d'une seule recette par son propre ID.
+ *
+ * @param recipeId - L'ID de la recette à récupérer.
+ * @returns La recette trouvée (un objet unique), ou null si elle n'existe pas.
+ */
+export async function getRecipeByIdService(recipeId: string) {
+    const recipe = await prisma.recipe.findUnique({ // <-- Utilise findUnique pour une seule recette
+      where: { id: recipeId }, // <-- Filtre par l'ID de la recette
+      include: { // Inclure les relations pour une réponse complète
+        author: { select: { id: true, firstName: true, lastName: true } },
+        category: true,
+        movie: true,
+        ingredients: { include: { ingredient: true } }
+      }
+    });
+    return recipe;
+  }

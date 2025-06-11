@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { CreateRecipeInput,UpdateRecipeInput } from "../validations/recipe";  
-import { createRecipeService,updateRecipeService} from "../services/recipe.service";
+import { createRecipeService,updateRecipeService,getRecipeByIdService } from "../services/recipe.service";
 
 
 // --- Gérer la création d'une nouvelle recette ---
@@ -64,3 +64,33 @@ export async function handleUpdateRecipe(
       next(error);
     }
   }
+
+ /**
+ * Gère la récupération d'une recette par son ID.
+ * Route: GET /api/recipes/:id
+ * (Votre fonction existante)
+ */
+export async function handleGetRecipeById(
+    req: Request<{ id: string }>, // L'ID de la recette vient des paramètres de l'URL.
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { id } = req.params; // On récupère l'ID depuis les paramètres de la route (ex: /recipes/123).
+  
+      // Appel au service pour trouver la recette par son ID.
+      const recipe = await getRecipeByIdService(id);
+  
+      if (!recipe) {
+        // Si aucune recette n'est trouvée avec cet ID, on renvoie un statut 404 (Not Found).
+        return res.status(404).json({ message: 'Recette non trouvée.' });
+      }
+  
+      // Réponse de succès : statut 200 (OK) et la recette trouvée.
+      res.status(200).json(recipe);
+    } catch (error) {
+      // En cas d'erreur (ex: problème de base de données), on la passe au gestionnaire d'erreurs.
+      next(error);
+    }
+  }
+  
