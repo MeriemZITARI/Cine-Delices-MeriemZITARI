@@ -13,4 +13,4 @@ export const createCategorySchema = z.object({
 export const updateCategorySchema = createCategorySchema.partial()  // On utilise .partial() pour rendre toutes les propriétés optionnelles
 
 export type CreateCategoryInput = z.infer<typeof createCategorySchema>; // TypeScript type pour la création d'une recette
-//export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>; //on type pour la mise à jour d'une catégorie
+export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>; //on type pour la mise à jour d'une catégorie

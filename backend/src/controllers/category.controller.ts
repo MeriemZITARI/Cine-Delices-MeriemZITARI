@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { createCategoryService } from '../services/category.service';
+import { updateCategoryService } from '../services/category.service';
 
 export async function handleCreateCategory(req: Request, res: Response, next: NextFunction) {
   try {
@@ -17,6 +18,27 @@ export async function handleCreateCategory(req: Request, res: Response, next: Ne
     // Vérifiez si l'erreur est liée à une catégorie existante
     if (error.message === 'Une catégorie avec ce nom existe déjà.') {
       return res.status(400).json({ message: error.message });
+    }
+
+    // Pour toute autre erreur, passez-la au middleware de gestion des erreurs
+    next(error);
+  }
+};
+
+export async function handleUpdateCategory(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params; // Récupérez l'ID de la catégorie depuis les paramètres
+    const data = req.body; // Récupérez les données à mettre à jour depuis le corps de la requête
+
+    // Appeler le service pour mettre à jour la catégorie
+    const updatedCategory = await updateCategoryService(id, data);
+
+    // Retourner une réponse de succès
+    res.status(200).json({ message: 'Catégorie mise à jour avec succès.', category: updatedCategory });
+  } catch (error: any) {
+    // Vérifiez si l'erreur est liée à une catégorie non trouvée
+    if (error.message === 'Catégorie non trouvée.') {
+      return res.status(404).json({ message: error.message });
     }
 
     // Pour toute autre erreur, passez-la au middleware de gestion des erreurs
