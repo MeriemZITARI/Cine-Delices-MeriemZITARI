@@ -15,112 +15,13 @@ import RecipeCarousel from '../RecipeCaroussel';
 import RecipeCard from '../RecipeCard';
 // Contexte et composants UI
 import { useSearchModal } from '../../context/SearchModalContext';
-import { Button } from '../ui/button';
-import { ChevronDown, Search, ArrowRight } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
 // Types et utilitaires
 import { Recipe, Category, Movie, SearchFilters } from '../../types';
 import { cn } from "../../lib/utils";
 // Styles spécifiques pour cette page
 import './HomePage.css';
-
-/**
- * Composant SearchForm - Mobile-first
- * Formulaire de recherche avec filtres de durée et de type
- */
-const SearchForm: React.FC = () => {
-  // États pour les différents critères de recherche
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
-
-  /**
-   * Gère la sélection/désélection d'une durée
-   * @param minutes - Durée en minutes
-   */
-  const handleDurationSelect = (minutes: number) => {
-    setSelectedDuration(minutes === selectedDuration ? null : minutes);
-  };
-
-  /**
-   * Gère la sélection/désélection d'un type
-   * @param type - Type de recette
-   */
-  const handleTypeSelect = (type: string) => {
-    setSelectedType(type === selectedType ? null : type);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Logique de recherche
-  };
-
-  return (
-    <div className="w-full">
-      <h3 className="text-base sm:text-lg mb-3 sm:mb-4">Je cherche ..</h3>
-      <form onSubmit={handleSubmit} className="mb-4 sm:mb-6">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <Search size={18} className="text-gray-400" />
-          </div>
-          <input 
-            type="text" 
-            placeholder="recettes de pizza" 
-            className="w-full p-2 pl-10 sm:p-3 sm:pl-10 border rounded-md text-sm sm:text-base mb-4 sm:mb-6"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        
-        <h3 className="text-base sm:text-lg mb-2">J'ai ..</h3>
-        <div className="mb-3 sm:mb-4">
-          <div className="grid grid-cols-2 gap-2 mb-2 sm:mb-3">
-            {[15, 30, 45, 60].map((duration) => (
-              <label key={duration} className="flex items-center text-sm sm:text-base">
-                <input 
-                  type="radio" 
-                  name="duration" 
-                  className="mr-2"
-                  checked={selectedDuration === duration}
-                  onChange={() => handleDurationSelect(duration)}
-                />
-                {duration} minutes
-              </label>
-            ))}
-          </div>
-        </div>
-
-        <h3 className="text-base sm:text-lg mb-2">Je veux préparer</h3>
-        <div className="mb-4 sm:mb-6">
-          <div className="grid grid-cols-2 gap-2">
-            {['entrée', 'plat', 'dessert', 'boisson'].map((type) => (
-              <label key={type} className="flex items-center text-sm sm:text-base">
-                <input 
-                  type="radio" 
-                  name="type" 
-                  className="mr-2"
-                  checked={selectedType === type}
-                  onChange={() => handleTypeSelect(type)}
-                />
-                {type === 'entrée' ? 'une entrée' :
-                 type === 'plat' ? 'un plat' :
-                 type === 'dessert' ? 'un dessert' : 'une boisson'}
-              </label>
-            ))}
-          </div>
-        </div>
-        
-        <Button 
-          type="submit" 
-          variant="default"
-          className="w-full text-sm sm:text-base"
-        >
-          C'est parti !
-        </Button>
-      </form>
-    </div>
-  );
-};
+import SearchForm from '../SearchForm/SearchForm';
 
 /**
  * Composant de la page d'accueil mobile-first
@@ -278,7 +179,7 @@ const HomePage: React.FC = () => {
       {/* Section Top - Recherche et Recette du jour avec bandeau jaune */}      
       <div className="background-gradient-yellow py-8 sm:py-10">
         <div className="container mx-auto px-4">
-          {/* Formulaire de recherche mobile */}
+          {/* Formulaire de recherche bureau */}
           {isSearchVisible && (
             <div className="lg:hidden w-full mb-6 search-container">
               <div className="bg-white rounded-lg sm:rounded-none shadow-lg p-4">
@@ -290,7 +191,7 @@ const HomePage: React.FC = () => {
           {/* Layout flexible qui change de direction en fonction de la taille d'écran */}
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 desktop-layout">
             {/* Recette du jour - Pleine largeur sur mobile, 4/5 sur desktop */}
-            <div className="w-full lg:w-4/5 bg-black rounded-lg sm:rounded-none overflow-hidden shadow-lg mb-6 lg:mb-0 h-[300px] sm:h-[400px] lg:h-[500px] featured-recipe">
+            <div className="w-full lg:w-4/5 bg-black rounded-lg sm:rounded-none overflow-hidden shadow-lg mb-6 lg:mb-0 h-[300px] sm:h-[400px] lg:h-[500px] featured-recipe flex-1">
               {featuredRecipe && (
                 <Link to={`/recettes/${featuredRecipe.id}`} className="block h-full cursor-pointer">
                   <div className="relative h-full">
@@ -312,12 +213,14 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Formulaire de recherche desktop - Caché sur mobile, visible sur desktop */}            
-            <div className="hidden lg:block w-1/5 bg-white rounded-none shadow-lg p-4 sm:p-6 search-sidebar">
+            <div className="hidden lg:block w-1/5 bg-white rounded-none shadow-lg p-4 sm:p-6 search-sidebar flex-none w-[23rem]">
               <SearchForm />
             </div>
           </div>
         </div>
-      </div>      {/* Section Film à l'affiche et Dernières recettes */}
+      </div>
+      
+      {/* Section Film à l'affiche et Dernières recettes */}
       <div className="bg-white mt-6 sm:mt-10">
         <div className="container mx-auto px-4 py-6 sm:py-8">
           {/* Layout flexible qui change selon la taille d'écran */}

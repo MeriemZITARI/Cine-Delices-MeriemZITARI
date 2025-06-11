@@ -5,7 +5,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '../ui/button';
+import Button from "../Button/Button";
 import authService from '../../services/auth';
 
 const RegisterPage: React.FC = () => {
@@ -140,12 +140,12 @@ const RegisterPage: React.FC = () => {
           {/* Message d'erreur */}
           {error && <div className="text-red-500 text-sm mb-3 text-center">{error}</div>}
 
-          {/* Bouton de soumission */}          <Button 
+          {/* Bouton de soumission */}
+          <Button 
+            text="S'inscrire"
             type="submit"
-            className="w-full bg-white border border-gray-400 rounded py-2 text-base font-medium"
-          >
-            Valider
-          </Button>
+            className="w-full"
+          />
         </form>
 
         {/* Lien de connexion */}
