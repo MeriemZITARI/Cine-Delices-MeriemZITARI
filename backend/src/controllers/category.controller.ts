@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { createCategoryService } from '../services/category.service';
 import { updateCategoryService } from '../services/category.service';
+import { deleteCategoryService } from '../services/category.service';
 
 export async function handleCreateCategory(req: Request, res: Response, next: NextFunction) {
   try {
@@ -35,6 +36,25 @@ export async function handleUpdateCategory(req: Request, res: Response, next: Ne
 
     // Retourner une réponse de succès
     res.status(200).json({ message: 'Catégorie mise à jour avec succès.', category: updatedCategory });
+  } catch (error: any) {
+    // Vérifiez si l'erreur est liée à une catégorie non trouvée
+    if (error.message === 'Catégorie non trouvée.') {
+      return res.status(404).json({ message: error.message });
+    }
+
+    // Pour toute autre erreur, passez-la au middleware de gestion des erreurs
+    next(error);
+  }
+};
+
+export async function handleDeleteCategory(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params; // Récupérez l'ID de la catégorie depuis les paramètres
+
+    // Appeler le service pour supprimer la catégorie
+    const result = await deleteCategoryService(id);
+
+    res.status(200).json(result); // Retourner une réponse de succès
   } catch (error: any) {
     // Vérifiez si l'erreur est liée à une catégorie non trouvée
     if (error.message === 'Catégorie non trouvée.') {

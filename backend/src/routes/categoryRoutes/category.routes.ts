@@ -3,6 +3,8 @@ import { handleCreateCategory } from '../../controllers/category.controller';
 import { isAuthenticated } from '../../middlewares/isAuthenticated'; // Vérifie si l'utilisateur est connecté
 import { isAdmin } from '../../middlewares/isAdmin'; // Vérifie si l'utilisateur est un administrateur
 import { handleUpdateCategory } from '../../controllers/category.controller'; // Import du contrôleur pour la mise à jour de la catégorie
+import { handleDeleteCategory } from '../../controllers/category.controller'; // Import du contrôleur pour la suppression de la catégorie
+
 const categoryRouter = Router();
 
 /**
@@ -68,12 +70,39 @@ categoryRouter.post('/', isAuthenticated, isAdmin, handleCreateCategory);
  *       500:
  *         description: Erreur interne du serveur.
  */
+//route pour mettre à jour une catégorie
 categoryRouter.patch(
     '/:id',
     isAuthenticated, // Vérifie si l'utilisateur est connecté
     isAdmin, // Vérifie si l'utilisateur est un administrateur
     handleUpdateCategory // Contrôleur pour gérer la mise à jour de la catégorie
   );
+
+/**
+ * @swagger
+ * /categories/{id}:
+ *   delete:
+ *     summary: Supprimer une catégorie
+ *     description: Permet de supprimer une catégorie existante. Seuls les administrateurs peuvent effectuer cette action.
+ *     tags:
+ *       - Catégories
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: L'ID de la catégorie à supprimer
+ *     responses:
+ *       200:
+ *         description: Catégorie supprimée avec succès.
+ *       404:
+ *         description: Catégorie non trouvée.
+ *       500:
+ *         description: Erreur interne du serveur.
+ */
+//route pour supprimer une catégorie
+categoryRouter.delete('/:id', isAuthenticated, isAdmin, handleDeleteCategory);
   
 
 

@@ -58,4 +58,27 @@ export async function updateCategoryService(id: string, data: UpdateCategoryInpu
     console.error('Erreur lors de la mise à jour de la catégorie :', error);
     throw error; // Relancez l'erreur pour qu'elle soit gérée par le contrôleur
   }
+};
+
+export async function deleteCategoryService(categoryId: string) {
+  try {
+    // Vérifiez si la catégorie existe
+    const existingCategory = await prisma.category.findUnique({
+      where: { id: categoryId },
+    });
+
+    if (!existingCategory) {
+      throw new Error('Catégorie non trouvée.');
+    }
+
+    // Supprimez la catégorie
+    await prisma.category.delete({
+      where: { id: categoryId },
+    });
+
+    return { message: 'Catégorie supprimée avec succès.' };
+  } catch (error) {
+    console.error('Erreur lors de la suppression de la catégorie :', error);
+    throw error; // Relancez l'erreur pour qu'elle soit gérée par le contrôleur
+  }
 }
