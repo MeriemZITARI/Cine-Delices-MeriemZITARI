@@ -7,7 +7,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
-
+import { setupSwagger } from './swagger';
+// import errorHandler from './middlewares/errorHandler';
 import router from './routes';
 // --- NOTRE SONDE DE DÉBOGAGE ---
 console.log('--- Début du débogage ---');
@@ -18,6 +19,11 @@ console.log('--- Fin du débogage ---');
 // ---------------------------------
 
 const app = express();
+
+// Documentation Swagger
+setupSwagger(app);
+
+
 const PORT = process.env.PORT || 3001;
 app.use(express.json());
 
@@ -30,6 +36,8 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
 // Routes de l'API
 app.use('/api', router);
+
+
 
 app.use(errorHandler);
 
