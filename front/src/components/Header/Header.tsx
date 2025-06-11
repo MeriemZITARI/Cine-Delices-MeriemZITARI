@@ -1,18 +1,23 @@
-import React, { useState } from "react";
-import { Link, NavLink, useLocation } from "react-router-dom";
+import type React from "react";
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 import { FaUserCircle, FaSearch, FaBars } from "react-icons/fa"; // Exemple d'icône pour "Mon compte"
 import Button from "../Button/Button";
 
 const Header: React.FC = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
-
   const toggleSearchModal = () => {
     setIsSearchModalOpen(!isSearchModalOpen);
   };
   
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <>
-      <header className="bg-white text-black px-4 py-2 shadow-md">
+      <header className="bg-white text-black px-4 py-2 shadow-md relative">
         <div className="container mx-auto flex items-center justify-between h-16">
           {/*<nav className="hidden">
             <NavLink 
@@ -29,12 +34,23 @@ const Header: React.FC = () => {
             </NavLink>
           </nav>*/}
           <div className="flex items-center h-full">
-            <button className="text-black md:hidden">
+            <button 
+              type="button"
+              className="text-black md:hidden" 
+              onClick={toggleMenu}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === 'Escape') toggleMenu();
+              }}
+            >
               <FaBars size={36} />
             </button>
             <button 
+              type="button"
               className="text-black md:hidden ml-4"
               onClick={toggleSearchModal}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === 'Escape') toggleSearchModal();
+              }}
             >
               <FaSearch size={36} />
             </button>
@@ -57,10 +73,36 @@ const Header: React.FC = () => {
               <FaUserCircle size={36} />
             </Link>
           </div>
+
+          {/* Menu déroulant */}
+          {isMenuOpen && (
+            <div className="absolute top-full left-0 w-full bg-white shadow-md z-50">
+              <ul className="flex justify-center py-2" style={{ fontFamily: 'Broadway, sans-serif' }}>
+                <li className="mx-4">
+                  <Link
+                    to="/recettes"
+                    className="text-gray-700 hover:text-black font-medium"
+                    onClick={toggleMenu}
+                  >
+                    Recettes
+                  </Link>
+                </li>
+                <li className="mx-4">
+                  <Link
+                    to="/films"
+                    className="text-gray-700 hover:text-black font-medium"
+                    onClick={toggleMenu}
+                  >
+                    Films
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
-        <div className="hidden flex items-center">
+        {/* <div className="hidden flex items-center">
           <Button text="Se connecter / S'inscrire" />
-        </div>
+        </div>*/}
       </header>
 
       {/* Modale de recherche */}
@@ -68,8 +110,14 @@ const Header: React.FC = () => {
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           onClick={toggleSearchModal}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') toggleSearchModal();
+          }}
         >
-          <div className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+          <div 
+            className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md"
+            onClick={(e) => e.stopPropagation()}
+          >
             <h2 className="text-xl font-bold mb-4">Rechercher</h2>
             <form>
               {/* Champ "Je cherche" */}
@@ -179,7 +227,7 @@ const Header: React.FC = () => {
               <div className="flex justify-end gap-2">
                 <Button
                   text="Annuler"
-                  className="bg-gray-500"
+                  className="bg-gray-500 hover:bg-gray-600"
                   onClick={toggleSearchModal}
                 />
                 <Button
