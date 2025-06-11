@@ -1,8 +1,7 @@
 import { prisma } from '../client/prismaClient';
+import type { CreateCategoryInput } from '../validations/category';
 
-interface CreateCategoryInput {
-  name: string;
-}
+
 
 export async function createCategoryService(data: CreateCategoryInput) {
   try {
