@@ -19,11 +19,11 @@ console.log('--- Fin du débogage ---');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-app.use(express.json({ strict: false }));
+app.use(express.json());
 
 // Middlewares globaux
 app.use(helmet());
-app.use(cors({ origin: ['http://localhost:3001', 'null'], credentials: true }));
+app.use(cors({ origin: 'http://localhost:3001', credentials: true }));
 
 app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));

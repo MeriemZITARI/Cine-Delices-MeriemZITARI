@@ -2,12 +2,7 @@ import { Request, Response } from 'express';
 
 export async function handleLogout(req: Request, res: Response) {
     try {
-        // Vérifier si le cookie contenant le token existe
-    const token = req.cookies?.access_token;
 
-    if (!token) {
-      return res.status(400).json({ message: "Aucun utilisateur n'est connecté." });
-    }
       // Supprimer le cookie contenant le token
       res.clearCookie('access_token', {
         httpOnly: true,
