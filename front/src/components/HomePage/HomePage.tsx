@@ -1,7 +1,7 @@
 /**
  * HomePage.tsx
- * Page d'accueil de l'application
- * Affiche le carrousel des recettes, le formulaire de recherche et les filtres
+ * Page d'accueil de l'application optimisée en mobile-first
+ * qui s'adapte progressivement au desktop
  */
 
 import React, { useState, useEffect } from 'react';
@@ -16,23 +16,23 @@ import RecipeCard from '../RecipeCard';
 // Contexte et composants UI
 import { useSearchModal } from '../../context/SearchModalContext';
 import { Button } from '../ui/button';
-// Removed unused import for 'Card'
-//import AdvancedSearch from './AdvancedSearch';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Search, ArrowRight } from 'lucide-react';
 // Types et utilitaires
-import { Recipe, Category, Movie, SearchFilters } from './../../types';
+import { Recipe, Category, Movie, SearchFilters } from '../../types';
 import { cn } from "../../lib/utils";
+// Styles spécifiques pour cette page
+import './HomePage.css';
 
 /**
- * Composant SearchForm
+ * Composant SearchForm - Mobile-first
  * Formulaire de recherche avec filtres de durée et de type
- * Permet une recherche textuelle et une sélection de filtres
  */
 const SearchForm: React.FC = () => {
   // États pour les différents critères de recherche
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
+  const [showFilters, setShowFilters] = useState(false);
 
   /**
    * Gère la sélection/désélection d'une durée
@@ -59,13 +59,18 @@ const SearchForm: React.FC = () => {
     <div className="w-full">
       <h3 className="text-base sm:text-lg mb-3 sm:mb-4">Je cherche ..</h3>
       <form onSubmit={handleSubmit} className="mb-4 sm:mb-6">
-        <input 
-          type="text" 
-          placeholder="recettes de pizza" 
-          className="w-full p-2 sm:p-3 border rounded-md text-sm sm:text-base mb-4 sm:mb-6"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+        <div className="relative">
+          <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+            <Search size={18} className="text-gray-400" />
+          </div>
+          <input 
+            type="text" 
+            placeholder="recettes de pizza" 
+            className="w-full p-2 pl-10 sm:p-3 sm:pl-10 border rounded-md text-sm sm:text-base mb-4 sm:mb-6"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         
         <h3 className="text-base sm:text-lg mb-2">J'ai ..</h3>
         <div className="mb-3 sm:mb-4">
@@ -117,6 +122,9 @@ const SearchForm: React.FC = () => {
   );
 };
 
+/**
+ * Composant de la page d'accueil mobile-first
+ */
 const HomePage: React.FC = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [featuredRecipe, setFeaturedRecipe] = useState<Recipe | null>(null);
@@ -124,6 +132,13 @@ const HomePage: React.FC = () => {
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const { isSearchVisible } = useSearchModal();
+  
+  // Fonction pour gérer la navigation vers la page d'un film
+  const handleMovieClick = (e: React.MouseEvent<HTMLDivElement>, movieId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = `/films/${movieId}`;
+  };
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
@@ -202,7 +217,9 @@ const HomePage: React.FC = () => {
       // Filtrer par durée si sélectionnée
       if (selectedDuration) {
         results = results.filter(recipe => recipe.duration <= selectedDuration);
-      }      // Filtrer par type de plat si sélectionné
+      }      
+      
+      // Filtrer par type de plat si sélectionné
       if (selectedType) {
         results = results.filter(recipe => 
           recipe.category && recipe.category.name.toLowerCase() === selectedType.toLowerCase()
@@ -258,79 +275,178 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="background-gradient-yellow py-4 sm:py-6">
+      {/* Section Top - Recherche et Recette du jour avec bandeau jaune */}      
+      <div className="background-gradient-yellow py-8 sm:py-10">
         <div className="container mx-auto px-4">
           {/* Formulaire de recherche mobile */}
           {isSearchVisible && (
-            <div className="lg:hidden w-full mb-6">
-              <div className="bg-white rounded-none shadow-lg p-4">
+            <div className="lg:hidden w-full mb-6 search-container">
+              <div className="bg-white rounded-lg sm:rounded-none shadow-lg p-4">
                 <SearchForm />
               </div>
             </div>
           )}
 
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-0">
-            {/* Recette du jour */}
-            <div className="w-full lg:w-4/5 bg-black rounded-none overflow-hidden shadow-lg mb-6 lg:mb-0 h-[300px] sm:h-[400px] lg:h-[500px]">
+          {/* Layout flexible qui change de direction en fonction de la taille d'écran */}
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-0 desktop-layout">
+            {/* Recette du jour - Pleine largeur sur mobile, 4/5 sur desktop */}
+            <div className="w-full lg:w-4/5 bg-black rounded-lg sm:rounded-none overflow-hidden shadow-lg mb-6 lg:mb-0 h-[300px] sm:h-[400px] lg:h-[500px] featured-recipe">
               {featuredRecipe && (
-                <div className="relative h-full">
-                  <RecipeImage 
-                    recipe={featuredRecipe} 
-                    alt={featuredRecipe.title} 
-                    className="w-full h-full object-cover brightness-[0.35]"
-                  />
-                  <div className="absolute inset-0 flex flex-col p-4 sm:p-6">
-                    <h2 className="text-white text-xl sm:text-2xl font-bold font-broadway drop-shadow-lg">La recette du jour !</h2>
-                    <div className="mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-end text-white gap-2 sm:gap-0">
-                      <div className="text-sm sm:text-base font-medium drop-shadow-md">{featuredRecipe.title}</div>
-                      <div className="text-xs sm:text-sm drop-shadow-md">Temps de préparation : {featuredRecipe.duration} min</div>
+                <Link to={`/recettes/${featuredRecipe.id}`} className="block h-full cursor-pointer">
+                  <div className="relative h-full">
+                    <RecipeImage 
+                      recipe={featuredRecipe} 
+                      alt={featuredRecipe.title} 
+                      className="w-full h-full object-cover brightness-[0.35]"
+                    />
+                    <div className="absolute inset-0 flex flex-col p-4 sm:p-6">
+                      <h2 className="text-white text-xl sm:text-2xl font-bold font-broadway drop-shadow-lg">La recette du jour !</h2>
+                      <div className="mt-auto flex flex-col sm:flex-row justify-between items-start sm:items-end text-white gap-2 sm:gap-0">
+                        <div className="text-sm sm:text-base font-medium drop-shadow-md">{featuredRecipe.title}</div>
+                        <div className="text-xs sm:text-sm drop-shadow-md">Temps de préparation : {featuredRecipe.duration} min</div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               )}
             </div>
 
-            {/* Formulaire de recherche desktop */}
-            <div className="hidden lg:block w-1/5 bg-white rounded-none shadow-lg p-4 sm:p-6">
+            {/* Formulaire de recherche desktop - Caché sur mobile, visible sur desktop */}            
+            <div className="hidden lg:block w-1/5 bg-white rounded-none shadow-lg p-4 sm:p-6 search-sidebar">
               <SearchForm />
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Section Film à l'affiche et Dernières recettes */}
-      <div className="bg-white mt-8 sm:mt-12">
+      </div>      {/* Section Film à l'affiche et Dernières recettes */}
+      <div className="bg-white mt-6 sm:mt-10">
         <div className="container mx-auto px-4 py-6 sm:py-8">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 mb-8 sm:mb-12">
-            {/* Film à l'affiche */}
-            <div className="w-full lg:w-1/5">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Le film à l'affiche</h2>
+          {/* Layout flexible qui change selon la taille d'écran */}
+          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 mb-8 sm:mb-12 desktop-layout">            
+            {/* Film à l'affiche - Pleine largeur sur mobile, 1/5 sur desktop */}
+            <div className="w-full lg:w-1/5 desktop-layout-sidebar">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
+                <span className="mr-2">🎬</span>
+                Le film à l'affiche
+              </h2>
               {featuredMovie && (
                 <div className="flex justify-center lg:justify-start">
                   <div className="w-full max-w-[220px]">
-                    <div className="border border-gray-200 overflow-hidden">
-                      <MovieImage 
-                        movie={featuredMovie} 
-                        alt={featuredMovie.title} 
-                        className="w-full h-[320px] object-cover object-center"
-                      />
-                    </div>
+                    <Link to={`/films/${featuredMovie.id}`} className="block cursor-pointer">
+                      <div className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                        <MovieImage 
+                          movie={featuredMovie} 
+                          alt={featuredMovie.title} 
+                          className="w-full h-[320px] object-cover object-center"
+                        />
+                        <div className="p-2 bg-gray-50">
+                          <p className="text-sm font-medium">{featuredMovie.title}</p>
+                          <p className="text-xs text-gray-500">{featuredMovie.year}</p>
+                        </div>
+                      </div>
+                    </Link>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Section dernières recettes */}
-            <div className="w-full lg:w-4/5">
-              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">Les dernières recettes</h2>
+            {/* Section dernières recettes - Pleine largeur sur mobile, 4/5 sur desktop */}
+            <div className="w-full lg:w-4/5 desktop-layout-main">
+              <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 flex items-center">
+                <span className="mr-2">🍽️</span>
+                Les dernières recettes
+              </h2>
               {loading ? (
-                <div className="text-center">Chargement...</div>
+                <div className="text-center py-8">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500"></div>
+                  <p className="mt-2 text-gray-500">Chargement des recettes...</p>
+                </div>
               ) : (
-                <div className="relative">                  {/* Version mobile - Cards */}
+                <div className="relative">                    {/* Version mobile - Cards avec alternance 70/30 */}
                   <div className="lg:hidden">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {latestRecipes.map((recipe, index) => (
-                        <RecipeCard key={recipe.id} recipe={recipe} reversed={index === 1} />
+                        <div key={recipe.id} className="recipe-card bg-white rounded-lg shadow-sm hover:shadow-md overflow-hidden">
+                          <Link to={`/recettes/${recipe.id}`}>
+                            <div className="h-48 flex overflow-hidden">
+                              {index % 2 === 0 ? (
+                                /* Configuration 70% recette, 30% film */
+                                <>                                  <div className="w-[70%] h-full overflow-hidden relative">                                    <RecipeImage 
+                                      recipe={recipe}
+                                      alt={recipe.title}
+                                      className="w-full h-full object-cover transition-transform hover:scale-105"
+                                    />
+                                    <div className="absolute top-1 left-1 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                                      Recette
+                                    </div>
+                                  </div>                                  <div className="w-[30%] h-full overflow-hidden relative">
+                                    {recipe.movie ? (
+                                      <>
+                                        <div 
+                                          onClick={(e) => handleMovieClick(e, recipe.movie.id)} 
+                                          className="w-full h-full cursor-pointer"
+                                        >
+                                          <MovieImage 
+                                            movie={recipe.movie}
+                                            alt={recipe.movie.title}
+                                            className="w-full h-full object-cover"
+                                          />
+                                          <div className="absolute top-1 left-1 bg-blue-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                                            Film
+                                          </div>
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                        <span className="text-2xl">🎬</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                </>                              ) : (                                /* Configuration 30% film, 70% recette */
+                                <>                                  <div className="w-[30%] h-full overflow-hidden relative">
+                                    {recipe.movie ? (
+                                      <>
+                                        <div 
+                                          onClick={(e) => handleMovieClick(e, recipe.movie.id)} 
+                                          className="w-full h-full cursor-pointer"
+                                        >
+                                          <MovieImage 
+                                            movie={recipe.movie}
+                                            alt={recipe.movie.title}
+                                            className="w-full h-full object-cover"
+                                          />
+                                          <div className="absolute top-1 left-1 bg-blue-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                                            Film
+                                          </div>
+                                        </div>
+                                      </>
+                                    ) : (
+                                      <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                        <span className="text-2xl">🎬</span>
+                                      </div>
+                                    )}
+                                  </div><div className="w-[70%] h-full overflow-hidden relative">
+                                    <RecipeImage 
+                                      recipe={recipe}
+                                      alt={recipe.title}
+                                      className="w-full h-full object-cover transition-transform hover:scale-105"
+                                    />
+                                    <div className="absolute top-1 left-1 bg-red-500 text-white px-2 py-0.5 rounded text-xs font-medium">
+                                      Recette
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                            <div className="p-3">
+                              <h3 className="font-medium text-md">{recipe.title}</h3>
+                              <div className="flex items-center gap-2 text-xs text-gray-500 mt-1">
+                                <span>⏱️ {recipe.duration} min</span>
+                                <span>{recipe.category?.name || 'Plat'}</span>
+                                {recipe.movie && <span>🎬 {recipe.movie.title}</span>}
+                              </div>
+                            </div>
+                          </Link>
+                        </div>
                       ))}
                     </div>
                   </div>
@@ -349,11 +465,10 @@ const HomePage: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              )}
-
-              <div className="text-center mt-6">
-                <Link to="/recettes" className="underline text-blue-600">
-                  Voir toutes les recettes
+              )}              <div className="text-center mt-6">
+                <Link to="/recettes" className="inline-flex items-center py-1 text-red-500 hover:text-red-700 text-base font-medium transition-colors duration-200 voir-toutes-link">
+                  <span>Voir toutes les recettes</span>
+                  <ArrowRight size={16} className="ml-1" />
                 </Link>
               </div>
             </div>
@@ -361,18 +476,19 @@ const HomePage: React.FC = () => {
         </div>
       </div>
       
-      {/* Section Résultats de recherche */}
+      {/* Section Résultats de recherche - Conception mobile-first */}
       {hasSearched && (
         <div className="container mx-auto px-4">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4">Résultats de la recherche</h2>
+          <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center">
+            <span className="mr-2">🔍</span>
+            Résultats de la recherche
+          </h2>
           
           {searchResults.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-0">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {searchResults.map((recipe) => (
-                <div key={recipe.id} className={cn(
-                  "border-[1px] bg-white shadow-sm transition-all hover:shadow-md overflow-hidden"
-                )}>
-                  <div>
+                <Link key={recipe.id} to={`/recettes/${recipe.id}`}>
+                  <div className="recipe-card bg-white rounded-lg shadow-sm hover:shadow-md overflow-hidden h-full">
                     <div className="h-40 overflow-hidden">
                       <RecipeImage 
                         recipe={recipe} 
@@ -381,13 +497,14 @@ const HomePage: React.FC = () => {
                       />
                     </div>
                     <div className="p-3">
-                      <h3 className="text-md font-semibold">{recipe.title}</h3>
-                      <p className="text-sm text-gray-600">
-                        {recipe.category?.name} • {recipe.duration} min
+                      <h3 className="text-md font-medium">{recipe.title}</h3>
+                      <p className="text-sm text-gray-600 mt-1 flex items-center justify-between">
+                        <span>{recipe.category?.name || 'Plat'}</span>
+                        <span>⏱️ {recipe.duration} min</span>
                       </p>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (
@@ -407,15 +524,18 @@ const HomePage: React.FC = () => {
         </div>
       )}
 
+      {/* Indicateur de chargement pendant la recherche */}
       {isSearching && (
-        <div className="container mx-auto px-4 py-8 sm:py-12 text-center">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-secondary"></div>
-          <p className="mt-2">Recherche en cours...</p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 text-center shadow-xl">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+            <p className="mt-2">Recherche en cours...</p>
+          </div>
         </div>
       )}
 
-      <div className="container mx-auto px-4 mt-8">
-        <hr className="border-t-2 border-red-400 my-6 sm:my-8" />
+      <div className="container mx-auto px-4 mt-8 hidden sm:block">
+        <hr className="border-t-2 border-red-400 my-6 sm:my-8 bg-red-400" style={{height:'4px', border:0, borderRadius:'2px'}} />
       </div>
     </div>
   );

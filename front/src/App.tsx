@@ -2,6 +2,8 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import HomePage from "./components/HomePage/HomePage";
+import HomePageMobileFinal from "./components/HomePage/HomePage";
+import RecipeDetailPage from "./components/RecipeDetailPage";
 import { SearchModalProvider } from "./context/SearchModalContext";
 
 function App() {
@@ -11,7 +13,8 @@ function App() {
         <Header />
         <main className="flex-grow">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<HomePageMobileFinal />} />
+            <Route path="/recettes/:id" element={<RecipeDetailPage />} />
           </Routes>
         </main>
         <Footer />
