@@ -54,6 +54,12 @@ async function main() {
     { name: 'Pâte à Pizza' }, { name: 'Basilic' }, { name: 'Piment' }, { name: 'Viande Hachée' },
     { name: 'Oignon' }, { name: 'Ail' }, { name: 'Pâtes' }, { name: 'Sel' },
     { name: 'Poivre' }, { name: "Huile d'olive" }, { name: 'Champignons' }, { name: 'Poivron' },
+    { name: 'Crème' }, { name: 'Saumon' }, { name: 'Riz' }, { name: 'Citron' },
+    { name: 'Pomme de terre' }, { name: 'Carotte' }, { name: 'Thym' }, { name: 'Romarin' },
+    { name: 'Vanille' }, { name: 'Cannelle' }, { name: 'Courgette' }, { name: 'Aubergine' },
+    { name: 'Vin Rouge' }, { name: 'Bouillon' }, { name: 'Noix de Muscade' }, { name: 'Persil' },
+    { name: 'Poulet' }, { name: 'Miel' }, { name: 'Pomme' }, { name: 'Caramel' },
+    { name: 'Potiron' }, { name: 'Courge' }, { name: 'Muscade' }
   ];
 
   const ingredients = await Promise.all(
@@ -104,6 +110,42 @@ async function main() {
       imdbLink: 'https://www.imdb.com/title/tt0110912/',
       releaseDate: new Date('1994-05-21T00:00:00Z'),
     },
+    {
+      title: 'Le Festin de Babette',
+      description: 'Une réfugiée française devient cuisinière pour deux sœurs pieuses et prépare un festin somptueux qui change leur vie.',
+      imdbLink: 'https://www.imdb.com/title/tt0092603/',
+      releaseDate: new Date('1987-08-28T00:00:00Z'),
+    },
+    {
+      title: 'Comme un Chef',
+      description: 'Un jeune cuisinier talentueux et autodidacte doit collaborer avec un chef étoilé pour sauver son restaurant.',
+      imdbLink: 'https://www.imdb.com/title/tt1911553/',
+      releaseDate: new Date('2012-07-11T00:00:00Z'),
+    },
+    {
+      title: 'Les Saveurs du Palais',
+      description: 'L\'histoire de la cuisinière personnelle du président de la République, confrontée aux défis de la cuisine de l\'Élysée.',
+      imdbLink: 'https://www.imdb.com/title/tt2103254/',
+      releaseDate: new Date('2012-09-19T00:00:00Z'),
+    },
+    {
+      title: 'Harry Potter à l\'école des sorciers',
+      description: 'Un jeune sorcier découvre ses pouvoirs et un monde magique extraordinaire.',
+      imdbLink: 'https://www.imdb.com/title/tt0241527/',
+      releaseDate: new Date('2001-11-16T00:00:00Z'),
+    },
+    {
+      title: 'Chocolat',
+      description: 'Une femme ouvre une chocolaterie dans un petit village français, bouleversant la vie tranquille des habitants.',
+      imdbLink: 'https://www.imdb.com/title/tt0241303/',
+      releaseDate: new Date('2000-12-15T00:00:00Z'),
+    },
+    {
+      title: 'Julie & Julia',
+      description: 'L\'histoire parallèle de Julia Child et Julie Powell, explorant l\'art de la cuisine française.',
+      imdbLink: 'https://www.imdb.com/title/tt1135503/',
+      releaseDate: new Date('2009-08-07T00:00:00Z'),
+    },
   ];
 
   const movies = await Promise.all(
@@ -141,13 +183,33 @@ async function main() {
   const butter = ingredients.find((i: Ingredient) => i.name === 'Beurre');
   const milk = ingredients.find((i: Ingredient) => i.name === 'Lait');
   const oliveOil = ingredients.find((i: Ingredient) => i.name === "Huile d'olive");
-
+  const cream = ingredients.find((i: Ingredient) => i.name === "Crème");
+  const salmon = ingredients.find((i: Ingredient) => i.name === "Saumon");
+  const rice = ingredients.find((i: Ingredient) => i.name === "Riz");
+  const lemon = ingredients.find((i: Ingredient) => i.name === "Citron");
+  const potato = ingredients.find((i: Ingredient) => i.name === "Pomme de terre");
+  const carrot = ingredients.find((i: Ingredient) => i.name === "Carotte");
+  const thyme = ingredients.find((i: Ingredient) => i.name === "Thym");
+  const rosemary = ingredients.find((i: Ingredient) => i.name === "Romarin");
+  const vanilla = ingredients.find((i: Ingredient) => i.name === "Vanille");
+  const cinnamon = ingredients.find((i: Ingredient) => i.name === "Cannelle");
+  const pumpkin = ingredients.find((i: Ingredient) => i.name === "Potiron");
+  const apple = ingredients.find((i: Ingredient) => i.name === "Pomme");
+  const nutmeg = ingredients.find((i: Ingredient) => i.name === "Noix de Muscade");
+  const bouillon = ingredients.find((i: Ingredient) => i.name === "Bouillon");
+  const mushrooms = ingredients.find((i: Ingredient) => i.name === "Champignons");
 
   const lotrMovie = movies.find((m: Movie) => m.title.includes('Seigneur des Anneaux')); // <-- UTILISE Movie directement
   const ratatouilleMovie = movies.find((m: Movie) => m.title.includes('Ratatouille')); // <-- UTILISE Movie directement
+  const harryPotterMovie = movies.find((m: Movie) => m.title.includes('Harry Potter'));
+  const chocolatMovie = movies.find((m: Movie) => m.title.includes('Chocolat'));
+  const julieJuliaMovie = movies.find((m: Movie) => m.title.includes('Julie & Julia'));
 
-  if (!mainDishCategory || !dessertCategory || !flour || !sugar || !eggs || !chocolate || !tomato || !cheese || !pizzaDough || !basil || !chili || !mincedMeat || !onion || !garlic || !pasta || !lotrMovie || !ratatouilleMovie || !pepper || !butter || !milk || !oliveOil) {
-    console.error('Erreur: Impossible de trouver toutes les catégories/ingrédients/films nécessaires pour les recettes. Veuillez vérifier le seeding des éléments de base.');
+  if (!mainDishCategory || !dessertCategory || !flour || !sugar || !eggs || !chocolate || !tomato || !cheese || 
+      !pizzaDough || !basil || !chili || !mincedMeat || !onion || !garlic || !pasta || !lotrMovie || 
+      !ratatouilleMovie || !pepper || !butter || !milk || !oliveOil || !cream || !salmon || !lemon || 
+      !thyme || !rosemary || !vanilla || !cinnamon || !pumpkin || !apple || !nutmeg || !bouillon || !mushrooms) {
+    console.error('Erreur: Impossible de trouver toutes les catégories/ingrédients/films nécessaires pour les recettes.');
     if (!mainDishCategory) console.error("Catégorie 'Plats Principaux' manquante.");
     if (!dessertCategory) console.error("Catégorie 'Desserts' manquante.");
     if (!flour) console.error("Ingrédient 'Farine' manquant.");
@@ -167,6 +229,18 @@ async function main() {
     if (!butter) console.error("Ingrédient 'Beurre' manquant.");
     if (!milk) console.error("Ingrédient 'Lait' manquant.");
     if (!oliveOil) console.error("Ingrédient 'Huile d'olive' manquant.");
+    if (!cream) console.error("Ingrédient 'Crème' manquant.");
+    if (!salmon) console.error("Ingrédient 'Saumon' manquant.");
+    if (!lemon) console.error("Ingrédient 'Citron' manquant.");
+    if (!thyme) console.error("Ingrédient 'Thym' manquant.");
+    if (!rosemary) console.error("Ingrédient 'Romarin' manquant.");
+    if (!vanilla) console.error("Ingrédient 'Vanille' manquant.");
+    if (!cinnamon) console.error("Ingrédient 'Cannelle' manquant.");
+    if (!pumpkin) console.error("Ingrédient 'Potiron' manquant.");
+    if (!apple) console.error("Ingrédient 'Pomme' manquant.");
+    if (!nutmeg) console.error("Ingrédient 'Noix de Muscade' manquant.");
+    if (!bouillon) console.error("Ingrédient 'Bouillon' manquant.");
+    if (!mushrooms) console.error("Ingrédient 'Champignons' manquant.");
     if (!lotrMovie) console.error("Film 'Le Seigneur des Anneaux' manquant.");
     if (!ratatouilleMovie) console.error("Film 'Ratatouille' manquant.");
     return;
@@ -234,6 +308,254 @@ async function main() {
     });
   }
   console.log('Recette de Ratatouille créée.');
+
+  // Bièraubeurre de Harry Potter
+  let recipe3 = await prisma.recipe.findFirst({ where: { title: 'Bièraubeurre' } });
+  if (!recipe3) {
+    recipe3 = await prisma.recipe.create({
+      data: {
+        title: 'Bièraubeurre',
+        description: 'La boisson préférée des étudiants de Poudlard, servie aux Trois Balais. Une boisson chaude et réconfortante au caramel et à la crème.',
+        duration: 30,
+        difficulty: 2,
+        image: 'https://cdn.pixabay.com/photo/2016/10/31/18/23/dessert-1786311_1280.jpg',
+        quote: 'Rien de tel qu\'une bonne Bièraubeurre pour se réchauffer!',
+        isValidated: true,
+        
+        userId: adminUser.id,
+        categoryId: categories.find((c: Category) => c.name === 'Boissons')?.id || mainDishCategory.id,
+        movieId: harryPotterMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 200, unit: 'ml', ingredientId: milk.id },
+            { quantity: 50, unit: 'g', ingredientId: butter.id },
+            { quantity: 100, unit: 'g', ingredientId: sugar.id },
+          ],
+        },
+      },
+      include: { author: true, category: true, movie: true, ingredients: { include: { ingredient: true } } },
+    });
+  }
+  console.log('Recette de Bièraubeurre créée.');
+
+  // Chocolats de Vianne
+  let recipe4 = await prisma.recipe.findFirst({ where: { title: 'Chocolats chauds épicés à la Vianne' } });
+  if (!recipe4) {
+    recipe4 = await prisma.recipe.create({
+      data: {
+        title: 'Chocolats chauds épicés à la Vianne',
+        description: 'Un chocolat chaud riche et épicé, inspiré de la chocolaterie de Vianne Rocher. Un mélange magique qui réchauffe le cœur.',
+        duration: 20,
+        difficulty: 3,
+        image: 'https://cdn.pixabay.com/photo/2017/01/11/11/33/cake-1971552_1280.jpg',
+        quote: 'Le chocolat possède des vertus magiques qui peuvent transformer une journée ordinaire en moment extraordinaire.',
+        isValidated: true,
+        
+        userId: adminUser.id,
+        categoryId: dessertCategory.id,
+        movieId: chocolatMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 200, unit: 'g', ingredientId: chocolate.id },
+            { quantity: 500, unit: 'ml', ingredientId: milk.id },
+            { quantity: 1, unit: 'pincée', ingredientId: chili.id },
+          ],
+        },
+      },
+      include: { author: true, category: true, movie: true, ingredients: { include: { ingredient: true } } },
+    });
+  }
+  console.log('Recette de Chocolats épicés créée.');
+
+  // Bœuf Bourguignon de Julia Child
+  let recipe5 = await prisma.recipe.findFirst({ where: { title: 'Bœuf Bourguignon de Julia' } });
+  if (!recipe5) {
+    recipe5 = await prisma.recipe.create({
+      data: {
+        title: 'Bœuf Bourguignon de Julia',
+        description: 'Le plat signature de Julia Child, un classique de la cuisine française. Un ragoût de bœuf mijoté dans du vin rouge avec des légumes.',
+        duration: 180,
+        difficulty: 4,
+        image: 'https://cdn.pixabay.com/photo/2016/08/11/24/43/beef-1587759_1280.jpg',
+        quote: 'En cuisine, il n\'y a pas d\'erreurs, seulement des accidents créatifs!',
+        isValidated: true,
+        
+        userId: regularUser.id,
+        categoryId: mainDishCategory.id,
+        movieId: julieJuliaMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 1, unit: 'kg', ingredientId: mincedMeat.id },
+            { quantity: 2, unit: 'unités', ingredientId: onion.id },
+            { quantity: 4, unit: 'gousses', ingredientId: garlic.id },
+            { quantity: 30, unit: 'ml', ingredientId: oliveOil.id },
+          ],
+        },
+      },
+      include: { author: true, category: true, movie: true, ingredients: { include: { ingredient: true } } },
+    });
+  }
+  console.log('Recette de Bœuf Bourguignon créée.');
+
+  // Caille en Sarcophage du Festin de Babette
+  const festinMovie = movies.find((m: Movie) => m.title.includes('Festin de Babette'));
+  let recipe6 = await prisma.recipe.findFirst({ where: { title: 'Caille en Sarcophage' } });
+  if (!recipe6) {
+    recipe6 = await prisma.recipe.create({
+      data: {
+        title: 'Caille en Sarcophage',
+        description: 'Un plat emblématique du film, une caille délicatement enveloppée dans une pâte feuilletée, servie avec une sauce aux truffes.',
+        duration: 150,
+        difficulty: 5,
+        image: 'https://cdn.pixabay.com/photo/2018/04/22/12/42/meat-3341080_1280.jpg',
+        quote: 'La cuisine est un acte d\'amour.',
+        isValidated: true,
+        
+        userId: adminUser.id,
+        categoryId: mainDishCategory.id,
+        movieId: festinMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 200, unit: 'g', ingredientId: flour.id },
+            { quantity: 150, unit: 'g', ingredientId: butter.id },
+            { quantity: 100, unit: 'ml', ingredientId: cream.id },
+            { quantity: 2, unit: 'brins', ingredientId: thyme.id },
+          ],
+        },
+      },
+    });
+  }
+  console.log('Recette de Caille en Sarcophage créée.');
+
+  // Saumon en Croûte d'Herbes de Comme un Chef
+  const commeUnChefMovie = movies.find((m: Movie) => m.title.includes('Comme un Chef'));
+  let recipe7 = await prisma.recipe.findFirst({ where: { title: 'Saumon en Croûte d\'Herbes' } });
+  if (!recipe7) {
+    recipe7 = await prisma.recipe.create({
+      data: {
+        title: 'Saumon en Croûte d\'Herbes',
+        description: 'Un saumon délicatement cuit, recouvert d\'une croûte d\'herbes aromatiques, servi avec une sauce au citron.',
+        duration: 45,
+        difficulty: 3,
+        image: 'https://cdn.pixabay.com/photo/2016/03/05/19/02/salmon-1238248_1280.jpg',
+        quote: 'La cuisine, c\'est comme la musique, il faut trouver la bonne harmonie.',
+        isValidated: true,
+        
+        userId: regularUser.id,
+        categoryId: mainDishCategory.id,
+        movieId: commeUnChefMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 200, unit: 'g', ingredientId: salmon.id },
+            { quantity: 1, unit: 'unité', ingredientId: lemon.id },
+            { quantity: 2, unit: 'brins', ingredientId: rosemary.id },
+            { quantity: 2, unit: 'brins', ingredientId: thyme.id },
+            { quantity: 30, unit: 'ml', ingredientId: oliveOil.id },
+          ],
+        },
+      },
+    });
+  }
+  console.log('Recette de Saumon en Croûte d\'Herbes créée.');
+
+  // Poulet aux Morilles des Saveurs du Palais
+  const saveursMovie = movies.find((m: Movie) => m.title.includes('Saveurs du Palais'));
+  let recipe8 = await prisma.recipe.findFirst({ where: { title: 'Poulet aux Morilles à la Crème' } });
+  if (!recipe8) {
+    recipe8 = await prisma.recipe.create({
+      data: {
+        title: 'Poulet aux Morilles à la Crème',
+        description: 'Un plat raffiné digne de l\'Élysée, avec une sauce onctueuse aux morilles et à la crème.',
+        duration: 60,
+        difficulty: 4,
+        image: 'https://cdn.pixabay.com/photo/2015/03/26/09/39/chicken-690091_1280.jpg',
+        quote: 'La cuisine présidentielle doit être à l\'image de la France : excellente.',
+        isValidated: true,
+        
+        userId: adminUser.id,
+        categoryId: mainDishCategory.id,
+        movieId: saveursMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 200, unit: 'ml', ingredientId: cream.id },
+            { quantity: 100, unit: 'g', ingredientId: mushrooms.id },
+            { quantity: 2, unit: 'gousses', ingredientId: garlic.id },
+            { quantity: 1, unit: 'unité', ingredientId: onion.id },
+            { quantity: 30, unit: 'g', ingredientId: butter.id },
+          ],
+        },
+      },
+    });
+  }
+  console.log('Recette de Poulet aux Morilles créée.');
+
+  // Tarte aux Pommes de Rémy
+  let recipe9 = await prisma.recipe.findFirst({ where: { title: 'Tarte aux Pommes à la Rémy' } });
+  if (!recipe9) {
+    recipe9 = await prisma.recipe.create({
+      data: {
+        title: 'Tarte aux Pommes à la Rémy',
+        description: 'Une tarte aux pommes raffinée et délicate, inspirée par le talent culinaire de notre petit chef préféré.',
+        duration: 75,
+        difficulty: 3,
+        image: 'https://cdn.pixabay.com/photo/2016/03/27/22/38/cake-1284548_1280.jpg',
+        quote: 'N\'importe qui peut cuisiner, mais seuls les téméraires peuvent exceller.',
+        isValidated: true,
+        
+        userId: regularUser.id,
+        categoryId: dessertCategory.id,
+        movieId: ratatouilleMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 250, unit: 'g', ingredientId: flour.id },
+            { quantity: 125, unit: 'g', ingredientId: butter.id },
+            { quantity: 4, unit: 'unités', ingredientId: apple.id },
+            { quantity: 100, unit: 'g', ingredientId: sugar.id },
+            { quantity: 1, unit: 'pincée', ingredientId: cinnamon.id },
+          ],
+        },
+      },
+    });
+  }
+  console.log('Recette de Tarte aux Pommes créée.');
+
+  // Velouté de Potiron de Harry Potter
+  let recipe10 = await prisma.recipe.findFirst({ where: { title: 'Velouté de Potiron de Poudlard' } });
+  if (!recipe10) {
+    recipe10 = await prisma.recipe.create({
+      data: {
+        title: 'Velouté de Potiron de Poudlard',
+        description: 'Un velouté réconfortant servi dans la Grande Salle pendant le festin d\'Halloween.',
+        duration: 45,
+        difficulty: 2,
+        image: 'https://cdn.pixabay.com/photo/2018/08/31/19/13/pumpkin-soup-3645375_1280.jpg',
+        quote: 'Un festin digne de Poudlard!',
+        isValidated: true,
+        
+        userId: adminUser.id,
+        categoryId: categories.find((c: Category) => c.name === 'Entrées')?.id || mainDishCategory.id,
+        movieId: harryPotterMovie?.id,
+        
+        ingredients: {
+          create: [
+            { quantity: 500, unit: 'g', ingredientId: pumpkin.id },
+            { quantity: 200, unit: 'ml', ingredientId: cream.id },
+            { quantity: 1, unit: 'unité', ingredientId: onion.id },
+            { quantity: 500, unit: 'ml', ingredientId: bouillon.id },
+            { quantity: 1, unit: 'pincée', ingredientId: nutmeg.id },
+          ],
+        },
+      },
+    });
+  }
+  console.log('Recette de Velouté de Potiron créée.');
 
   console.log('Seeding terminé.');
 }
