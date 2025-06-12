@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 const authService = {
   async login(data: { email: string; password: string }) {
     try {
-      const response = await axiosInstance.post('/auth/login', data);
+      const response = await axiosInstance.post('/api/auth/login', data);
       this.setAuthToken(response.data.token);
       return {
         success: true,
@@ -25,7 +25,7 @@ const authService = {
   },
 
   async register(credentials: IRegisterCredentials) {
-    const response = await axiosInstance.post('/auth/register', credentials);
+    const response = await axiosInstance.post('/api/auth/register', credentials);
     this.setAuthToken(response.data.token);
     return response.data as { token: string; user: IUser };
   },
@@ -56,7 +56,7 @@ const authService = {
   },
 
   async getCurrentUser() {
-    const response = await axiosInstance.get('/auth/me');
+    const response = await axiosInstance.get('/api/auth/me');
     return response.data as IUser;
   }
 };

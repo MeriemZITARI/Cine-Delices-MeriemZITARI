@@ -10,8 +10,8 @@ import authService from '../../services/api/AuthServices';
 import { z } from 'zod';
 
 // TODO: Ajouter Jotai pour la gestion de l'état global
-// import { useAtom } from 'jotai';
-// import { authUserAtom } from '../store/authUser';
+import { useAtom } from 'jotai';
+import { authUserAtom } from '../../store/authUserAtom';
 
 // Schéma de validation pour le formulaire de connexion
 const loginSchema = z.object({
@@ -26,8 +26,8 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const inputEmailRef = useRef<HTMLInputElement>(null);
 
-  // TODO: État global de l'utilisateur avec Jotai
-  // const [, setAuthUser] = useAtom(authUserAtom);
+  // Utilisation de l'atome pour gérer l'utilisateur connecté
+  const [authUser, setAuthUser] = useAtom(authUserAtom);
 
   // États pour gérer les champs du formulaire et les erreurs
   const [email, setEmail] = useState('');
@@ -66,11 +66,11 @@ const LoginPage: React.FC = () => {
       }
       
       // Si tout est correct, affichez l'utilisateur
-      console.log("Utilisateur connecté :", response);
+      //console.log("Utilisateur connecté :", response.user);
 
-      // TODO: À activer une fois Jotai installé
+      // Mettre à jour l'utilisateur dans l'atome
       // const user = await authService.getMe();
-      // setAuthUser(user);
+      setAuthUser(response.user);
       
       // Redirection vers la page d'accueil
       //navigate('/');

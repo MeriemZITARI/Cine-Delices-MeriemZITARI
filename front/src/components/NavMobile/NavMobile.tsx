@@ -2,12 +2,16 @@ import { useState } from "react";
 import { FaBars, FaSearch, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import Button from "../Button/Button";
+import { useAtom } from "jotai";
+import { authUserAtom } from "../../store/authUserAtom";
 
 interface NavMobileProps {
   className?: string; // Permet de passer des classes CSS pour afficher/masquer le menu mobile
 }
 
 const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
+    const [authUser] = useAtom(authUserAtom);
+
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const toggleSearchModal = () => {
       setIsSearchModalOpen(!isSearchModalOpen);
@@ -60,12 +64,22 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
             />
           </Link>
           <div className="flex items-center h-full">
-            <Link
-              to="/mon-compte"
-              className="flex items-center justify-center h-full text-black"
-            >
-              <FaUserCircle size={36} />
-            </Link>
+            { authUser ? (
+              <Link
+                to="/mon-compte"
+                className="flex items-center justify-center h-full text-black"
+              >
+                <FaUserCircle size={36} />
+              </Link>
+             ) : (
+              // Icône pour "Mon compte" si connecté
+              <Link
+                to="/login"
+                className="flex items-center justify-center h-full text-black"
+              >
+                <FaUserCircle size={36} />
+              </Link>
+            )}
           </div>
 
           {/* Menu déroulant */}
