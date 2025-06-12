@@ -6,7 +6,7 @@ export const updateProfileSchema = z.object({
     
 
     email: z.string()
-        .email("L'email doit être valide")
+        .email("L'email doit être valide")// L'email est optionnel, car l'utilisateur peut ne pas vouloir le changer
         .max(50, "L'email ne doit pas dépasser 50 caractères")
         .refine((val) => val.includes("@"), {
             //refine est utilisé pour ajouter une vérification personnalisée
@@ -15,7 +15,7 @@ export const updateProfileSchema = z.object({
             // des raisons de clarté et surtout de personnalisation du message d'erreur.
             
             message: "L'email doit être valide et contenir un '@'",
-        }), 
+        }).optional(), // L'email est optionnel, car l'utilisateur peut ne pas vouloir le changer
         password: z.string()
         .min(8, "Le mot de passe doit contenir au moins 8 caractères")
         .max(64, "Le mot de passe ne doit pas dépasser 64 caractères")
