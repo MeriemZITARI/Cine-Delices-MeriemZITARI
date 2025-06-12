@@ -1,45 +1,27 @@
-
+// axios.ts
 import axios from 'axios';
 
+// Supprimer '/api' ici car il est déjà dans l'URL de base
+const API_URL = import.meta.env.VITE_API_URL.replace(/\/api$/, '');
+
 export const axiosInstance = axios.create({
-  baseURL: 'http://localhost:3001', // Vérifier le port
+  baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
     'Accept': 'application/json'
   }
 });
-axiosInstance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
+
+// Ajouter un intercepteur pour logger les requêtes en dev
+axiosInstance.interceptors.request.use(request => {
+  console.log('Request URL:', request.url);
+  return request;
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => {
-      console.log('Réponse API:', response.config.url, response.data);
-      return response;
-  },
-  (error) => {
-      console.error('Erreur API:', {
-          url: error.config?.url,
-          status: error.response?.status,
-          statusText: error.response?.statusText,
-          data: error.response?.data
-      });
-      return Promise.reject(error);
+  response => response,
+  error => {
+    console.error('Erreur API:', error);
+    return Promise.reject(error);
   }
 );
-
-export default axiosInstance;
-
-// Si on avait stocké le token JWT dans le localStorage on aurait pu faire comme ça
-// axiosInstance.interceptors.request.use((config) => {
-//   // On ajoute le token JWT à chaque requête
-//   const token = localStorage.getItem('token');
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });

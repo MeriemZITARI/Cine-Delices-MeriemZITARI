@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 import HomePage from "./components/HomePage/HomePage";
-import HomePageMobileFinal from "./components/HomePage/HomePage";
+import HomePageMobileFinal from "./components/HomePage/HomePageNew";
 import RecipeDetailPage from "./components/RecipeDetailPage";
 import RegisterPage from "./components/RegisterPage/RegisterPage";
 import LoginPage from "./components/LoginPage/LoginPage";

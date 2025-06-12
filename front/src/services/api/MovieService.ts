@@ -1,49 +1,51 @@
+import axios from 'axios';
 import type { IMovie } from '../../types/Movies';
-import { axiosInstance } from '../../utils/axios';
 
-const movieService = {
-  async getMovies() {
-    const response = await axiosInstance.get('/api/movies');
-    return response.data as IMovie[];
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
+const MovieService = {
+  async getMovies(): Promise<IMovie[]> {
+    const response = await axios.get(`${apiUrl}/movies`);
+    return response.data;
   },
 
   async getMovie(id: string) {
-    const response = await axiosInstance.get(`/api/movies/${id}`);
+    const response = await axios.get(`${apiUrl}/movies/${id}`);
     return response.data as IMovie;
   },
 
   async createMovie(movie: Omit<IMovie, 'id' | 'createdAt' | 'updatedAt'>) {
-    const response = await axiosInstance.post('/api/movies', movie);
+    const response = await axios.post(`${apiUrl}/movies`, movie);
     return response.data as IMovie;
   },
 
   async updateMovie(id: string, movie: Partial<IMovie>) {
-    const response = await axiosInstance.put(`/api/movies/${id}`, movie);
+    const response = await axios.put(`${apiUrl}/movies/${id}`, movie);
     return response.data as IMovie;
   },
 
   async deleteMovie(id: string) {
-    await axiosInstance.delete(`/api/movies/${id}`);
+    await axios.delete(`${apiUrl}/movies/${id}`);
   },
 
   async getMoviesByGenre(genre: string) {
-    const response = await axiosInstance.get(`/api/movies/genre/${genre}`);
+    const response = await axios.get(`${apiUrl}/movies/genre/${genre}`);
     return response.data as IMovie[];
   },
 
   async searchMovies(query: string) {
-    const response = await axiosInstance.get('/api/movies/search', {
+    const response = await axios.get(`${apiUrl}/movies/search`, {
       params: { q: query }
     });
     return response.data as IMovie[];
   },
 
-  async getTopRatedMovies(limit: number = 10) {
-    const response = await axiosInstance.get('/api/movies/top-rated', {
+  async getLatestMovies(limit: number = 10) {
+    const response = await axios.get(`${apiUrl}/movies/latest`, {
       params: { limit }
     });
     return response.data as IMovie[];
   }
 };
 
-export default movieService;
+export default MovieService;
