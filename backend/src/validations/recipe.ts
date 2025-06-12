@@ -1,4 +1,5 @@
 
+import { query } from "express";
 import z from "zod";
 
 // Schema pour chque ingrédient dans une recette avec quantité et unité
@@ -33,3 +34,6 @@ export const createRecipeSchema = z.object({
 
     export const updateRecipeSchema = createRecipeSchema.partial()  // On utilise .partial() pour rendre toutes les propriétés optionnelles
     export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>; //on type pour la mise à jour d'une recette
+
+
+     // TypeScript type pour le filtrage des recettes

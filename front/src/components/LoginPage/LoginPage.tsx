@@ -73,7 +73,7 @@ const LoginPage: React.FC = () => {
       setAuthUser(response.user);
       
       // Redirection vers la page d'accueil
-      //navigate('/');
+      navigate('/');
     } catch (err) {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message);

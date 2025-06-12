@@ -125,7 +125,7 @@ async function main() {
     {
       title: 'Les Saveurs du Palais',
       description: 'L\'histoire de la cuisinière personnelle du président de la République, confrontée aux défis de la cuisine de l\'Élysée.',
-      imdbLink: 'https://www.imdb.com/title/tt2103254/',
+      imdbLink: 'https://www.imdb.com/fr/title/tt2094877/',
       releaseDate: new Date('2012-09-19T00:00:00Z'),
     },
     {
@@ -255,7 +255,7 @@ async function main() {
         description: 'Le pain de route des Elfes, un petit morceau suffit à remplir l\'estomac d\'un voyageur. Parfait pour les aventures.',
         duration: 60,
         difficulty: 2,
-        image: 'https://cdn.pixabay.com/photo/2016/09/16/16/05/bread-1673898_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/pains_Lemba.webp',
         quote: 'Un petit morceau suffit à remplir l\'estomac d\'un adulte.',
         isValidated: true,
         
@@ -286,7 +286,7 @@ async function main() {
         description: 'Une ratatouille fraîche et colorée, digne des plus grands restaurants parisiens, avec la touche secrète de Rémy.',
         duration: 90,
         difficulty: 4,
-        image: 'https://cdn.pixabay.com/photo/2014/12/21/23/28/ratatouille-575037_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/ratatouille.webp',
         quote: 'La cuisine est un art, et l\'art est une aventure.',
         isValidated: true,
         
@@ -318,7 +318,7 @@ async function main() {
         description: 'La boisson préférée des étudiants de Poudlard, servie aux Trois Balais. Une boisson chaude et réconfortante au caramel et à la crème.',
         duration: 30,
         difficulty: 2,
-        image: 'https://cdn.pixabay.com/photo/2016/10/31/18/23/dessert-1786311_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/biereaubeurre.webp',
         quote: 'Rien de tel qu\'une bonne Bièraubeurre pour se réchauffer!',
         isValidated: true,
         
@@ -348,7 +348,7 @@ async function main() {
         description: 'Un chocolat chaud riche et épicé, inspiré de la chocolaterie de Vianne Rocher. Un mélange magique qui réchauffe le cœur.',
         duration: 20,
         difficulty: 3,
-        image: 'https://cdn.pixabay.com/photo/2017/01/11/11/33/cake-1971552_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/chocolat_chaud.webp',
         quote: 'Le chocolat possède des vertus magiques qui peuvent transformer une journée ordinaire en moment extraordinaire.',
         isValidated: true,
         
@@ -378,7 +378,7 @@ async function main() {
         description: 'Le plat signature de Julia Child, un classique de la cuisine française. Un ragoût de bœuf mijoté dans du vin rouge avec des légumes.',
         duration: 180,
         difficulty: 4,
-        image: 'https://cdn.pixabay.com/photo/2016/08/11/24/43/beef-1587759_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/boeuf_bourguignon.webp',
         quote: 'En cuisine, il n\'y a pas d\'erreurs, seulement des accidents créatifs!',
         isValidated: true,
         
@@ -410,7 +410,7 @@ async function main() {
         description: 'Un plat emblématique du film, une caille délicatement enveloppée dans une pâte feuilletée, servie avec une sauce aux truffes.',
         duration: 150,
         difficulty: 5,
-        image: 'https://cdn.pixabay.com/photo/2018/04/22/12/42/meat-3341080_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/caille-sarcophage.webp',
         quote: 'La cuisine est un acte d\'amour.',
         isValidated: true,
         
@@ -441,7 +441,7 @@ async function main() {
         description: 'Un saumon délicatement cuit, recouvert d\'une croûte d\'herbes aromatiques, servi avec une sauce au citron.',
         duration: 45,
         difficulty: 3,
-        image: 'https://cdn.pixabay.com/photo/2016/03/05/19/02/salmon-1238248_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/Saumon_en_croute.webp',
         quote: 'La cuisine, c\'est comme la musique, il faut trouver la bonne harmonie.',
         isValidated: true,
         
@@ -473,7 +473,7 @@ async function main() {
         description: 'Un plat raffiné digne de l\'Élysée, avec une sauce onctueuse aux morilles et à la crème.',
         duration: 60,
         difficulty: 4,
-        image: 'https://cdn.pixabay.com/photo/2015/03/26/09/39/chicken-690091_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/poulet-aux-morilles.webp',
         quote: 'La cuisine présidentielle doit être à l\'image de la France : excellente.',
         isValidated: true,
         
@@ -504,7 +504,7 @@ async function main() {
         description: 'Une tarte aux pommes raffinée et délicate, inspirée par le talent culinaire de notre petit chef préféré.',
         duration: 75,
         difficulty: 3,
-        image: 'https://cdn.pixabay.com/photo/2016/03/27/22/38/cake-1284548_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/Tarte_pommes.webp',
         quote: 'N\'importe qui peut cuisiner, mais seuls les téméraires peuvent exceller.',
         isValidated: true,
         
@@ -535,7 +535,7 @@ async function main() {
         description: 'Un velouté réconfortant servi dans la Grande Salle pendant le festin d\'Halloween.',
         duration: 45,
         difficulty: 2,
-        image: 'https://cdn.pixabay.com/photo/2018/08/31/19/13/pumpkin-soup-3645375_1280.jpg',
+        image: 'http://localhost:3001/images-recettes/velouté_potiron.webp',
         quote: 'Un festin digne de Poudlard!',
         isValidated: true,
         
