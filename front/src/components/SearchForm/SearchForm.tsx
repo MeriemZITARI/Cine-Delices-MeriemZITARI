@@ -2,38 +2,30 @@ import React, { useState } from 'react';
 import { Search } from 'lucide-react';
 import Button from "../Button/Button";
 
-const SearchForm: React.FC = () => {
-  // États pour les différents critères de recherche
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
+// Interfaces
+interface SearchFormProps {
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  selectedDuration: number | null;
+  onDurationSelect: (duration: number) => void;
+  selectedType: string | null;
+  onTypeSelect: (type: string) => void;
+}
 
-  /**
-   * Gère la sélection/désélection d'une durée
-   * @param minutes - Durée en minutes
-   */
-  const handleDurationSelect = (minutes: number) => {
-    setSelectedDuration(minutes === selectedDuration ? null : minutes);
-  };
-
-  /**
-   * Gère la sélection/désélection d'un type
-   * @param type - Type de recette
-   */
-  const handleTypeSelect = (type: string) => {
-    setSelectedType(type === selectedType ? null : type);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Logique de recherche
-  };
-
+const SearchForm: React.FC<SearchFormProps> = ({
+  onSubmit,
+  searchTerm,
+  onSearchChange,
+  selectedDuration,
+  onDurationSelect,
+  selectedType,
+  onTypeSelect
+}) => {
   return (
-    <div className="w-full">
-      <h3 className="text-base font-bold sm:text-lg mb-2">Je cherche ..</h3>
-      <form onSubmit={handleSubmit} className="mb-4 sm:mb-6">
+    <div className="bg-white rounded-lg md:rounded-l-none shadow-md p-4 h-[400px]">
+      <h3 className="text-base font-bold sm:text-lg mb-2">Je cherche...</h3>
+      <form onSubmit={onSubmit}>
         <div className="flex items-center border rounded-md p-2 mb-4 sm:mb-5">
           <div className="flex items-center justify-center text-gray-400 mr-3">
             <Search size={18} />
@@ -43,52 +35,48 @@ const SearchForm: React.FC = () => {
             placeholder="Star Wars, pizza, chocolat, ..." 
             className="w-full text-sm sm:text-base outline-none"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
           />
         </div>
         
-        <h3 className="text-base font-bold sm:text-lg mb-2">J'ai ..</h3>
-        <div className="mb-3 sm:mb-4">
-          <div className="grid grid-cols-2 gap-2 mb-2 sm:mb-3">
-            {[15, 30, 45, 60].map((duration) => (
-            <label key={duration} className="flex items-center text-sm sm:text-base">
-                <input 
-                type="radio" 
-                name="duration" 
-                className="mr-2"
+        <h3 className="text-base font-bold sm:text-lg mb-2">J'ai...</h3>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {[15, 30, 45, 60].map((duration) => (
+            <label key={duration} className="flex items-center">
+              <input
+                type="radio"
+                name="duration"
                 checked={selectedDuration === duration}
-                onChange={() => handleDurationSelect(duration)}
-                />
-                {duration} minutes
+                onChange={() => onDurationSelect(duration)}
+                className="custom-radio"
+              />
+              {duration} minutes
             </label>
-            ))}
-        </div>
+          ))}
         </div>
 
-        <h3 className="text-base font-bold sm:text-lg mb-2">Je veux préparer</h3>
-        <div className="mb-4 sm:mb-6">
-          <div className="grid grid-cols-2 gap-2">
-            {['entrée', 'plat', 'dessert', 'boisson'].map((type) => (
-            <label key={type} className="flex items-center text-sm sm:text-base">
-                <input 
-                type="radio" 
-                name="type" 
-                className="mr-2"
+        <h3 className="text-base font-bold sm:text-lg mb-2">Je veux préparer...</h3>
+        <div className="grid grid-cols-2 gap-2 mb-4">
+          {['entrée', 'plat', 'dessert', 'boisson'].map((type) => (
+            <label key={type} className="flex items-center">
+              <input
+                type="radio"
+                name="type"
                 checked={selectedType === type}
-                onChange={() => handleTypeSelect(type)}
-                />
-                {type === 'entrée' ? 'une entrée' :
-                type === 'plat' ? 'un plat' :
-                type === 'dessert' ? 'un dessert' : 'une boisson'}
+                onChange={() => onTypeSelect(type)}
+                className="custom-radio"
+              />
+              {type === 'entrée' ? 'Une entrée' :
+              type === 'plat' ? 'Un plat principal' :
+              type === 'dessert' ? 'Un dessert' : 'Une boisson'}
             </label>
-            ))}
-          </div>
+          ))}
         </div>
-        
+
         <Button 
-          text="C'est parti !"
+          text="C'est parti !" 
           type="submit" 
-          className="w-full text-sm sm:text-base"
+          className="w-full"
         />
       </form>
     </div>

@@ -9,83 +9,7 @@ import MoviePoster from '../MoviePoster';
 import { Button } from '../ui/button';
 import RecipeCarouselNew from '../RecipeCarousselNew';
 import './HomePageNew.css';
-
-// Interfaces
-interface SearchFormProps {
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  selectedDuration: number | null;
-  onDurationSelect: (duration: number) => void;
-  selectedType: string | null;
-  onTypeSelect: (type: string) => void;
-}
-
-// Using imported IMovie interface
-
-// Composant SearchForm
-const SearchForm: React.FC<SearchFormProps> = ({
-  onSubmit,
-  searchTerm,
-  onSearchChange,
-  selectedDuration,
-  onDurationSelect,
-  selectedType,
-  onTypeSelect
-}) => {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-4">
-      <h2 className="text-lg font-semibold mb-4">Je cherche...</h2>
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          placeholder="Retrouvez votre recette préférée de film"
-          className="w-full p-3 border rounded-md mb-4"
-          value={searchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
-        />
-        
-        <h3 className="font-medium mb-2">J'ai...</h3>
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {[15, 30, 45, 60].map((duration) => (
-            <label key={duration} className="flex items-center">
-              <input
-                type="radio"
-                name="duration"
-                checked={selectedDuration === duration}
-                onChange={() => onDurationSelect(duration)}
-                className="custom-radio"
-              />
-              {duration} minutes
-            </label>
-          ))}
-        </div>
-
-        <h3 className="font-medium mb-2">Je veux préparer...</h3>
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {['entrée', 'plat', 'dessert', 'boisson'].map((type) => (
-            <label key={type} className="flex items-center">
-              <input
-                type="radio"
-                name="type"
-                checked={selectedType === type}
-                onChange={() => onTypeSelect(type)}
-                className="custom-radio"
-              />
-              {type === 'entrée' ? 'Une entrée' :
-              type === 'plat' ? 'Un plat principal' :
-              type === 'dessert' ? 'Un dessert' : 'Une boisson'}
-            </label>
-          ))}
-        </div>
-
-        <Button type="submit" className="w-full bg-red-500 hover:bg-red-600 text-white">
-          C'est parti !
-        </Button>
-      </form>
-    </div>
-  );
-};
+import SearchForm from '../SearchForm/SearchForm';
 
 // Composant principal HomePageNew
 const HomePageNew: React.FC = () => {
@@ -197,13 +121,14 @@ const HomePageNew: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* En-tête avec le formulaire de recherche */}
-      <div className="bg-gradient-to-b from-yellow-300 to-yellow-100 py-8">
-        <div className="container mx-auto px-4">          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0">
+      <div className="bg-customYellow py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0">
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
-              <div className="order-2 lg:order-1 lg:w-[65%]">
+              <div className="order-2 lg:order-1 lg:flex-1">
                 {/* <h2 className="text-xl font-bold mb-4">La recette du jour</h2> */}
-                <div className="relative rounded-lg overflow-hidden shadow-lg">
+                <div className="relative rounded-lg sm:rounded-r-none overflow-hidden shadow-lg">
                   <RecipeImage
                     recipe={featuredRecipe}
                     alt={featuredRecipe.title}
@@ -225,7 +150,7 @@ const HomePageNew: React.FC = () => {
             )}
 
             {/* Formulaire de recherche */}
-            <div className="order-1 lg:order-2 lg:w-[30%] mb-6 lg:mb-0">
+            <div className="order-1 lg:order-2 lg:w-[380px] mb-6 lg:mb-0">
               <SearchForm
                 onSubmit={handleSearch}
                 searchTerm={searchTerm}

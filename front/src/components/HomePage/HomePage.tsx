@@ -258,7 +258,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <div className="background-gradient-yellow py-4 sm:py-6">
+      <div className="bg-customYellow py-4 sm:py-6">
         <div className="container mx-auto px-4">
           {/* Formulaire de recherche mobile */}
           {isSearchVisible && (
