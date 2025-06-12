@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { findUserById, updateUserProfile } from '../services/user.service';
+import { findUserById, updateUserProfile, deleteUserAccount } from '../services/user.service';
 import { UpdateProfileInput } from '../validations/users';
 
 
@@ -50,6 +50,23 @@ export async function handleUpdateMyProfile(
       res.status(200).json(updatedUser);
     } catch (error) {
       // 5. On passe les erreurs (ex: email déjà pris par un autre user) au gestionnaire global
+      next(error);
+    }
+  }
+
+
+// --- NOUVELLE FONCTION POUR LA SUPPRESSION DU PROFIL ---
+
+export async function handleDeleteMyProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.userId;
+  
+      await deleteUserAccount(userId);
+  
+      // Le statut 204 No Content est la réponse standard et correcte
+      // pour une suppression réussie. On n'envoie pas de corps de réponse.
+      res.status(204).send();
+    } catch (error) {
       next(error);
     }
   }
