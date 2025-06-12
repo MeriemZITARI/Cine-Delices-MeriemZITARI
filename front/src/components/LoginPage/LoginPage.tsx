@@ -1,16 +1,25 @@
 /**
  * Composant de la page de connexion - Implémentation mobile-first
  * Le formulaire s'adapte en largeur selon le device tout en restant centré
- */
+*/
 
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from "../Button/Button";
-import authService from '../../services/auth';
+import authService from '../../services/api/AuthServices';
+import { z } from 'zod';
 
 // TODO: Ajouter Jotai pour la gestion de l'état global
 // import { useAtom } from 'jotai';
 // import { authUserAtom } from '../store/authUser';
+
+// Schéma de validation pour le formulaire de connexion
+const loginSchema = z.object({
+  email: z.string().email("L'adresse e-mail n'est pas valide."),
+  password: z
+    .string()
+    .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+});
 
 const LoginPage: React.FC = () => {
   // Navigation et références
@@ -36,25 +45,42 @@ const LoginPage: React.FC = () => {
    */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!email || !password) {
       setError('Tous les champs sont obligatoires.');
       return;
     }
-    setError('');
-    
+
+    loginSchema.parse({ email, password }); // Valide les champs
+    setError(""); // Réinitialise les erreurs si tout est valide
+
+    // Appeler le service d'authentification
+    //console.log("Données valides :", { email, password });
+
     try {
       // Connexion via le service d'authentification
-      await authService.login({ email, password });
+      const response = await authService.login({ email, password });
       
+      if (!response || !response.success) {
+        throw new Error("Échec de la connexion, utilisateur non trouvé.");
+      }
+      
+      // Si tout est correct, affichez l'utilisateur
+      console.log("Utilisateur connecté :", response);
+
       // TODO: À activer une fois Jotai installé
       // const user = await authService.getMe();
       // setAuthUser(user);
       
       // Redirection vers la page d'accueil
-      navigate('/');
+      //navigate('/');
     } catch (err) {
-      setError('Email ou mot de passe incorrect');
-      console.error('Erreur lors de la connexion:', err);
+      if (err instanceof z.ZodError) {
+        setError(err.errors[0].message);
+      } else {
+        setError("Cette combinaison e-mail/mot de passe n'a pas été trouvée en base de données");
+        console.error("Erreur lors de la connexion :", err);
+      }
     }
   };
 

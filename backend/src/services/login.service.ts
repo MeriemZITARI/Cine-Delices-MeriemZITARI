@@ -13,12 +13,14 @@ export async function loginUser(data: LoginInput) {
     });
 
     if (!user) {
+        // Aucun utilisateur n'a été trouvé avec l'e-mail fourni
         throw new Error('Email ou mot de passe incorrect.');
     }
 
     // Étape 2 : Vérifier le mot de passe
     const isPasswordValid = await argon2.verify(user.password, data.password);
     if (!isPasswordValid) {
+        // Le mot de passe ne correspond pas
         throw new Error('Email ou mot de passe incorrect.');
     }
 
