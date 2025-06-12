@@ -66,4 +66,5 @@ npm run dev```
 cd cinedelices_test
 npm install
 npm run dev```
+
 ➡️ npm run dev démarre le serveur Vite pour le frontend React
