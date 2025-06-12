@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeImage from "./RecipeImage";
-import MovieImage from "./MovieImage";
+import MoviePoster from "./MoviePoster";
 import type { IRecipe } from "../types/Recipe";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -73,7 +73,7 @@ const RecipeCarouselNew: React.FC<RecipeCarouselProps> = ({ recipes }) => {
                     recipe={{
                       id: recipe.id,
                       title: recipe.title,
-                      image: recipe.imageUrl
+                      image: recipe.imageUrl || (recipe as any).image // compatibilité imageUrl/image
                     }}
                     alt={recipe.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
@@ -85,12 +85,8 @@ const RecipeCarouselNew: React.FC<RecipeCarouselProps> = ({ recipes }) => {
                       onClick={(e) => recipe.movie?.id && handleMovieClick(e, recipe.movie.id)} 
                       className="w-full h-full cursor-pointer"
                     >
-                      <MovieImage
-                        movie={{
-                          id: recipe.movie.id,
-                          title: recipe.movie.title,
-                          imageUrl: recipe.movie.imageUrl
-                        }}
+                      <MoviePoster
+                        imdbLink={recipe.movie.imdbLink}
                         alt={recipe.movie.title || ''}
                         className="w-full h-full object-contain bg-black transition-transform duration-300 hover:scale-105"
                       />

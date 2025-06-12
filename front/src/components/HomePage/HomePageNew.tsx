@@ -91,7 +91,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
 const HomePageNew: React.FC = () => {
   const [featuredRecipe, setFeaturedRecipe] = useState<IRecipe | null>(null);
   const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
-  const [featuredMovies, setFeaturedMovies] = useState<IMovie[]>([]);
+  const [uniqueMovies, setUniqueMovies] = useState<IMovie[]>([]);
+  const [randomMovieForCarrousel, setRandomMovieForCarrousel] = useState<IMovie | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -102,32 +103,51 @@ const HomePageNew: React.FC = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [recipesResponse, moviesData] = await Promise.all([
-          recipeService.getRecipes(),
-         
-        ]);
-
+        const recipesResponse = await recipeService.getRecipes();
         if (recipesResponse?.data && recipesResponse.data.length > 0) {
           // Sélection aléatoire d'une recette pour la recette du jour
           const randomIndex = Math.floor(Math.random() * recipesResponse.data.length);
           setFeaturedRecipe(recipesResponse.data[randomIndex]);
           setLatestRecipes(recipesResponse.data.slice(0, 3));
-        }
-
-        if (moviesData && moviesData.length > 0) {
-          console.log('Movies response:', moviesData);
-          setFeaturedMovies(moviesData.slice(0, 3));
+          // Extraire les films uniques à partir des recettes
+          const moviesMap: { [id: string]: IMovie } = {};
+          recipesResponse.data.forEach((r: IRecipe) => {
+            if (r.movie && r.movie.id && !moviesMap[r.movie.id]) {
+              moviesMap[r.movie.id] = {
+                id: r.movie.id,
+                title: r.movie.title,
+                description: '',
+                imdbLink: (r.movie as any).imdbLink || '',
+                releaseDate: r.movie.releaseDate,
+                createdAt: '',
+                updatedAt: ''
+              };
+            }
+          });
+          const moviesArr = Object.values(moviesMap);
+          setUniqueMovies(moviesArr);
+          if (moviesArr.length > 0) {
+            const randomMovie = moviesArr[Math.floor(Math.random() * moviesArr.length)];
+            setRandomMovieForCarrousel(randomMovie);
+          } else {
+            setRandomMovieForCarrousel(null);
+          }
         } else {
-          console.log('Pas de films trouvés');
-          setFeaturedMovies([]);
+          setFeaturedRecipe(null);
+          setLatestRecipes([]);
+          setUniqueMovies([]);
+          setRandomMovieForCarrousel(null);
         }
       } catch (error) {
+        setFeaturedRecipe(null);
+        setLatestRecipes([]);
+        setUniqueMovies([]);
+        setRandomMovieForCarrousel(null);
         console.error("Erreur lors du chargement des données:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -178,11 +198,11 @@ const HomePageNew: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       {/* En-tête avec le formulaire de recherche */}
       <div className="bg-gradient-to-b from-yellow-300 to-yellow-100 py-8">
-        <div className="container mx-auto px-4">          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12">
+        <div className="container mx-auto px-4">          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0">
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
               <div className="order-2 lg:order-1 lg:w-[65%]">
-                <h2 className="text-xl font-bold mb-4">La recette du jour</h2>
+                {/* <h2 className="text-xl font-bold mb-4">La recette du jour</h2> */}
                 <div className="relative rounded-lg overflow-hidden shadow-lg">
                   <RecipeImage
                     recipe={featuredRecipe}
@@ -225,29 +245,25 @@ const HomePageNew: React.FC = () => {
         <section className="mb-16">
           <h2 className="text-2xl font-bold mb-6">Films et Recettes à l'affiche</h2>
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Film à l'affiche (30%) */}
-            <div className="w-full lg:w-[30%]">
-              {featuredMovies[0] && (
-                <div className="bg-white rounded-lg shadow-md overflow-hidden h-full transform hover:scale-[1.02] transition-transform duration-200">
-                  <div className="relative h-[400px]">                    <MoviePoster 
-                      imdbLink={featuredMovies[0].imdbLink}
-                      alt={featuredMovies[0].title}
+            {/* Affiche de film aléatoire à gauche du carrousel (desktop uniquement) */}
+            <div className="hidden lg:block w-full lg:w-[30%]">
+              {randomMovieForCarrousel && (
+                <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
+                  <div className="relative h-[400px] w-full flex items-center justify-center">
+                    <MoviePoster
+                      imdbLink={randomMovieForCarrousel.imdbLink}
+                      alt={randomMovieForCarrousel.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-6">
-                      <span className="bg-red-500 text-white px-2 py-1 rounded-full text-sm inline-block w-fit mb-2">
-                        Film du jour
-                      </span>
-                      <h3 className="text-white font-bold text-xl mb-2">{featuredMovies[0].title}</h3>
-                      <p className="text-white/90 text-sm line-clamp-2">{featuredMovies[0].description}</p>
-                      <div className="mt-2 text-white/80 text-sm">
-                        {new Date(featuredMovies[0].releaseDate).getFullYear()}
-                      </div>
-                    </div>
+                  </div>
+                  <div className="p-4 text-center">
+                    <h3 className="font-bold text-lg mb-2">{randomMovieForCarrousel.title}</h3>
+                    <p className="text-gray-500 text-sm">{new Date(randomMovieForCarrousel.releaseDate).getFullYear()}</p>
                   </div>
                 </div>
               )}
-            </div>            {/* Carrousel desktop uniquement (70%) */}
+            </div>
+            {/* Carrousel desktop uniquement (70%) */}
             <div className="hidden lg:block w-full lg:w-[70%]">
               {Array.isArray(latestRecipes) && latestRecipes.length > 0 ? (
                 <RecipeCarouselNew recipes={latestRecipes} />
@@ -305,13 +321,9 @@ const HomePageNew: React.FC = () => {
         </section>
 
         {/* Liens sociaux */}
+        {/* Footer sans liens sociaux */}
         <footer className="mt-16 py-8 border-t">
-          <div className="flex justify-center space-x-6">
-            <a href="#" className="text-gray-600 hover:text-red-500 transition-colors duration-200">Facebook</a>
-            <a href="#" className="text-gray-600 hover:text-red-500 transition-colors duration-200">Twitter</a>
-            <a href="#" className="text-gray-600 hover:text-red-500 transition-colors duration-200">Instagram</a>
-            <a href="#" className="text-gray-600 hover:text-red-500 transition-colors duration-200">YouTube</a>
-          </div>
+          {/* Footer épuré, liens sociaux retirés */}
         </footer>
       </div>
     </div>
