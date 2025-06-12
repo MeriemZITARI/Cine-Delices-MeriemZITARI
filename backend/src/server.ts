@@ -10,6 +10,7 @@ import rateLimit from 'express-rate-limit';
 import { setupSwagger } from './swagger';
 // import errorHandler from './middlewares/errorHandler';
 import router from './routes';
+
 // --- NOTRE SONDE DE DÉBOGAGE ---
 console.log('--- Début du débogage ---');
 console.log('Chemin de travail actuel:', process.cwd());
@@ -19,6 +20,9 @@ console.log('--- Fin du débogage ---');
 // ---------------------------------
 
 const app = express();
+
+// Middleware pour servir des fichiers statiques
+app.use(express.static('public'));
 
 // Documentation Swagger
 setupSwagger(app);
