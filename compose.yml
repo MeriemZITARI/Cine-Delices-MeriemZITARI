@@ -1,0 +1,45 @@
+services:
+  backend:
+    # construire l'image de l'api
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    # exposer le port 3000 de l'api dans le conteneur
+    ports:
+      - "3001:3001"
+    # nom du conteneur
+    container_name: backend
+    # dépendre du conteneur de la base de données
+    depends_on:
+      - database
+    # Ajout du volume pour le dossier api
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    # définir l'environnement de développement pour le hot reload
+    environment:
+      - JWT_SECRET= un_super_secret
+      - DATABASE_URL=postgresql://cine:cine@database:5432/cine
+    
+
+
+  database:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: cine
+      POSTGRES_USER: cine
+      POSTGRES_DB: cine
+    volumes:
+      # On va partager le volume user_db_data avec le conteneur
+      # Cela va permettre de garder les données même si le conteneur est supprimé
+      - db_data:/var/lib/postgresql/data
+    ports:
+      # On fait en sorte de pouvoir accéder à la base de données depuis l'extérieur
+      # On expose le port 5434 de l'hôte vers le port 5432 du conteneur pour éviter les conflits avec une autre instance de postgres
+      - '5434:5432'
+
+# volumes pour garder les données après le redémarrage du conteneur
+volumes:
+  db_data:
