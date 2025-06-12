@@ -2,7 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { recipeService } from '../services/api/RecipeService';
 import type { IRecipe } from '../types/Recipe';
 import RecipeImage from './RecipeImage';
+import MoviePoster from './MoviePoster';
+import imdbData from '../assets/imdb.json';
 import placeholderImg from "/images/placeholder.jpg?url";
+
+const getImdbLink = (movieTitle: string): string | undefined => {
+  const found = imdbData.find((m: { titre: string; imdb: string }) => m.titre === movieTitle);
+  return found?.imdb;
+};
 
 const TestApi: React.FC = () => {
   const [recipes, setRecipes] = useState<IRecipe[]>([]);
@@ -14,26 +21,17 @@ const TestApi: React.FC = () => {
       try {
         setLoading(true);
         const response = await recipeService.getRecipes();
-        console.log("Réponse complète de l'API:", response);
-        console.log("Données des recettes:", response?.data);
-        console.log("URLs des images:", response?.data?.map(recipe => ({
-          titre: recipe.title,
-          imageUrl: recipe.imageUrl,
-          filmImageUrl: recipe.movie?.imageUrl
-        })));
         if (response?.data) {
           setRecipes(response.data);
         } else {
           throw new Error('Erreur lors de la récupération des recettes');
         }
       } catch (err) {
-        console.error('Erreur détaillée:', err);
         setError('Erreur lors de la récupération des recettes');
       } finally {
         setLoading(false);
       }
     };
-
     fetchRecipes();
   }, []);
 
@@ -76,23 +74,26 @@ const TestApi: React.FC = () => {
             <div className="p-4">
               <h3 className="font-bold text-xl mb-2">{recipe.title}</h3>
               <p className="text-gray-600 mb-3">{recipe.description}</p>
-              
               {recipe.movie && (
                 <div className="mb-3">
                   <h4 className="font-semibold text-gray-700">Film associé:</h4>
                   <div className="flex items-center mt-1">
-                    <div className="relative w-12 h-16 mr-2">
-                      <img 
-                        src={recipe.movie.imageUrl || placeholderImg} 
+                    <div className="relative w-24 h-36 mr-2">
+                      <MoviePoster
+                        imdbLink={getImdbLink(recipe.movie.title)}
                         alt={recipe.movie.title}
                         className="w-full h-full object-cover rounded"
                       />
                     </div>
                     <div className="flex-1">
                       <div className="text-xs text-gray-500 break-all mb-1">
-                        <a href={recipe.movie.imageUrl} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
-                          {recipe.movie.imageUrl || "Image par défaut"}
-                        </a>
+                        {getImdbLink(recipe.movie.title) ? (
+                          <a href={getImdbLink(recipe.movie.title)} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800">
+                            {getImdbLink(recipe.movie.title)}
+                          </a>
+                        ) : (
+                          <span>IMDb non disponible</span>
+                        )}
                       </div>
                       <p>{recipe.movie.title}</p>
                       <p className="text-sm text-gray-500">{recipe.movie.releaseDate}</p>
@@ -100,7 +101,6 @@ const TestApi: React.FC = () => {
                   </div>
                 </div>
               )}
-
               <div className="mt-3">
                 <h4 className="font-semibold text-gray-700">Ingrédients:</h4>
                 <ul className="list-disc list-inside">
@@ -111,7 +111,6 @@ const TestApi: React.FC = () => {
                   ))}
                 </ul>
               </div>
-
               {recipe.instructions && recipe.instructions.length > 0 && (
                 <div className="mt-3">
                   <h4 className="font-semibold text-gray-700">Instructions:</h4>
@@ -122,7 +121,6 @@ const TestApi: React.FC = () => {
                   </ol>
                 </div>
               )}
-
               <div className="mt-3">
                 <div className="flex items-center space-x-4 text-sm text-gray-500">
                   <span>⏱️ {recipe.preparationTime} min</span>
@@ -130,7 +128,6 @@ const TestApi: React.FC = () => {
                   <span>👥 {recipe.servings} portion(s)</span>
                 </div>
               </div>
-
               {recipe.author && (
                 <div className="mt-3 pt-3 border-t border-gray-200">
                   <p className="text-sm text-gray-500">
