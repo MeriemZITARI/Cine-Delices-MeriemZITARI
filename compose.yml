@@ -40,6 +40,31 @@ services:
       # On expose le port 5434 de l'hôte vers le port 5432 du conteneur pour éviter les conflits avec une autre instance de postgres
       - '5434:5432'
 
+  client:
+    # construire l'image du client
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+    # exposer le port 3000 du client dans le conteneur
+    ports:
+      - "3000:3000"
+    # nom du conteneur
+    container_name: client
+    # dépendre de l'api
+    depends_on:
+      - backend
+    # définir l'environnement de développement
+    volumes:
+      - ./front:/app:delegated
+      - /app/node_modules
+    # définir l'environnement de développement pour le hot reload
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+      - VITE_USE_POLLING=true
+
 # volumes pour garder les données après le redémarrage du conteneur
 volumes:
   db_data:
+  
