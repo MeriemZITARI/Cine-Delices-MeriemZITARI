@@ -8,8 +8,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "seed": "ts-node prisma/seed.ts",
-    "test": "jest"
+    "seed": "ts-node prisma/seed.ts"
+     
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
