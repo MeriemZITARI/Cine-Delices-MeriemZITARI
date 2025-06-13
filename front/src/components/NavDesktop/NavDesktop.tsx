@@ -52,7 +52,7 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
                 className="flex items-center justify-center h-full text-black"
               >
                 <FaUserCircle size={36} />
-                <p className="ml-2">{authUser.email} {authUser.lastname}</p>
+                <p className="ml-2">{authUser.firstName} {authUser.lastName}</p>
               </Link>
               <Link
                 to="/logout"

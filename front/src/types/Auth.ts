@@ -1,8 +1,8 @@
 export interface IUser {
     id: string;
     email: string;
-    firstname: string;
-    lastname: string;
+    firstName: string;
+    lastName: string;
     role: 'USER' | 'ADMIN';
   }
   
@@ -14,6 +14,7 @@ export interface IUser {
   export interface IRegisterCredentials {
     email: string;
     password: string;
-    username: string;
+    firstName: string;
+    lastName: string;
   }
   

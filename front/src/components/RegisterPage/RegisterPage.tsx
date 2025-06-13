@@ -6,12 +6,32 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from "../Button/Button";
-import authService from '../../services/auth';
+import authService from '../../services/api/AuthServices';
+
+import { z } from 'zod';
+import { useAtom } from 'jotai';
+import { authUserAtom } from '../../store/authUserAtom';
+
+// Schéma de validation pour le formulaire d'inscription
+const registerSchema = z.object({
+  firstName: z.string().min(1, "Le prénom est obligatoire."),
+  lastName: z.string().min(1, "Le nom est obligatoire."),
+  email: z.string().email("L'adresse e-mail n'est pas valide."),
+  password: z
+    .string()
+    .regex(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
+      "Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial."
+    ),
+});
 
 const RegisterPage: React.FC = () => {
   // Navigation et références
   const navigate = useNavigate();
   const inputEmailRef = useRef<HTMLInputElement>(null);
+
+  // Utilisation de l'atome pour gérer l'utilisateur connecté
+  const [authUser, setAuthUser] = useAtom(authUserAtom);
 
   // États pour gérer les champs du formulaire et les erreurs
   const [firstName, setFirstName] = useState('');
@@ -32,17 +52,24 @@ const RegisterPage: React.FC = () => {
   async function handleFormAction(formData: FormData) {
     try {
       const data = {
-        firstname: formData.get('firstName') as string,
-        lastname: formData.get('lastName') as string,
+        firstName: formData.get('firstName') as string,
+        lastName: formData.get('lastName') as string,
         email: formData.get('email') as string,
         password: formData.get('password') as string,
       };
-
-      // Inscription via le service d'authentification
-      await authService.register(data);
       
+      // Inscription via le service d'authentification
+      const response = await authService.register(data);
+      
+      if (!response || !response.success) {
+        throw new Error("Échec de la création du compte utilisateur.");
+      }
+      
+      // Mise à jour de l'atome
+      setAuthUser(response.user);
+
       // Redirection vers la page de connexion après inscription réussie
-      navigate('/login');
+      navigate('/');
     } catch (err) {
       setError('Une erreur est survenue lors de l\'inscription');
       console.error('Erreur lors de l\'inscription:', err);
@@ -56,19 +83,33 @@ const RegisterPage: React.FC = () => {
    */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!firstName || !lastName || !email || !password) {
       setError('Tous les champs sont obligatoires.');
       return;
     }
-    setError('');
-    
-    const formData = new FormData();
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
-    formData.append('email', email);
-    formData.append('password', password);
-    
-    handleFormAction(formData);
+
+    try {
+      // Valide les données avec Zod
+      registerSchema.parse({ firstName, lastName, email, password });
+      setError(""); // Réinitialise les erreurs si tout est valide
+
+      const formData = new FormData();
+      formData.append("firstName", firstName);
+      formData.append("lastName", lastName);
+      formData.append("email", email);
+      formData.append("password", password);
+
+      handleFormAction(formData);
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        // Récupère les messages d'erreur et les affiche
+        const errorMessages = err.errors.map((error) => error.message).join(" ");
+        setError(errorMessages);
+      } else {
+        setError("Une erreur inconnue est survenue.");
+      }
+    }
   };
 
   return (
@@ -88,6 +129,8 @@ const RegisterPage: React.FC = () => {
                 id="lastName"
                 name="lastName"
                 type="text"
+                value={lastName} // Associe l'état au champ
+                onChange={(e) => setLastName(e.target.value)} // Met à jour l'état
                 className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
                 placeholder="Dupont"
                 autoComplete="family-name"
@@ -100,6 +143,8 @@ const RegisterPage: React.FC = () => {
                 id="firstName"
                 name="firstName"
                 type="text"
+                value={firstName} // Associe l'état au champ
+                onChange={(e) => setFirstName(e.target.value)} // Met à jour l'état
                 className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
                 placeholder="Jean"
                 autoComplete="given-name"
@@ -116,6 +161,8 @@ const RegisterPage: React.FC = () => {
               id="email"
               name="email"
               type="email"
+              value={email} // Associe l'état au champ
+              onChange={(e) => setEmail(e.target.value)} // Met à jour l'état
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
               placeholder="email@exemple.com"
               autoComplete="email"
@@ -130,6 +177,8 @@ const RegisterPage: React.FC = () => {
               id="password"
               name="password"
               type="password"
+              value={password} // Associe l'état au champ
+              onChange={(e) => setPassword(e.target.value)} // Met à jour l'état
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
               placeholder="********"
               autoComplete="new-password"

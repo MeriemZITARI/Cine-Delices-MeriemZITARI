@@ -7,9 +7,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from "../Button/Button";
 import authService from '../../services/api/AuthServices';
-import { z } from 'zod';
 
-// TODO: Ajouter Jotai pour la gestion de l'état global
+import { z } from 'zod';
 import { useAtom } from 'jotai';
 import { authUserAtom } from '../../store/authUserAtom';
 

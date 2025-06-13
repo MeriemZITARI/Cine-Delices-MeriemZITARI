@@ -138,7 +138,7 @@ const HomePageNew: React.FC = () => {
                   />
                   <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
                     <Link to={`/recettes/${featuredRecipe.id}`} className="group">
-                      <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-yellow-300 transition-colors">
+                      <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow transition-colors">
                         {featuredRecipe.title}
                       </h1>
                       <div className="flex items-center gap-4 text-sm">
@@ -152,7 +152,7 @@ const HomePageNew: React.FC = () => {
             )}
 
             {/* Formulaire de recherche */}
-            <div className="order-1 lg:order-2 lg:w-[380px] mb-6 lg:mb-0">
+            <div className="order-1 hidden lg:block lg:order-2 lg:w-[380px] mb-6 lg:mb-0">
               <SearchForm
                 onSubmit={handleSearch}
                 searchTerm={searchTerm}
