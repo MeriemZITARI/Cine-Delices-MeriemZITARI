@@ -252,12 +252,17 @@ async function main() {
     recipe1 = await prisma.recipe.create({
       data: {
         title: 'Pains de Lembas (Recette elfique)',
-        description: 'Le pain de route des Elfes, un petit morceau suffit à remplir l\'estomac d\'un voyageur. Parfait pour les aventures.',
+        description: `1. Prechauffez le four a 180 degres.
+2. Melangez la farine et le sucre.
+3. Ajoutez les oeufs battus et le beurre fondu.
+4. Incorporez progressivement le lait pour former une pate lisse.
+5. Formez des petits pains ovales.
+6. Faites cuire 20-25 minutes jusqu'a ce qu'ils soient dores.
+7. Laissez refroidir et enveloppez dans des feuilles de mallorn.`,
         duration: 60,
         difficulty: 2,
         image: 'http://localhost:3001/images-recettes/pains_Lemba.webp',
-        quote: 'Un petit morceau suffit à remplir l\'estomac d\'un adulte.',
-        isValidated: true,
+        quote: 'Un seul petit morceau suffit à nourrir un homme adulte pour toute une journée de marche. Les Elfes nous en ont fait don. - Legolas',
         
         userId: adminUser.id,
         categoryId: dessertCategory.id,
@@ -283,12 +288,11 @@ async function main() {
     recipe2 = await prisma.recipe.create({
       data: {
         title: 'Ratatouille de Rémy',
-        description: 'Une ratatouille fraîche et colorée, digne des plus grands restaurants parisiens, avec la touche secrète de Rémy.',
+        description: '1. Lavez et coupez tous les légumes en fines tranches.\n2. Faites revenir l\'oignon et l\'ail.\n3. Disposez les tranches de légumes en cercles concentriques.\n4. Assaisonnez d\'huile d\'olive, sel, poivre et herbes.\n5. Couvrez et laissez mijoter à feu doux 45 minutes.\n6. Terminez par 10 minutes au four pour caraméliser.',
         duration: 90,
         difficulty: 4,
         image: 'http://localhost:3001/images-recettes/ratatouille.webp',
-        quote: 'La cuisine est un art, et l\'art est une aventure.',
-        isValidated: true,
+        quote: 'N\'importe qui peut cuisiner, mais seul un grand chef peut cuisiner avec son cœur. - Chef Auguste Gusteau',
         
         userId: regularUser.id,
         categoryId: mainDishCategory.id,
@@ -315,12 +319,15 @@ async function main() {
     recipe3 = await prisma.recipe.create({
       data: {
         title: 'Bièraubeurre',
-        description: 'La boisson préférée des étudiants de Poudlard, servie aux Trois Balais. Une boisson chaude et réconfortante au caramel et à la crème.',
+        description: `1. Dans une casserole, faites fondre le beurre avec le sucre.
+2. Ajoutez le lait chaud progressivement en fouettant.
+3. Laissez mijoter à feu doux 10 minutes en remuant.
+4. Ajoutez une pincée de cannelle si désiré.
+5. Servez chaud avec une touche de crème fouettée.`,
         duration: 30,
         difficulty: 2,
         image: 'http://localhost:3001/images-recettes/biereaubeurre.webp',
-        quote: 'Rien de tel qu\'une bonne Bièraubeurre pour se réchauffer!',
-        isValidated: true,
+        quote: 'Oh, c\'est la meilleure chose que j\'ai jamais bue! - Harry Potter lors de sa première visite aux Trois Balais',
         
         userId: adminUser.id,
         categoryId: categories.find((c: Category) => c.name === 'Boissons')?.id || mainDishCategory.id,
@@ -345,7 +352,12 @@ async function main() {
     recipe4 = await prisma.recipe.create({
       data: {
         title: 'Chocolats chauds épicés à la Vianne',
-        description: 'Un chocolat chaud riche et épicé, inspiré de la chocolaterie de Vianne Rocher. Un mélange magique qui réchauffe le cœur.',
+        description: `1. Faites chauffer le lait à feu doux sans le faire bouillir.
+2. Cassez le chocolat en petits morceaux.
+3. Ajoutez le chocolat dans le lait chaud et remuez jusqu'à ce qu'il soit fondu.
+4. Ajoutez une pincée de piment de Cayenne.
+5. Fouettez jusqu'à obtenir une texture mousseuse.
+6. Servez chaud avec une pincée de cacao en poudre.`,
         duration: 20,
         difficulty: 3,
         image: 'http://localhost:3001/images-recettes/chocolat_chaud.webp',
@@ -375,7 +387,14 @@ async function main() {
     recipe5 = await prisma.recipe.create({
       data: {
         title: 'Bœuf Bourguignon de Julia',
-        description: 'Le plat signature de Julia Child, un classique de la cuisine française. Un ragoût de bœuf mijoté dans du vin rouge avec des légumes.',
+        description: `1. Coupez la viande en cubes et faites-la mariner dans le vin rouge.
+2. Faites revenir les lardons et réservez-les.
+3. Dans la même cocotte, faites dorer la viande de tous les côtés.
+4. Ajoutez les oignons, l'ail et les carottes.
+5. Remettez les lardons, ajoutez le vin et le bouillon.
+6. Laissez mijoter 2h30 à feu doux.
+7. Ajoutez les champignons 30 minutes avant la fin.
+8. Servez chaud avec des pommes de terre.`,
         duration: 180,
         difficulty: 4,
         image: 'http://localhost:3001/images-recettes/boeuf_bourguignon.webp',
@@ -407,7 +426,14 @@ async function main() {
     recipe6 = await prisma.recipe.create({
       data: {
         title: 'Caille en Sarcophage',
-        description: 'Un plat emblématique du film, une caille délicatement enveloppée dans une pâte feuilletée, servie avec une sauce aux truffes.',
+        description: `1. Préparez la pâte feuilletée et laissez-la reposer.
+2. Désossez délicatement les cailles.
+3. Préparez la farce aux truffes et aux foies gras.
+4. Farcissez les cailles et enveloppez-les dans la pâte.
+5. Dorez à l'œuf et faites des motifs décoratifs.
+6. Cuisez au four 25 minutes à 200°C.
+7. Préparez la sauce aux truffes pendant la cuisson.
+8. Servez immédiatement avec la sauce.`,
         duration: 150,
         difficulty: 5,
         image: 'http://localhost:3001/images-recettes/caille-sarcophage.webp',
@@ -438,7 +464,13 @@ async function main() {
     recipe7 = await prisma.recipe.create({
       data: {
         title: 'Saumon en Croûte d\'Herbes',
-        description: 'Un saumon délicatement cuit, recouvert d\'une croûte d\'herbes aromatiques, servi avec une sauce au citron.',
+        description: `1. Hachez finement les herbes avec l'ail et le zeste de citron.
+2. Mélangez avec la chapelure et l'huile d'olive.
+3. Assaisonnez les filets de saumon.
+4. Recouvrez de la croûte d'herbes.
+5. Cuisez au four 15-20 minutes à 180°C.
+6. Préparez la sauce au citron pendant la cuisson.
+7. Servez avec des légumes de saison.`,
         duration: 45,
         difficulty: 3,
         image: 'http://localhost:3001/images-recettes/Saumon_en_croute.webp',
@@ -470,7 +502,14 @@ async function main() {
     recipe8 = await prisma.recipe.create({
       data: {
         title: 'Poulet aux Morilles à la Crème',
-        description: 'Un plat raffiné digne de l\'Élysée, avec une sauce onctueuse aux morilles et à la crème.',
+        description: `1. Réhydratez les morilles séchées.
+2. Faites revenir le poulet jusqu'à ce qu'il soit doré.
+3. Ajoutez les échalotes et l'ail émincés.
+4. Déglacez au vin blanc.
+5. Ajoutez les morilles et la crème.
+6. Laissez mijoter 30 minutes.
+7. Rectifiez l'assaisonnement.
+8. Servez avec du riz ou des tagliatelles.`,
         duration: 60,
         difficulty: 4,
         image: 'http://localhost:3001/images-recettes/poulet-aux-morilles.webp',
@@ -501,7 +540,14 @@ async function main() {
     recipe9 = await prisma.recipe.create({
       data: {
         title: 'Tarte aux Pommes à la Rémy',
-        description: 'Une tarte aux pommes raffinée et délicate, inspirée par le talent culinaire de notre petit chef préféré.',
+        description: `1. Préparez la pâte et laissez-la reposer 1h.
+2. Épluchez et découpez finement les pommes.
+3. Étalez la pâte dans le moule.
+4. Disposez artistiquement les pommes.
+5. Saupoudrez de sucre et de cannelle.
+6. Ajoutez quelques noisettes de beurre.
+7. Cuisez 40 minutes à 180°C.
+8. Glacez avec du miel chaud.`,
         duration: 75,
         difficulty: 3,
         image: 'http://localhost:3001/images-recettes/Tarte_pommes.webp',
@@ -532,7 +578,14 @@ async function main() {
     recipe10 = await prisma.recipe.create({
       data: {
         title: 'Velouté de Potiron de Poudlard',
-        description: 'Un velouté réconfortant servi dans la Grande Salle pendant le festin d\'Halloween.',
+        description: `1. Épluchez et coupez le potiron en cubes.
+2. Faites revenir l'oignon émincé.
+3. Ajoutez le potiron et le bouillon.
+4. Laissez mijoter 20 minutes.
+5. Mixez jusqu'à obtenir un velouté.
+6. Ajoutez la crème et la muscade.
+7. Réchauffez doucement.
+8. Servez avec des croûtons dorés.`,
         duration: 45,
         difficulty: 2,
         image: 'http://localhost:3001/images-recettes/velouté_potiron.webp',

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import RecipeDetail from "./RecipeDetail";
 import recipeService from "../services/api/RecipeService";
+import MovieService from "../services/api/MovieService"; // Ajout de l'import
 import type { IRecipe } from "../types/Recipe";
+import type { IMovie } from "../types/Movies";
 
 interface Ingredient {
   quantity: number;
@@ -28,13 +30,41 @@ const RecipeDetailPage: React.FC = () => {
           return;
         }
 
-        const response = await recipeService.getRecipe(id);
-        if (!response) {
+        const recipeData = await recipeService.getRecipe(id);
+        
+        // Ajout de plus de console.log pour déboguer
+        console.log("Données brutes de la recette:", recipeData);
+        console.log("Type de instructions:", typeof recipeData.instructions);
+        console.log("Type de anecdote:", typeof recipeData.anecdote);
+        console.log("Description:", recipeData.description);
+
+        if (!recipeData) {
           setError("Recette introuvable");
           return;
         }
 
-        setRecipe(response);
+        // Si la recette a un film associé, récupérer les détails du film
+        if (recipeData.movie?.id) {
+          try {
+            const movieData = await MovieService.getMovie(recipeData.movie.id);
+            // Mettre à jour les données du film dans la recette
+            recipeData.movie = {
+              ...recipeData.movie,
+              ...movieData,
+            };
+          } catch (err) {
+            console.error("Erreur lors du chargement du film:", err);
+          }
+        }
+
+        // Traitement des instructions et de l'anecdote
+        const formattedRecipe = {
+          ...recipeData,
+          instructions: recipeData.description || "Aucune instruction disponible",  // Modification ici
+          anecdote: recipeData.anecdote || "Pas d'anecdote disponible pour cette recette."
+        };
+
+        setRecipe(formattedRecipe);
         setError(null);
       } catch (err) {
         console.error("Erreur lors du chargement de la recette:", err);
@@ -80,9 +110,14 @@ const RecipeDetailPage: React.FC = () => {
       : [];
 
   // Formatage des instructions avec vérification
-  const instructions = Array.isArray(recipe.instructions)
-    ? recipe.instructions.join("\n")
-    : recipe.instructions || "";
+  const instructions = recipe.description || "Aucune instruction disponible";  // Modification ici
+
+  // Formatage de l'anecdote avec vérification
+  const anecdote = recipe.anecdote || "Pas d'anecdote disponible pour cette recette.";
+
+  // Ajout d'un console.log avant le rendu
+  console.log("Instructions formatées:", instructions);
+  console.log("Anecdote formatée:", anecdote);
 
   // Formatage du nom de l'auteur avec vérification
   const authorName = recipe.author
@@ -103,17 +138,19 @@ const RecipeDetailPage: React.FC = () => {
               id: recipe.movie.id,
               title: recipe.movie.title,
               year: recipe.movie.releaseDate?.split("-")[0] || "",
-              poster: recipe.movie.image,
+              description: recipe.movie.description || "",
+              imdbLink: recipe.movie.imdbLink || "",
+              poster: recipe.movie.imageUrl,
+              anecdote: recipe.movie.anecdote || ""
             }
           : undefined
       }
       ingredients={formattedIngredients}
       instructions={instructions}
-      anecdote={
-        recipe.anecdote || "Pas d'anecdote disponible pour cette recette."
-      }
+      anecdote={anecdote}
     />
   );
 };
 
 export default RecipeDetailPage;
+     
