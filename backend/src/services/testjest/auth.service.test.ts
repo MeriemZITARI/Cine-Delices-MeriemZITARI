@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 // --- Le Mock Robuste et Simple ---
 // On dit à Jest: "Quand un fichier importe '../client/prismaClient', ne lui donne
 // pas le vrai fichier. Donne-lui cette fausse version à la place."
-jest.mock('../client/prismaClient', () => ({
+jest.mock('../../client/prismaClient', () => ({
   // On simule l'export nommé `prisma`
   prisma: {
     user: {
