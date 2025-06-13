@@ -123,12 +123,14 @@ const HomePageNew: React.FC = () => {
       {/* En-tête avec le formulaire de recherche */}
       <div className="bg-customYellow py-8">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0 rounded-lg overflow-hidden shadow-md">
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
               <div className="order-2 lg:order-1 lg:flex-1">
-                {/* <h2 className="text-xl font-bold mb-4">La recette du jour</h2> */}
-                <div className="relative rounded-lg sm:rounded-r-none overflow-hidden shadow-lg">
+                <div className="relative overflow-hidden shadow-lg">
+                  <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
+                    <h2 className="text-2xl lg:text-4xl font-bold">La recette du jour !</h2>
+                  </div>
                   <RecipeImage
                     recipe={featuredRecipe}
                     alt={featuredRecipe.title}
@@ -136,7 +138,7 @@ const HomePageNew: React.FC = () => {
                   />
                   <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
                     <Link to={`/recettes/${featuredRecipe.id}`} className="group">
-                      <h1 className="text-xl lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-yellow-300 transition-colors">
+                      <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-yellow-300 transition-colors">
                         {featuredRecipe.title}
                       </h1>
                       <div className="flex items-center gap-4 text-sm">
@@ -167,14 +169,14 @@ const HomePageNew: React.FC = () => {
       
       <div className="container mx-auto px-4 py-12">
         {/* Section films et carrousel */}
-        <section className="mb-16">
+        <section className="mb-16 hidden md:block">
           <h2 className="text-2xl font-bold mb-6">Films et Recettes à l'affiche</h2>
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Affiche de film aléatoire à gauche du carrousel (desktop uniquement) */}
             <div className="hidden lg:block w-full lg:w-[30%]">
               {randomMovieForCarrousel && (
                 <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
-                  <div className="relative h-[400px] w-full flex items-center justify-center">
+                  <div className="relative h-[320px] w-full flex items-center justify-center">
                     <MoviePoster
                       imdbLink={randomMovieForCarrousel.imdbLink}
                       alt={randomMovieForCarrousel.title}

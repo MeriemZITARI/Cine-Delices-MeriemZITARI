@@ -23,7 +23,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
   onTypeSelect
 }) => {
   return (
-    <div className="bg-white rounded-lg md:rounded-l-none shadow-md p-4 h-[400px]">
+    <div className="bg-white p-4 h-[400px]">
       <h3 className="text-base font-bold sm:text-lg mb-2">Je cherche...</h3>
       <form onSubmit={onSubmit}>
         <div className="flex items-center border rounded-md p-2 mb-4 sm:mb-5">
