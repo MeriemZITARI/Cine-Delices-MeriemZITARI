@@ -52,6 +52,7 @@
 ### 🔧 Backend
 
 ```bash
+
 cd backend
 cp .env.example .env
 npm install
@@ -59,12 +60,24 @@ npm run dev```
 
 ➡️ npm run dev lance le serveur backend avec ts-node-dev
 
+---
 
-### 🖥️ Frontend (React + Vite)
+### 🖥️ Frontend 
 
 ```bash
-cd cinedelices_test
+cd front
+cp .env.example .env
 npm install
 npm run dev```
 
 ➡️ npm run dev démarre le serveur Vite pour le frontend React
+
+---
+
+## Les commandes docker 
+
+```bash
+
+docker compose down -V # pour stopper les conteneurs et supprimer les volumes
+docker compose build --no-cache # pour reconstruire les images sans utiliser les images précédentes
+docker compose up -d # pour lancer les conteneurs en arrière plan 
