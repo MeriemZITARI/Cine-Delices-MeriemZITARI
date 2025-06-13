@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { FaClock } from 'react-icons/fa'; // Ajout de l'import
 import RecipeDetail from "./RecipeDetail";
 import recipeService from "../services/api/RecipeService";
 import MovieService from "../services/api/MovieService"; // Ajout de l'import
 import type { IRecipe } from "../types/Recipe";
 import type { IMovie } from "../types/Movies";
+import getDifficultyText from '../utils/getDifficulty';
 
 interface Ingredient {
   quantity: number;
@@ -128,8 +130,8 @@ const RecipeDetailPage: React.FC = () => {
     <RecipeDetail
       title={recipe.title}
       author={authorName}
-      difficulty={recipe.difficulty?.toString() || "1"}
-      duration={recipe.preparationTime || 0}
+      difficulty={getDifficultyText(recipe.difficulty)}
+      duration={recipe.duration || 0} // Assurez-vous de passer duration
       image={recipe.image || "/images/placeholder.jpg"}
       category={recipe.category?.name || "Non catégorisé"}
       movie={
@@ -147,10 +149,10 @@ const RecipeDetailPage: React.FC = () => {
       }
       ingredients={formattedIngredients}
       instructions={instructions}
-      anecdote={anecdote}
+      anecdote={recipe.quote || "Pas d'anecdote disponible pour cette recette."}
     />
   );
 };
 
 export default RecipeDetailPage;
-     
+

@@ -1,4 +1,5 @@
 import React from "react";
+import { FaClock } from 'react-icons/fa'; // Ajout de l'import
 import RecipeImage from "./RecipeImage";
 import MoviePoster from "./MoviePoster"; // Changer l'import
 
@@ -46,12 +47,17 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
             <div className="hidden lg:block mb-4">
               <h1 className="text-2xl font-bold text-center">{title}</h1>
               {movie && (
-                <div className="text-center text-sm text-gray-700 mt-1">Inspiré par le film "{movie.title}"</div>
+                <div className="text-center text-sm text-gray-700 mt-1">
+                  Inspiré par le film "{movie.title}"
+                </div>
               )}
               <div className="flex justify-center items-center gap-4 mt-2 text-base text-gray-800">
                 <span>Difficulté : <span className="font-semibold">{difficulty}</span></span>
                 <span className="text-gray-400">|</span>
-                <span>Temps : <span className="font-semibold">{duration} min</span></span>
+                <span className="flex items-center gap-2">
+                  <FaClock className="text-customYellow" />
+                  <span className="font-semibold">{duration} min</span>
+                </span>
               </div>
               <div className="text-center text-sm text-gray-600 mt-1">par {author}</div>
             </div>
