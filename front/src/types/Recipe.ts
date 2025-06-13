@@ -13,7 +13,7 @@ export interface IRecipe {
     }[];
     instructions: string[];
     imageUrl: string;
-    preparationTime: number;
+    duration: number;
     difficulty: number;
     servings: number;
     anecdote?: string;

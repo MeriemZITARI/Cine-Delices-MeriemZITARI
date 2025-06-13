@@ -10,6 +10,8 @@ import { Button } from '../ui/button';
 import RecipeCarouselNew from '../RecipeCarousselNew';
 import './HomePageNew.css';
 import SearchForm from '../SearchForm/SearchForm';
+import { FaClock, FaTools } from 'react-icons/fa';
+import getDifficultyText from '../../utils/getDifficulty';
 
 // Composant principal HomePageNew
 const HomePageNew: React.FC = () => {
@@ -31,6 +33,7 @@ const HomePageNew: React.FC = () => {
         if (recipesResponse?.data && recipesResponse.data.length > 0) {
           // Sélection aléatoire d'une recette pour la recette du jour
           const randomIndex = Math.floor(Math.random() * recipesResponse.data.length);
+          console.log(recipesResponse);
           setFeaturedRecipe(recipesResponse.data[randomIndex]);
           setLatestRecipes(recipesResponse.data.slice(0, 3));
           // Extraire les films uniques à partir des recettes
@@ -142,8 +145,18 @@ const HomePageNew: React.FC = () => {
                         {featuredRecipe.title}
                       </h1>
                       <div className="flex items-center gap-4 text-sm">
-                        <span>⏱️ {featuredRecipe.preparationTime} min</span>
-                        <span>👨‍🍳 Difficulté: {featuredRecipe.difficulty}/5</span>
+                        <span className="flex items-center gap-2">
+                          <span className="text-customYellow">
+                            <FaClock />
+                          </span>
+                          {featuredRecipe.duration} min
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className="text-customYellow">
+                            <FaTools />
+                          </span>
+                          {getDifficultyText(featuredRecipe.difficulty)}
+                        </span>
                       </div>
                     </Link>
                   </div>
@@ -229,8 +242,18 @@ const HomePageNew: React.FC = () => {
                         {recipe.category.name}
                       </span>
                     )}
-                    <span>⏱️ {recipe.preparationTime} min</span>
-                    <span>👨‍🍳 {recipe.difficulty}/5</span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-customYellow">
+                        <FaClock />
+                      </span>
+                      {recipe.duration} min
+                    </span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-customYellow">
+                        <FaTools />
+                      </span>
+                      {getDifficultyText(recipe.difficulty)}
+                    </span>
                   </div>
                 </div>
               </Link>
