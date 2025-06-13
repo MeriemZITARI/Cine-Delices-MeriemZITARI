@@ -10,7 +10,7 @@ userRouter.use(isAuthenticated);
 
 /**
  * @swagger
- * /api/users/me:
+ * /users/me:
  *   get:
  *     summary: Récupérer le profil de l'utilisateur connecté
  *     description: Récupère les informations du profil de l'utilisateur actuellement connecté.
@@ -28,7 +28,7 @@ userRouter.get('/me', handleGetMyProfile);
 
 /**
  * @swagger
- * /api/users/me:
+ * /users/me:
  *   patch:
  *     summary: Mettre à jour le profil de l'utilisateur connecté
  *     description: Met à jour les informations du profil de l'utilisateur actuellement connecté.
@@ -61,7 +61,7 @@ userRouter.patch('/me', validateRequest(updateProfileSchema), handleUpdateMyProf
 
 /**
  * @swagger
- * /api/users/me:
+ * /users/me:
  *   delete:
  *     summary: Supprimer le compte de l'utilisateur connecté
  *     description: Supprime le compte de l'utilisateur actuellement connecté.
