@@ -17,7 +17,6 @@ async function main() {
     },
   });
 
-<<<<<<< HEAD
   const categories = await Promise.all(
     categoriesData.map(async data => {
       const existingCategory = await prisma.category.findFirst({
@@ -44,40 +43,6 @@ async function main() {
     { name: 'Vin Rouge' }, { name: 'Bouillon' }, { name: 'Noix de Muscade' }, { name: 'Persil' },
     { name: 'Poulet' }, { name: 'Miel' }, { name: 'Pomme' }, { name: 'Caramel' },
     { name: 'Potiron' }, { name: 'Courge' }, { name: 'Muscade' }
-=======
-  const johnDoe = await prisma.user.create({
-    data: {
-      email: 'john.doe@example.com',
-      password: await argon2.hash('PasswordUser123!'),
-      firstName: 'John',
-      lastName: 'Doe',
-    },
-  });
-
-  const janeSmith = await prisma.user.create({
-    data: {
-      email: 'jane.smith@example.com',
-      password: await argon2.hash('Jane123!'),
-      firstName: 'Jane',
-      lastName: 'Smith',
-    },
-  });
-  console.log('Utilisateurs créés.');
-
-  // --- 2. Catégories ---
-  const entreeCat = await prisma.category.create({ data: { name: 'Entrée' } });
-  const platCat = await prisma.category.create({ data: { name: 'Plat' } });
-  const dessertCat = await prisma.category.create({ data: { name: 'Dessert' } });
-  const boissonCat = await prisma.category.create({ data: { name: 'Boisson' } });
-  console.log('Catégories créées.');
-
-  // --- 3. Ingrédients ---
-  const ingredientNames = [
-    'Tomate', 'Oignon', 'Ail', 'Huile d\'olive', 'Farine', 'Sucre', 'Ricotta', 'Ananas', 'Steak haché',
-    'Pain burger', 'Fromage cheddar', 'Chocolat Noir', 'Saucisse de Morteau', 'Pâte brisée', 'Oeuf',
-    'Crème fraîche', 'Crevette', 'Beurre', 'Persil', 'Lait de coco', 'Colorant alimentaire bleu',
-    'Porc haché', 'Gingembre', 'Sauce soja', 'Gin', 'Jus de cranberry', 'Pomme', 'Saumon'
->>>>>>> 00c42826bb691a94be518b0a17ebae59416becca
   ];
   for (const name of ingredientNames) {
     await prisma.ingredient.create({ data: { name } });
@@ -232,7 +197,6 @@ Instructions :
         ],
       },
     },
-<<<<<<< HEAD
     {
       title: 'Le Festin de Babette',
       description: 'Une réfugiée française devient cuisinière pour deux sœurs pieuses et prépare un festin somptueux qui change leur vie.',
@@ -430,92 +394,6 @@ Instructions :
             { quantity: 30, unit: 'ml', ingredientId: oliveOil.id },
           ],
         },
-=======
-  });
-
-  // 6
-  await prisma.recipe.create({
-    data: {
-      title: 'Crevettes à l\'Ail "Bubba Gump"',
-      duration: 25,
-      difficulty: 2,
-      image: 'http://localhost:3001/images-recettes/poulet-aux-morilles.webp',
-      quote: 'La vie, c\'est comme une boîte de chocolats...',
-      isValidated: true,
-      description: `Une variation des crevettes à l'ail et au beurre, simple et délicieuse.
-Instructions :
-- Faites fondre du beurre avec de l'ail haché.
-- Jetez-y des grosses crevettes décortiquées.
-- Faites cuire 1 à 2 minutes de chaque côté.
-- Déglacez avec du jus de citron, ajoutez du persil frais.`,
-      author: { connect: { id: johnDoe.id } },
-      category: { connect: { id: entreeCat.id } },
-      movie: { connect: { id: gumpMovie.id } },
-      ingredients: {
-        create: [
-          { unit: 'unité', quantity: 8, ingredient: { connect: { name: 'Crevette' } } },
-          { unit: 'gousse', quantity: 2, ingredient: { connect: { name: 'Ail' } } },
-          { unit: 'g', quantity: 20, ingredient: { connect: { name: 'Beurre' } } },
-          { unit: 'g', quantity: 10, ingredient: { connect: { name: 'Persil' } } },
-        ],
-      },
-    },
-  });
-
-  // 7
-  await prisma.recipe.create({
-    data: {
-      title: 'Le Lait Bleu de Bantha',
-      duration: 5,
-      difficulty: 1,
-      image: 'http://localhost:3001/images-recettes/biereaubeurre.webp',
-      quote: 'Ces droïdes... ils sont en vente ?',
-      isValidated: true,
-      description: `La boisson rafraîchissante de la ferme des Lars sur Tatooine.
-Instructions :
-- Dans un blender, versez 250ml de lait de coco.
-- Ajoutez du jus d'ananas et un trait de jus de citron.
-- Incorporez quelques gouttes de colorant alimentaire bleu.
-- Mixez et servez frais.`,
-      author: { connect: { id: janeSmith.id } },
-      category: { connect: { id: boissonCat.id } },
-      movie: { connect: { id: starWarsMovie.id } },
-      ingredients: {
-        create: [
-          { unit: 'cl', quantity: 25, ingredient: { connect: { name: 'Lait de coco' } } },
-          { unit: 'tranche', quantity: 1, ingredient: { connect: { name: 'Ananas' } } },
-          { unit: 'pincée', quantity: 1, ingredient: { connect: { name: 'Colorant alimentaire bleu' } } },
-        ],
-      },
-    },
-  });
-
-  // 8
-  await prisma.recipe.create({
-    data: {
-      title: 'Brioche "Sans-Visage"',
-      duration: 120,
-      difficulty: 4,
-      image: 'http://localhost:3001/images-recettes/Saumon_en_croute.webp',
-      quote: 'Ah... Ah...',
-      isValidated: true,
-      description: `Un pain au lait japonais (nikuman) doux et réconfortant.
-Instructions :
-- Préparez une pâte à brioche et laissez-la lever.
-- Préparez une farce à base de porc haché, gingembre et sauce soja.
-- Formez des boules de pâte, garnissez-les et refermez-les.
-- Faites cuire les brioches à la vapeur pendant 15 minutes.`,
-      author: { connect: { id: adminUser.id } },
-      category: { connect: { id: entreeCat.id } },
-      movie: { connect: { id: chihiroMovie.id } },
-      ingredients: {
-        create: [
-          { unit: 'g', quantity: 250, ingredient: { connect: { name: 'Farine' } } },
-          { unit: 'g', quantity: 200, ingredient: { connect: { name: 'Porc haché' } } },
-          { unit: 'g', quantity: 5, ingredient: { connect: { name: 'Gingembre' } } },
-          { unit: 'ml', quantity: 10, ingredient: { connect: { name: 'Sauce soja' } } },
-        ],
->>>>>>> 00c42826bb691a94be518b0a17ebae59416becca
       },
     },
   });
@@ -572,7 +450,6 @@ Instructions :
     },
   });
 
-<<<<<<< HEAD
   // Bièraubeurre de Harry Potter
   let recipe3 = await prisma.recipe.findFirst({ where: { title: 'Bièraubeurre' } });
   if (!recipe3) {
@@ -871,9 +748,6 @@ Instructions :
   console.log('Recette de Velouté de Potiron créée.');
 
   console.log('Seeding terminé.');
-=======
-  console.log('Seeding terminé avec succès !');
->>>>>>> 00c42826bb691a94be518b0a17ebae59416becca
 }
 
 main()
