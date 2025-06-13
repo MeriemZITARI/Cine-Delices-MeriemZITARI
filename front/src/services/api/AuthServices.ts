@@ -46,8 +46,14 @@ const authService = {
   },
 
   async logout() {
-    localStorage.removeItem('token');
-    delete axiosInstance.defaults.headers.common['Authorization'];
+    try {
+      await axiosInstance.post('/api/auth/logout');
+      this.setAuthToken(''); // Clear the token
+      return { success: true };
+    } catch (error) {
+      console.error('Erreur lors de la déconnexion:', error);
+      return { success: false, message: 'Erreur lors de la déconnexion' };
+    }
   },
 
   setAuthToken(token: string) {
