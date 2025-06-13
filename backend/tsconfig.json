@@ -12,6 +12,7 @@
     "skipLibCheck": true,
     "importHelpers": true,
 "allowJs": true,
+"types": ["jest", "node"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

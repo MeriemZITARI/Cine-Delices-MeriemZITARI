@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { findUserById } from '../services/user.service';
+import { findUserById, updateUserProfile, deleteUserAccount } from '../services/user.service';
+import { UpdateProfileInput } from '../validations/users';
 
 
 
@@ -28,4 +29,44 @@ export async function handleGetMyProfile(req: Request, res: Response, next: Next
   }
 }
 
+// --- NOUVELLE FONCTION ---
+export async function handleUpdateMyProfile(
+    // On type le corps de la requête avec notre type Zod
+    req: Request<{}, {}, UpdateProfileInput>,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      // 1. On récupère l'ID de l'utilisateur depuis le token (fourni par `isAuthenticated`)
+      const userId = req.user!.userId;
+  
+      // 2. On récupère les données validées du corps de la requête
+      const dataToUpdate = req.body;
+  
+      // 3. On appelle le service pour effectuer la mise à jour
+      const updatedUser = await updateUserProfile(userId, dataToUpdate);
+  
+      // 4. On renvoie l'utilisateur mis à jour avec un statut 200 OK
+      res.status(200).json(updatedUser);
+    } catch (error) {
+      // 5. On passe les erreurs (ex: email déjà pris par un autre user) au gestionnaire global
+      next(error);
+    }
+  }
 
+
+// --- NOUVELLE FONCTION POUR LA SUPPRESSION DU PROFIL ---
+
+export async function handleDeleteMyProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const userId = req.user!.userId;
+  
+      await deleteUserAccount(userId);
+  
+      // Le statut 204 No Content est la réponse standard et correcte
+      // pour une suppression réussie. On n'envoie pas de corps de réponse.
+      res.status(204).send();
+    } catch (error) {
+      next(error);
+    }
+  }

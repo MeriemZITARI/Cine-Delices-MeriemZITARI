@@ -55,3 +55,14 @@ export async function updateUserProfile(userId: string, data: UpdateProfileInput
   const { password, ...userWithoutPassword } = updatedUser;
   return userWithoutPassword;
 }
+
+export async function deleteUserAccount(userId: string) {
+  // On supprime l'utilisateur de la base de données
+  const deletedUser = await prisma.user.delete({
+    where: { id: userId },
+  });
+
+  // On peut renvoyer un message de succès ou l'utilisateur supprimé sans le mot de passe
+  const { password, ...userWithoutPassword } = deletedUser;
+  return userWithoutPassword;
+}

@@ -4,6 +4,7 @@
   "description": "API pour l'application de recettes Cine-Delices",
   "main": "dist/server.js",
   "scripts": {
+    "test": "jest",
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
