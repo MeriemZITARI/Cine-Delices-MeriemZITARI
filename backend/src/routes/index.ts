@@ -1,7 +1,7 @@
 // Fichier: src/routes/index.ts
 import { Router } from 'express';
 import recipeRoutes from './recipeRoutes/recipe.routes'; 
-import authRoutes from './authRoutes/auth.routes'; // Make sure this file exists: src/routes/authRoutes/auth.routes.ts
+import authRoutes from './authRoutes/auth.routes'; 
 import loginRoutes from './authRoutes/auth.routes'; 
 import userRoutes from './authRoutes/user.routes';
 import categoryRoutes from './categoryRoutes/category.routes';
