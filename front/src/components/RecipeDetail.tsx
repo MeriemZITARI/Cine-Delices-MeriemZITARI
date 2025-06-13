@@ -1,12 +1,13 @@
 import React from "react";
 import RecipeImage from "./RecipeImage";
-import MovieImage from "./MovieImage";
+import MoviePoster from "./MoviePoster"; // Changer l'import
 
 interface MovieForDetail {
   id: string;
   title: string;
   year: string;
   poster?: string;
+  imdbLink?: string; // Ajouter cette propriété
 }
 
 interface RecipeDetailProps {
@@ -82,7 +83,11 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
                       <div className="text-sm font-medium text-gray-700 italic truncate max-w-[70vw]">{`"${movie.title}"`}</div>
                     </div>
                     <div className="flex-shrink-0 w-20 h-20 ml-2 rounded overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
-                      <MovieImage movie={movie} alt={movie.title} className="w-full h-full object-cover rounded shadow" />
+                      <MoviePoster 
+                        imdbLink={movie.imdbLink}
+                        alt={movie.title}
+                        className="w-full h-full object-cover rounded shadow"
+                      />
                     </div>
                   </div>
                 )}
@@ -90,7 +95,11 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
               {/* Image film 30% */}
               {movie && (
                 <div className="hidden lg:flex w-full lg:w-[30%] items-center justify-center">
-                  <MovieImage movie={movie} alt={movie.title} className="w-full h-28 lg:h-64 object-cover rounded-md border" />
+                  <MoviePoster 
+                    imdbLink={movie.imdbLink}
+                    alt={movie.title}
+                    className="w-full h-28 lg:h-64 object-cover rounded-md border"
+                  />
                 </div>
               )}
             </div>
