@@ -56,28 +56,33 @@
 cd backend
 cp .env.example .env
 npm install
-npm run dev```
+npm run dev
+```
 
 ➡️ npm run dev lance le serveur backend avec ts-node-dev
 
 ---
 
-### 🖥️ Frontend 
+### 🖥️ Frontend
 
 ```bash
 cd front
 cp .env.example .env
 npm install
-npm run dev```
+npm run dev
+```
 
 ➡️ npm run dev démarre le serveur Vite pour le frontend React
 
 ---
 
-## Les commandes docker 
+## 🐳 Lancer l'application avec Docker
+
+---
 
 ```bash
-
-docker compose down -V # pour stopper les conteneurs et supprimer les volumes
-docker compose build --no-cache # pour reconstruire les images sans utiliser les images précédentes
-docker compose up -d # pour lancer les conteneurs en arrière plan 
+docker compose up --build # Démarre les conteneurs et recrée les images Docker à partir des dossiers backend et front
+docker compose exec backend npx prisma migrate dev # à utiliser en local dans un environnement de développement 
+docker compose exec backend npx prisma migrate deploy # à utiliser dans un environnement de production /préproduction 
+docker compose exec backend npx prisma db seed # exécute le fichier prisma/seed.ts indépendamment des migrations.
+```
