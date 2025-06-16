@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import MovieSearchModal from './MovieSearchModal';
-import { getIngredients, addIngredient } from '../services/api/IngredientService';
-import { Button } from './ui/button';
-import { getImageUrl } from '../services/Tmdb.Api';
-import { getCategories, Category } from "../services/api/CategoryService";
+import MovieSearchModal from '../../components/MovieSearchModal';
+import { getIngredients, addIngredient } from '../../services/api/IngredientService';
+import { Button } from '../../components/ui/button';
+import { getImageUrl } from '../../services/Tmdb.Api';
+import { getCategories, Category } from "../../services/api/CategoryService";
 import { useNavigate } from 'react-router-dom';
-import { recipeService } from '../services/api/RecipeService';
+import { recipeService } from '../../services/api/RecipeService';
 
 interface Ingredient {
   id: string;
@@ -295,99 +295,45 @@ const AddRecipePage: React.FC = () => {
           </div>
           {/* Suggestions d'autocomplétion */}
           {ingredientSuggestions.length > 0 && (
-            <ul className="border border-gray-300 rounded bg-white mt-1 w-full max-h-36 overflow-y-auto absolute z-10">
-              {ingredientSuggestions.map(i => (
+            <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
+              {ingredientSuggestions.map((ingredient) => (
                 <li
-                  key={i.id}
-                  className="px-3 py-2 cursor-pointer hover:bg-blue-50"
+                  key={ingredient.id}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                   onClick={() => {
-                    setIngredientInput(i.name);
+                    setIngredientInput(ingredient.name);
+                    handleAddIngredient(ingredient.name);
                     setShowSuggestions(false);
                   }}
                 >
-                  {i.name}
+                  {ingredient.name}
                 </li>
               ))}
             </ul>
           )}
-          {/* Liste des ingrédients sélectionnés */}
+          
+          {/* Affichage des ingrédients sélectionnés */}
           <div className="flex flex-wrap gap-2 mt-3">
-            {selectedIngredients.map((ing, idx) => (
-              <span
-                key={idx}
-                className="rounded-full px-4 py-1 text-sm flex items-center border border-gray-300 bg-white text-gray-900"
+            {selectedIngredients.map((ing, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 bg-blue-100 px-3 py-1 rounded"
               >
-                {editingIndex === idx ? (
-                  <>
-                    <input
-                      className="form-control border border-gray-300 rounded px-2 py-1 text-black w-24 mr-1"
-                      value={ing.name}
-                      onChange={e => {
-                        const updated = [...selectedIngredients];
-                        updated[idx].name = e.target.value;
-                        setSelectedIngredients(updated);
-                      }}
-                    />
-                    <input
-                      className="form-control border border-gray-300 rounded px-2 py-1 text-black w-14 mr-1"
-                      type="number"
-                      min="0"
-                      value={ing.quantity}
-                      onChange={e => {
-                        const updated = [...selectedIngredients];
-                        updated[idx].quantity = Number(e.target.value);
-                        setSelectedIngredients(updated);
-                      }}
-                    />
-                    <input
-                      className="form-control border border-gray-300 rounded px-2 py-1 text-black w-14 mr-1"
-                      value={ing.unit}
-                      onChange={e => {
-                        const updated = [...selectedIngredients];
-                        updated[idx].unit = e.target.value;
-                        setSelectedIngredients(updated);
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      className="ml-2 text-white font-bold"
-                      onClick={() => setEditingIndex(null)}
-                      title="Valider"
-                      variant="ghost"
-                    >
-                      ✔
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    {ing.name}
-                    <span className="ml-2 text-xs text-gray-500">({ing.quantity} {ing.unit})</span>
-                    <Button
-                      type="button"
-                      className="ml-2 text-white"
-                      onClick={() => setEditingIndex(idx)}
-                      title="Modifier"
-                      variant="ghost"
-                    >
-                      {/* Icône crayon SVG */}
-                      <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M17.414 2.586a2 2 0 0 0-2.828 0l-9.5 9.5A2 2 0 0 0 4 13.414V16a1 1 0 0 0 1 1h2.586a2 2 0 0 0 1.414-.586l9.5-9.5a2 2 0 0 0 0-2.828l-2-2zM6 15v-1.586l8.293-8.293 1.586 1.586L7.586 15H6z"/>
-                      </svg>
-                    </Button>
-                    <Button
-                      type="button"
-                      className="ml-2 text-white font-bold"
-                      onClick={() =>
-                        setSelectedIngredients(selectedIngredients.filter((_, i) => i !== idx))
-                      }
-                      title="Retirer"
-                      variant="ghost"
-                    >
-                      ×
-                    </Button>
-                  </>
-                )}
-              </span>
+                <span>
+                  {ing.ingredientName} - {ing.quantity} {ing.unit}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newIngredients = [...selectedIngredients];
+                    newIngredients.splice(index, 1);
+                    setSelectedIngredients(newIngredients);
+                  }}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  ×
+                </button>
+              </div>
             ))}
           </div>
         </div>

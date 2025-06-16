@@ -10,12 +10,12 @@ import NotFoundPage from "./pages/errors/404";
 import AllMoviesPage from "./pages/MoviePage/AllMoviesPage";
 
 import RecipeDetailPage from "./components/RecipeDetailPage";
-import AddRecipePage from "./components/AddRecipePage";
+import AddRecipePage from "./pages/RecipePage/AddRecipePage";
 import AllRecipesPage from './components/AllRecipesPage';
 
 
 import { SearchModalProvider } from "./context/SearchModalContext";
-import AllMoviesPage from "./pages/MoviePage/AllMoviesPage";
+
 
 function App() {
   return (
@@ -29,7 +29,6 @@ function App() {
             <Route path="/recettes/:id" element={<RecipeDetailPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
-            // ajouter la route pour créer une recette
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/recipes" element={<AllRecipesPage />} />
             <Route path="/add-recipe" element={<AddRecipePage />} />
