@@ -34,6 +34,8 @@ async function main() {
     { name: 'Snacks' },
   ];
 
+ 
+
   const categories = await Promise.all(
     categoriesData.map(async data => {
       const existingCategory = await prisma.category.findFirst({
