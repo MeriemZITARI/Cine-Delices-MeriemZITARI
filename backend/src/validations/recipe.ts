@@ -1,12 +1,13 @@
 
 import { query } from "express";
+import { monitorEventLoopDelay } from "perf_hooks";
 import z from "zod";
 
 // Schema pour chque ingrédient dans une recette avec quantité et unité
 export const ingredientInRecipeSchema = z.object({
     ingredientId: z.string().cuid("L'ID de l'ingrédient doit être un CUID valide"),
     quantity: z.number().min(0.01, "La quantité doit être supérieure à 0").max(10000, "La quantité ne doit pas dépasser 10000"),
-    unit: z.string().min(1, "l'unité ne peut etre vide").max(20, "L'unité ne doit pas dépasser 10 caractères"), 
+    unit: z.string().min(1, "l'unité ne peut etre vide").max(20, "L'unité ne doit pas dépasser 20 caractères"), 
 });
 
 // Schema pour la creation d'une recette
@@ -37,3 +38,10 @@ export const createRecipeSchema = z.object({
 
 
      // TypeScript type pour le filtrage des recettes
+     export const filterRecipesSchema = z.object({
+        search: z.string().optional(), // Recherche par titre ou description
+        categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide").optional(), // Filtrer par catégorie
+        movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(), // Filtrer par film   
+     });
+
+     export type FilterRecipesInput = z.infer<typeof filterRecipesSchema>;// TypeScript type pour le filtrage des recettes

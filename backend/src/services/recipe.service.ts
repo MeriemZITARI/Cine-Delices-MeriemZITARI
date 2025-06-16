@@ -1,6 +1,6 @@
 // src/services/recipe.service.ts
 import { prisma } from '../client/prismaClient';
-import { CreateRecipeInput, UpdateRecipeInput } from '../validations/recipe'; 
+import { CreateRecipeInput, UpdateRecipeInput,FilterRecipesInput } from '../validations/recipe'; 
 
 
 
@@ -185,23 +185,47 @@ export async function getRecipeByIdService(recipeId: string) {
     return recipe;
   }
 
-  /**
- * Service pour RÉCUPÉRER TOUTES les recettes.
- * C'est une étape du CRUD (Read - toutes les recettes).
- *
- * @returns Un tableau de toutes les recettes avec leurs relations.
+ /**
+ * Service pour RÉCUPÉRER TOUTES les recettes en appliquant des filtres.
  */
-export async function getAllRecipesService() {
-    const recipes = await prisma.recipe.findMany({ // <--- C'est ici que Prisma récupère toutes les recettes
-      include: { // On inclut les relations pour une réponse complète
-        author: { select: { id: true, firstName: true, lastName: true } },
-        category: true,
-        movie: true,
-        ingredients: { include: { ingredient: true } }
-      }
-    });
-    return recipes;
+export async function getAllRecipesService(filters: FilterRecipesInput = {}) {
+  // On extrait les filtres pour les utiliser
+  const { categoryId, movieId, search } = filters;
+
+  // On construit la clause de filtre pour Prisma.
+  // C'est un objet qui va contenir les conditions de recherche.
+  const whereClause: any = {};
+
+  if (categoryId) {
+    whereClause.categoryId = categoryId;
   }
+
+  if (movieId) {
+    whereClause.movieId = movieId;
+  }
+
+  if (search) {
+    whereClause.OR = [
+      // OR permet de chercher dans plusieurs champs.Par exemple, si l'utilisateur cherche "pasta","poulet"etc
+      { title: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+
+  console.log("Clause 'where' finale envoyée à Prisma:", whereClause);
+
+  const recipes = await prisma.recipe.findMany({
+    where: whereClause, // On utilise la clause de filtre ici
+    include: {
+      author: { select: { id: true, firstName: true, lastName: true } },
+      category: true,
+      movie: true,
+      ingredients: { include: { ingredient: true } },
+    },
+  });
+
+  return recipes;
+}
 
 /**
  * Service pour SUPPRIMER une recette par son ID.
