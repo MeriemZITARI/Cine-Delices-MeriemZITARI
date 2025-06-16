@@ -59,4 +59,20 @@ export async function updateUser(userId: string, data: UpdateUserInput) {
     });
   
     return updatedUser;
-}
+};
+
+export async function deleteUser(userId: string) {
+    // Vérifier si l'utilisateur existe
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+  
+    if (!user) {
+      throw new Error('Utilisateur non trouvé.');
+    }
+  
+    // Supprimer l'utilisateur
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+  }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handleGetAllUsers, handleUpdateUser } from '../../controllers/adminController/admin.user.controller';
+import { handleDeleteUser, handleGetAllUsers, handleUpdateUser } from '../../controllers/adminController/admin.user.controller';
 import { isAuthenticated } from '../../middlewares/isAuthenticated';
 import { isAdmin } from '../../middlewares/isAdmin';
 import { validateRequest } from 'middlewares/validateRequest';
@@ -92,6 +92,31 @@ adminRouter.get('/users',isAuthenticated, isAdmin, handleGetAllUsers);
  *         description: Erreur interne du serveur.
  */
 adminRouter.patch('/users/:id', isAuthenticated, isAdmin, handleUpdateUser);
+
+/**
+ * @swagger
+ * /admin/users/{id}:
+ *   delete:
+ *     summary: Supprimer un utilisateur
+ *     description: Permet à un administrateur de supprimer un utilisateur par son ID.
+ *     tags:
+ *       - Administration
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de l'utilisateur à supprimer
+ *     responses:
+ *       200:
+ *         description: Utilisateur supprimé avec succès.
+ *       404:
+ *         description: Utilisateur non trouvé.
+ *       500:
+ *         description: Erreur interne du serveur.
+ */
+adminRouter.delete('/users/:id', isAuthenticated, isAdmin, handleDeleteUser);
 
 
 export default adminRouter;

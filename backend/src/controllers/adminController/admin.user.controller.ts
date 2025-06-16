@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { getAllUsers, updateUser } from '../../services/adminService/admin.user.service';
+import { deleteUser, getAllUsers, updateUser } from '../../services/adminService/admin.user.service';
 import { getAllUsersFiltersSchema, updateUserSchema } from '../../validations/admin/admin.user';
 
 export async function handleGetAllUsers(req: Request, res: Response, next: NextFunction) {
@@ -33,6 +33,23 @@ export async function handleUpdateUser(req: Request, res: Response, next: NextFu
       res.status(200).json({
         data: updatedUser,
         message: 'Utilisateur mis à jour avec succès.',
+      });
+    } catch (error) {
+      // Passer l'erreur au middleware de gestion des erreurs
+      next(error);
+    }
+};
+
+export async function handleDeleteUser(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id } = req.params; // Récupérer l'ID de l'utilisateur à supprimer
+  
+      // Appeler le service pour supprimer l'utilisateur
+      await deleteUser(id);
+  
+      // Retourner une réponse de succès
+      res.status(200).json({
+        message: 'Utilisateur supprimé avec succès.',
       });
     } catch (error) {
       // Passer l'erreur au middleware de gestion des erreurs
