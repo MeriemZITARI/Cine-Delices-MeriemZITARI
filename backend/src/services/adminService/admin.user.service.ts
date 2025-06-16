@@ -1,5 +1,5 @@
 import { prisma } from '../../client/prismaClient';
-//import { CreateUserInput, UpdateUserInput } from '../../validations/admin/admin.user';
+import { UpdateUserInput } from '../../validations/admin/admin.user';
 import type { GetAllUsersFilters } from '../../validations/admin/admin.user';
 
 // Fonction qui récupère tous les utilisateurs selon des filtres dynamiques
@@ -40,4 +40,23 @@ export async function getAllUsers(filters: GetAllUsersFilters) {
       createdAt: true,
     },
   });
+};
+
+export async function updateUser(userId: string, data: UpdateUserInput) {
+    // Vérifier si l'utilisateur existe
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+  
+    if (!user) {
+      throw new Error('Utilisateur non trouvé.');
+    }
+  
+    // Mettre à jour l'utilisateur
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data,
+    });
+  
+    return updatedUser;
 }

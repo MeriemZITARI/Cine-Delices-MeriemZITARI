@@ -1,7 +1,9 @@
 import { Router } from 'express';
-import { handleGetAllUsers } from '../../controllers/adminController/admin.user.controller';
+import { handleGetAllUsers, handleUpdateUser } from '../../controllers/adminController/admin.user.controller';
 import { isAuthenticated } from '../../middlewares/isAuthenticated';
 import { isAdmin } from '../../middlewares/isAdmin';
+import { validateRequest } from 'middlewares/validateRequest';
+import { updateUserSchema } from 'validations/admin/admin.user';
 
 const adminRouter = Router();
 /**
@@ -43,5 +45,53 @@ const adminRouter = Router();
  */
 
 adminRouter.get('/users',isAuthenticated, isAdmin, handleGetAllUsers);
+
+/**
+* @swagger
+ * /admin/users/{id}:
+ *   put:
+ *     summary: Mettre à jour un utilisateur
+ *     description: Permet à un administrateur de modifier les informations d'un utilisateur.
+ *     tags:
+ *       - Administration
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID de l'utilisateur à modifier
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "John"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *               email:
+ *                 type: string
+ *                 example: "john.doe@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "Password123!"
+ *               isAdmin:
+ *                 type: boolean
+ *                 example: false
+ *     responses:
+ *       200:
+ *         description: Utilisateur mis à jour avec succès.
+ *       404:
+ *         description: Utilisateur non trouvé.
+ *       500:
+ *         description: Erreur interne du serveur.
+ */
+adminRouter.patch('/users/:id', isAuthenticated, isAdmin, handleUpdateUser);
+
 
 export default adminRouter;

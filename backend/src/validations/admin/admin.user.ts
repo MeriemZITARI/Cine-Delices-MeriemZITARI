@@ -26,26 +26,32 @@ export const getAllUsersFiltersSchema = z.object({
     })
     .optional(),
   });
+  export const updateUserSchema = z.object({
+    firstName: z
+      .string()
+      .min(1, "Le prénom doit contenir au moins 2 caractères")
+      .max(50, "Le prénom ne doit pas dépasser 50 caractères")
+      .optional(), // Optionnel pour la mise à jour
+    lastName: z
+      .string()
+      .min(1, "Le nom doit contenir au moins 2 caractères")
+      .max(50, "Le nom ne doit pas dépasser 50 caractères")
+      .optional(), // Optionnel pour la mise à jour
+    email: z
+      .string()
+      .email("L'email doit être valide")
+      .max(50, "L'email ne doit pas dépasser 50 caractères")
+      .optional(), // Optionnel pour la mise à jour
+    isAdmin: z
+      .boolean()
+      .optional(), // Optionnel pour la mise à jour
+  });
 
-// Schéma pour créer un utilisateur
-export const createUserSchema = z.object({
-  firstName: z.string().min(2, "Le prénom doit contenir au moins 2 caractères").max(50, "Le prénom ne doit pas dépasser 50 caractères"),
-  lastName: z.string().min(2, "Le nom doit contenir au moins 2 caractères").max(50, "Le nom ne doit pas dépasser 50 caractères"),
-  email: z.string().email("L'email doit être valide").max(50, "L'email ne doit pas dépasser 50 caractères"),
-  password: z.string()
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères")
-    .max(64, "Le mot de passe ne doit pas dépasser 64 caractères")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/,
-      "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
-    ),
-  isAdmin: z.boolean().optional(), // Optionnel, par défaut false
-});
+
 
 // Schéma pour mettre à jour un utilisateur (toutes les propriétés sont optionnelles)
-export const updateUserSchema = createUserSchema.partial();
 
 // Types dérivés des schémas
-export type CreateUserInput = z.infer<typeof createUserSchema>;
+
 export type UpdateUserInput = z.infer<typeof updateUserSchema>;
 export type GetAllUsersFilters = z.infer<typeof getAllUsersFiltersSchema>;
