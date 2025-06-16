@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from "axios";
 
 interface MoviePosterProps {
   imdbId?: string;
@@ -40,12 +41,12 @@ const MoviePoster: React.FC<MoviePosterProps> = ({ imdbId, imdbLink, alt, classN
           return;
         }
         
-        const response = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`);
-        if (!response.ok) {
+        const response = await axios.get(`https://www.omdbapi.com/?i=${id}&apikey=${apiKey}`);
+        if (response.status !== 200) {
           throw new Error('Erreur réseau lors de la récupération de l\'affiche');
         }
         
-        const data = await response.json();
+        const data = response.data;
         console.log('OMDb API result:', data);
         
         if (data.Response === 'True' && data.Poster && data.Poster !== 'N/A') {
@@ -97,5 +98,7 @@ const MoviePoster: React.FC<MoviePosterProps> = ({ imdbId, imdbLink, alt, classN
     </div>
   );
 };
+
+// Axios est déjà utilisé pour OMDb API
 
 export default MoviePoster;

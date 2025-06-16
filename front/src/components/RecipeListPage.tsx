@@ -1,33 +1,84 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import type { IRecipe } from "../types/Recipe";
+import { useParams, useNavigate } from "react-router-dom";
+import { FaClock } from 'react-icons/fa'; // Ajout de l'import
+import RecipeDetail from "./RecipeDetail";
 import recipeService from "../services/api/RecipeService";
-import RecipeImage from "./RecipeImage";
+import MovieService from "../services/api/MovieService"; // Ajout de l'import
+import type { IRecipe } from "../types/Recipe";
+import type { IMovie } from "../types/Movies";
+import getDifficultyText from '../utils/getDifficulty';
 
-const RecipeListPage: React.FC = () => {
-  const [recipes, setRecipes] = useState<IRecipe[]>([]);
+interface Ingredient {
+  quantity: number;
+  unit: string;
+  ingredient: {
+    name: string;
+  };
+}
+
+const RecipeDetailPage: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const [recipe, setRecipe] = useState<IRecipe | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchRecipes = async () => {
+    const fetchRecipe = async () => {
       try {
         setLoading(true);
-        const response = await recipeService.getRecipes();
-        if (response.data) {
-          setRecipes(response.data);
+        if (!id) {
+          setError("ID de recette manquant");
+          return;
         }
+
+        const recipeData = await recipeService.getRecipe(id);
+        
+        // Ajout de plus de console.log pour déboguer
+        console.log("Données brutes de la recette:", recipeData);
+        console.log("Type de instructions:", typeof recipeData.instructions);
+        console.log("Type de anecdote:", typeof recipeData.anecdote);
+        console.log("Description:", recipeData.description);
+
+        if (!recipeData) {
+          setError("Recette introuvable");
+          return;
+        }
+
+        // Si la recette a un film associé, récupérer les détails du film
+        if (recipeData.movie?.id) {
+          try {
+            const movieData = await MovieService.getMovie(recipeData.movie.id);
+            // Mettre à jour les données du film dans la recette
+            recipeData.movie = {
+              ...recipeData.movie,
+              ...movieData,
+            };
+          } catch (err) {
+            console.error("Erreur lors du chargement du film:", err);
+          }
+        }
+
+        // Traitement des instructions et de l'anecdote
+        const formattedRecipe = {
+          ...recipeData,
+          instructions: recipeData.description || "Aucune instruction disponible",  // Modification ici
+          anecdote: recipeData.anecdote || "Pas d'anecdote disponible pour cette recette."
+        };
+
+        setRecipe(formattedRecipe);
         setError(null);
       } catch (err) {
-        console.error("Erreur lors du chargement des recettes:", err);
-        setError("Impossible de charger les recettes");
+        console.error("Erreur lors du chargement de la recette:", err);
+        setError("Impossible de charger la recette");
+        setRecipe(null);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRecipes();
-  }, []);
+    fetchRecipe();
+  }, [id]);
 
   if (loading) {
     return (
@@ -37,53 +88,71 @@ const RecipeListPage: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error || !recipe) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">Oups !</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+          <p className="text-gray-600 mb-4">{error || "Recette introuvable"}</p>
           <button
-            onClick={() => window.location.reload()}
+            onClick={() => navigate("/recettes")}
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
-            Réessayer
+            Retourner aux recettes
           </button>
         </div>
       </div>
     );
   }
 
+  // Formatage des ingrédients avec vérification de type
+  const formattedIngredients =
+    recipe.ingredients && Array.isArray(recipe.ingredients)
+      ? recipe.ingredients.map((ing: Ingredient) => `${ing.quantity} ${ing.unit} ${ing.ingredient.name}`)
+      : [];
+
+  // Formatage des instructions avec vérification
+  const instructions = recipe.description || "Aucune instruction disponible";  // Modification ici
+
+  // Formatage de l'anecdote avec vérification
+  const anecdote = recipe.anecdote || "Pas d'anecdote disponible pour cette recette.";
+
+  // Ajout d'un console.log avant le rendu
+  console.log("Instructions formatées:", instructions);
+  console.log("Anecdote formatée:", anecdote);
+
+  // Formatage du nom de l'auteur avec vérification
+  const authorName = recipe.author
+    ? `${recipe.author.firstName || ""} ${recipe.author.lastName || recipe.author.username}`.trim()
+    : "Auteur inconnu";
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Toutes les recettes</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {recipes.map((recipe) => (
-          <Link
-            key={recipe.id}
-            to={`/recettes/${recipe.id}`}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            <RecipeImage              recipe={recipe}
-              alt={recipe.title}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-4">
-              <h3 className="font-bold">{recipe.title}</h3>
-              <p className="text-sm text-gray-600">
-                ⏱️ {recipe.preparationTime} minutes
-              </p>
-              {recipe.movie && (
-                <p className="text-sm text-gray-600">
-                  🎬 {recipe.movie.title}
-                </p>
-              )}
-            </div>
-          </Link>
-        ))}
-      </div>
-    </div>
+    <RecipeDetail
+      title={recipe.title}
+      author={authorName}
+      difficulty={getDifficultyText(recipe.difficulty)}
+      duration={recipe.duration || 0} // Assurez-vous de passer duration
+      image={recipe.image || "/images/placeholder.jpg"}
+      category={recipe.category?.name || "Non catégorisé"}
+      movie={
+        recipe.movie
+          ? {
+              id: recipe.movie.id,
+              title: recipe.movie.title,
+              year: recipe.movie.releaseDate?.split("-")[0] || "",
+              description: recipe.movie.description || "",
+              imdbLink: recipe.movie.imdbLink || "",
+              poster: recipe.movie.imageUrl,
+              anecdote: recipe.movie.anecdote || ""
+            }
+          : undefined
+      }
+      ingredients={formattedIngredients}
+      instructions={instructions}
+      anecdote={recipe.quote || "Pas d'anecdote disponible pour cette recette."}
+    />
   );
 };
 
-export default RecipeListPage;
+export default RecipeDetailPage;
+
