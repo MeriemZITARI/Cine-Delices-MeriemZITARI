@@ -8,24 +8,42 @@ import RecipeImage from '../RecipeImage';
 import MoviePoster from '../MoviePoster';
 import { Button } from '../ui/button';
 import RecipeCarouselNew from '../RecipeCarousselNew';
-import './HomePageNew.css';
+import './HomePage.css';
 import SearchForm from '../SearchForm/SearchForm';
 import { FaClock, FaTools } from 'react-icons/fa';
 import getDifficultyText from '../../utils/getDifficulty';
 
-// Composant principal HomePageNew
-const HomePageNew: React.FC = () => {
-  const [featuredRecipe, setFeaturedRecipe] = useState<IRecipe | null>(null);
-  const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
-  const [uniqueMovies, setUniqueMovies] = useState<IMovie[]>([]);
-  const [randomMovieForCarrousel, setRandomMovieForCarrousel] = useState<IMovie | null>(null);
-  const [activeSlide, setActiveSlide] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-  const [selectedType, setSelectedType] = useState<string | null>(null);
 
-  useEffect(() => {
+// Composant principal de la page d'accueil
+const HomePage: React.FC = () => {
+  // --- États principaux ---
+  // Recette du jour (affichage en haut)
+  const [featuredRecipe, setFeaturedRecipe] = useState<IRecipe | null>(null);
+  // Dernières recettes pour le carrousel (toujours affichées)
+  const [latestRecipes, setLatestRecipes] = useState<IRecipe[]>([]);
+  // Résultats de la recherche utilisateur
+  const [searchResults, setSearchResults] = useState<IRecipe[]>([]);
+  // Indique si l'utilisateur a lancé une recherche (pour afficher la section résultats)
+  const [hasSearched, setHasSearched] = useState(false);
+  // Liste des films uniques extraits des recettes (pour le carrousel)
+  const [uniqueMovies, setUniqueMovies] = useState<IMovie[]>([]);
+  // Film aléatoire à afficher à côté du carrousel
+  const [randomMovieForCarrousel, setRandomMovieForCarrousel] = useState<IMovie | null>(null);
+  // Slide actif du carrousel (si besoin d’extension)
+  const [activeSlide, setActiveSlide] = useState(0);
+  // Indique si les données sont en cours de chargement (affiche un loader)
+  const [loading, setLoading] = useState(true);
+
+  // --- États pour le formulaire de recherche ---
+  // Terme recherché (texte)
+  const [searchTerm, setSearchTerm] = useState('');
+  // Durée sélectionnée (minutes)
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(null); // Stocke la durée sélectionnée
+  // Type/catégorie sélectionné (clé interne : 'entrée', 'plat', ...)
+  const [selectedType, setSelectedType] = useState<string | null>(null); // Stocke le type/catégorie sélectionné
+
+  // --- Chargement initial des données (recettes, films) ---
+  useEffect(() => { // Récupère toutes les recettes et prépare les données pour l'affichage principal
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -80,32 +98,44 @@ const HomePageNew: React.FC = () => {
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);    try {
+    setLoading(true);
+    setHasSearched(true);
+    try {
       const response = await recipeService.getRecipes();
       let filteredRecipes = response.data;
       console.log("Recettes à filtrer:", filteredRecipes);
 
+      // --- Filtrage sur la durée ---
       if (selectedDuration) {
         filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.preparationTime <= selectedDuration
+          recipe.duration <= selectedDuration
         );
       }
 
+      // --- Mapping entre valeurs du filtre et noms réels de catégories ---
       if (selectedType) {
+        // Ce mapping permet de faire correspondre la valeur du bouton à la vraie catégorie en base
+        const categoryMap: Record<string, string> = {
+          'entrée': 'Entrées',
+          'plat': 'Plats Principaux',
+          'dessert': 'Desserts',
+          'boisson': 'Boissons'
+        };
+        const mappedCategory = categoryMap[selectedType];
         filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.category && recipe.category.name.toLowerCase() === selectedType.toLowerCase()
+          recipe.category && recipe.category.name === mappedCategory
         );
       }
 
+      // --- Filtrage sur le titre de la recette ---
       if (searchTerm) {
         filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          recipe.description.toLowerCase().includes(searchTerm.toLowerCase())
+          recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
       console.log("Recettes filtrées:", filteredRecipes);
-      setLatestRecipes(filteredRecipes);
+      setSearchResults(filteredRecipes);
     } catch (error) {
       console.error("Erreur lors de la recherche:", error);
     } finally {
@@ -113,6 +143,16 @@ const HomePageNew: React.FC = () => {
     }
   };
 
+  // Réinitialise les résultats si tous les filtres sont vides (pour éviter d'afficher de vieux résultats)
+  React.useEffect(() => {
+    if (!searchTerm && !selectedDuration && !selectedType) {
+      setSearchResults([]);
+      setHasSearched(false);
+    }
+  }, [searchTerm, selectedDuration, selectedType]);
+
+
+  // Affiche un loader pendant le chargement initial
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -181,7 +221,7 @@ const HomePageNew: React.FC = () => {
       </div>
       
       <div className="container mx-auto px-4 py-12">
-        {/* Section films et carrousel */}
+        {/* --- Section films et carrousel (toujours visible, non filtrée) --- */}
         <section className="mb-16 hidden md:block">
           <h2 className="text-2xl font-bold mb-6">Films et Recettes à l'affiche</h2>
           <div className="flex flex-col lg:flex-row gap-8">
@@ -213,6 +253,60 @@ const HomePageNew: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* --- Résultats de recherche (desktop uniquement, affichés seulement après une recherche) --- */}
+        {hasSearched && (
+          <section className="mb-16 hidden md:block">
+            <h2 className="text-2xl font-bold mb-6 text-red-600">Résultats de la recherche</h2>
+            {searchResults.length === 0 ? (
+              <p className="text-gray-500 text-center">Aucun résultat trouvé.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {searchResults.map((recipe) => (
+                  <Link
+                    key={recipe.id}
+                    to={`/recettes/${recipe.id}`}
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200"
+                  >
+                    <div className="relative h-48">
+                      <RecipeImage
+                        recipe={recipe}
+                        alt={recipe.title}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg mb-2">{recipe.title}</h3>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                        {recipe.description}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+                        {recipe.category?.name && (
+                          <span className="bg-gray-100 px-2 py-1 rounded">
+                            {recipe.category.name}
+                          </span>
+                        )}
+                        <span className="flex items-center gap-2">
+                          <span className="text-customYellow">
+                            <FaClock />
+                          </span>
+                          {recipe.duration} min
+                        </span>
+                        <span className="flex items-center gap-2">
+                          <span className="text-customYellow">
+                            <FaTools />
+                          </span>
+                          {getDifficultyText(recipe.difficulty)}
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
+
         
         {/* Dernières recettes - Mobile uniquement */}
         <section className="block lg:hidden mb-16">
@@ -280,4 +374,4 @@ const HomePageNew: React.FC = () => {
   );
 };
 
-export default HomePageNew;
+export default HomePage;
