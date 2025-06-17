@@ -1,11 +1,49 @@
 import { Router } from 'express';
-import { handleCreateCategory } from '../../controllers/category.controller';
+import { handleCreateCategory, handleGetAllCategories } from '../../controllers/category.controller';
 import { isAuthenticated } from '../../middlewares/isAuthenticated'; // Vérifie si l'utilisateur est connecté
 import { isAdmin } from '../../middlewares/isAdmin'; // Vérifie si l'utilisateur est un administrateur
 import { handleUpdateCategory } from '../../controllers/category.controller'; // Import du contrôleur pour la mise à jour de la catégorie
 import { handleDeleteCategory } from '../../controllers/category.controller'; // Import du contrôleur pour la suppression de la catégorie
 
 const categoryRouter = Router();
+
+/**
+ * @swagger
+ * /categories:
+ *   get:
+ *     summary: Récupérer toutes les catégories
+ *     description: Permet de récupérer toutes les catégories disponibles.
+ *     tags:
+ *       - Catégories
+ *     responses:
+ *       200:
+ *         description: Liste des catégories récupérée avec succès.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "category123"
+ *                   name:
+ *                     type: string
+ *                     example: "Desserts"
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2023-01-01T12:00:00.000Z"
+ *                   updatedAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2023-01-02T12:00:00.000Z"
+ *       500:
+ *         description: Erreur interne du serveur.
+ */
+categoryRouter.get('/', handleGetAllCategories);
+
 
 /**
  * @swagger
