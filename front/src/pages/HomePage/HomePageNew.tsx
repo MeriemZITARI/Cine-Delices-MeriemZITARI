@@ -30,6 +30,7 @@ const HomePageNew: React.FC = () => {
       try {
         setLoading(true);
         const recipesResponse = await recipeService.getRecipes();
+        
         if (recipesResponse?.data && recipesResponse.data.length > 0) {
           // Sélection aléatoire d'une recette pour la recette du jour
           const randomIndex = Math.floor(Math.random() * recipesResponse.data.length);

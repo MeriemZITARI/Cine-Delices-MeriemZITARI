@@ -11,10 +11,11 @@ export const recipeService = {
   async getRecipes(): Promise<ApiResponse<IRecipe[]>> {
     try {
       const response = await axiosInstance.get('/api/recipes');
+      console.log('Réponse de getRecipes:', response);
       return {
         success: true,
-        data: response.data.recipes,
-        message: response.data.message
+        data: response.data,
+        message: response.data
       };
     } catch (error) {
       console.error('Erreur dans getRecipes:', error);
