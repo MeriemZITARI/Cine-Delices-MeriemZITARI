@@ -3,15 +3,17 @@ import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 
 import HomePage from "./pages/HomePage/HomePage";
-import RecipeDetailPage from "./components/RecipeDetailPage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
 import AccountPage from "./pages/AccountPage/AccountPage";
-import { SearchModalProvider } from "./context/SearchModalContext";
-
 import NotFoundPage from "./pages/errors/404";
+
+import RecipeDetailPage from "./components/RecipeDetailPage";
 import AddRecipePage from "./components/AddRecipePage";
 import AllRecipesPage from './components/AllRecipesPage';
+
+import { SearchModalProvider } from "./context/SearchModalContext";
+
 function App() {
   return (
     <SearchModalProvider>
@@ -25,6 +27,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/recipes" element={<AllRecipesPage />} />
+            <Route path="/mon-compte" element={<AccountPage />} />
             <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
