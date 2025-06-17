@@ -1,12 +1,29 @@
 
-import { query } from "express";
+// File: backend/src/validations/recipe.ts
 import z from "zod";
 
 // Schema pour chque ingrédient dans une recette avec quantité et unité
+// Schema pour chaque ingrédient dans une recette
 export const ingredientInRecipeSchema = z.object({
-    ingredientId: z.string().cuid("L'ID de l'ingrédient doit être un CUID valide"),
+    // ici quantité et unité sont obligatoires
     quantity: z.number().min(0.01, "La quantité doit être supérieure à 0").max(10000, "La quantité ne doit pas dépasser 10000"),
-    unit: z.string().min(1, "l'unité ne peut etre vide").max(20, "L'unité ne doit pas dépasser 10 caractères"), 
+    unit: z.string().min(1, "l'unité ne peut etre vide").max(20, "L'unité ne doit pas dépasser 20 caractères"), 
+    
+    // On rend l'ID optionnel, car on pourrait recevoir un nom à la place
+    ingredientId: z.string().cuid("L'ID de l'ingrédient doit être un CUID valide").optional(),
+    
+    // On ajoute un nouveau champ optionnel pour le nom d'un nouvel ingrédient
+    ingredientName: z.string().min(2, "Le nom d'un nouvel ingrédient doit faire au moins 2 caractères.").optional(),
+})
+// Règle 1 : On s'assure qu'on a reçu AU MOINS l'un des deux (id ou name).
+.refine(data => !!data.ingredientId || !!data.ingredientName, {
+    message: "Chaque ingrédient doit avoir soit un 'ingredientId' (existant) soit un 'ingredientName' (nouveau).",
+    path: ["ingredientId"], // Champ sur lequel l'erreur sera affichée
+})
+// Règle 2 : On s'assure qu'on n'a PAS reçu les deux en même temps.
+.refine(data => !(data.ingredientId && data.ingredientName), {
+    message: "Vous ne pouvez pas fournir un 'ingredientId' et un 'ingredientName' en même temps.",
+    path: ["ingredientId"],
 });
 
 // Schema pour la creation d'une recette
@@ -37,3 +54,10 @@ export const createRecipeSchema = z.object({
 
 
      // TypeScript type pour le filtrage des recettes
+     export const filterRecipesSchema = z.object({
+        search: z.string().optional(), // Recherche par titre ou description
+        categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide").optional(), // Filtrer par catégorie
+        movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(), // Filtrer par film   
+     });
+
+     export type FilterRecipesInput = z.infer<typeof filterRecipesSchema>;// TypeScript type pour le filtrage des recettes

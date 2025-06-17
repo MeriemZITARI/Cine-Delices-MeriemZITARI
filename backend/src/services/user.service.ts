@@ -1,5 +1,5 @@
 // Fichier: src/services/users.service.ts
-import { UpdateProfileInput } from 'validations/users';
+import { UpdateUserPasswordInput, UpdateUserProfileInput } from 'validations/users';
 import { prisma } from '../client/prismaClient';
 import  argon2  from 'argon2';
 import { User } from '../../generated/prisma';
@@ -26,34 +26,48 @@ export async function findUserById(userId: string) {
 }
 
 
-export async function updateUserProfile(userId: string, data: UpdateProfileInput) {
-  // On utilise Partial<User> pour typer notre objet. C'est plus propre et plus sûr.
-  const dataToUpdate: Partial <User>= {};
-
-  // On construit l'objet de mise à jour
-  if (data.firstName) dataToUpdate.firstName = data.firstName;
-  if (data.lastName) dataToUpdate.lastName = data.lastName;
-  if (data.email) dataToUpdate.email = data.email;
-  if (data.password) {
-    dataToUpdate.password = await argon2.hash(data.password);
-  }
-
-    //  On vérifie si l'objet de mise à jour est vide.
-  // Si l'utilisateur n'a fourni aucun champ valide, on ne fait pas d'appel inutile à la base.
-  if (Object.keys(dataToUpdate).length === 0) {
-    // On peut simplement renvoyer l'utilisateur actuel sans rien changer.
-    // C'est une bonne pratique de réutiliser nos propres fonctions de service !
-    return findUserById(userId);
-  }
-
-  // On met à jour l'utilisateur en base de données
+export async function updateUserProfileService(userId: string, data: UpdateUserProfileInput) {
+  // Plus besoin de construire l'objet dataToUpdate ou de vérifier s'il est vide.
+  // Notre Zod schema avec .refine() s'en est déjà chargé.
+  
   const updatedUser = await prisma.user.update({
     where: { id: userId },
-    data: dataToUpdate,
+    data: data, // On passe directement les données validées { firstName?, lastName? }
+    // On sélectionne les champs à retourner pour ne jamais renvoyer le mot de passe.
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+    }
   });
 
-  const { password, ...userWithoutPassword } = updatedUser;
-  return userWithoutPassword;
+  return updatedUser;
+}
+export async function updateUserPasswordService(userId: string, data: UpdateUserPasswordInput) {
+  // 1. Récupérer l'utilisateur pour vérifier son mot de passe actuel
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+  });
+
+  // 2. Vérifier si le mot de passe actuel fourni est correct avec argon2.verify
+  // Attention à l'ordre : c'est le hash de la BDD d'abord, puis le mot de passe en clair
+  const isPasswordValid = await argon2.verify(user.password, data.currentPassword);
+  
+  if (!isPasswordValid) {
+    throw new Error("Le mot de passe actuel est incorrect.");
+  }
+
+  // 3. Hacher le NOUVEAU mot de passe avec argon2.hash
+  const newHashedPassword = await argon2.hash(data.newPassword);
+
+  // 4. Mettre à jour la base de données
+  await prisma.user.update({
+    where: { id: userId },
+    data: { password: newHashedPassword },
+  });
+
+  return { message: "Mot de passe mis à jour avec succès." };
 }
 
 export async function deleteUserAccount(userId: string) {

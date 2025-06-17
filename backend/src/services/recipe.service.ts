@@ -1,6 +1,6 @@
 // src/services/recipe.service.ts
 import { prisma } from '../client/prismaClient';
-import { CreateRecipeInput, UpdateRecipeInput } from '../validations/recipe'; 
+import { CreateRecipeInput, UpdateRecipeInput,FilterRecipesInput } from '../validations/recipe'; 
 
 
 
@@ -39,10 +39,21 @@ export async function createRecipeService(data: CreateRecipeInput, userId: strin
         create: ingredients.map(ing => ({
           quantity: ing.quantity,
           unit: ing.unit,
-          ingredient: {
-            connect: { id: ing.ingredientId }, // Connecte l'ingrédient existant
-          },
-        })),
+          // On utilise une condition pour choisir la bonne méthode Prisma
+          ingredient: ing.ingredientId
+            // CAS 1 : Si un ingredientId est fourni, on utilise "connect"
+            ? { connect: { id: ing.ingredientId } }
+            // CAS 2 : Sinon (un ingredientName est fourni), on utilise "connectOrCreate"
+            : { 
+                connectOrCreate: {
+                  // Prisma cherche un ingrédient avec ce nom...
+                  where: { name: ing.ingredientName! },
+                  // ...et s'il ne le trouve pas, il le crée avec ce même nom. 
+                  create: { name: ing.ingredientName! },
+                // On utilise l'opérateur "!" pour indiquer que ingredientName est défini ici.
+                }
+              }
+        }))
       },
       isValidated: false, // Par défaut, une recette n'est pas validée à la création par l'utilisateur
     },
@@ -185,23 +196,47 @@ export async function getRecipeByIdService(recipeId: string) {
     return recipe;
   }
 
-  /**
- * Service pour RÉCUPÉRER TOUTES les recettes.
- * C'est une étape du CRUD (Read - toutes les recettes).
- *
- * @returns Un tableau de toutes les recettes avec leurs relations.
+ /**
+ * Service pour RÉCUPÉRER TOUTES les recettes en appliquant des filtres.
  */
-export async function getAllRecipesService() {
-    const recipes = await prisma.recipe.findMany({ // <--- C'est ici que Prisma récupère toutes les recettes
-      include: { // On inclut les relations pour une réponse complète
-        author: { select: { id: true, firstName: true, lastName: true } },
-        category: true,
-        movie: true,
-        ingredients: { include: { ingredient: true } }
-      }
-    });
-    return recipes;
+export async function getAllRecipesService(filters: FilterRecipesInput = {}) {
+  // On extrait les filtres pour les utiliser
+  const { categoryId, movieId, search } = filters;
+
+  // On construit la clause de filtre pour Prisma.
+  // C'est un objet qui va contenir les conditions de recherche.
+  const whereClause: any = {};
+
+  if (categoryId) {
+    whereClause.categoryId = categoryId;
   }
+
+  if (movieId) {
+    whereClause.movieId = movieId;
+  }
+
+  if (search) {
+    whereClause.OR = [
+      // OR permet de chercher dans plusieurs champs.Par exemple, si l'utilisateur cherche "pasta","poulet"etc
+      { title: { contains: search, mode: 'insensitive' } },
+      { description: { contains: search, mode: 'insensitive' } },
+    ];
+  }
+
+  console.log("Clause 'where' finale envoyée à Prisma:", whereClause);
+
+  const recipes = await prisma.recipe.findMany({
+    where: whereClause, // On utilise la clause de filtre ici
+    include: {
+      author: { select: { id: true, firstName: true, lastName: true } },
+      category: true,
+      movie: true,
+      ingredients: { include: { ingredient: true } },
+    },
+  });
+
+  return recipes;
+}
 
 /**
  * Service pour SUPPRIMER une recette par son ID.

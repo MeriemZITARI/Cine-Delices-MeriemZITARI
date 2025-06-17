@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { findUserById, updateUserProfile, deleteUserAccount } from '../services/user.service';
-import { UpdateProfileInput } from '../validations/users';
+import { findUserById,  deleteUserAccount, updateUserProfileService, updateUserPasswordService } from '../services/user.service';
+import {  UpdateUserPasswordInput, UpdateUserProfileInput } from '../validations/users';
 
 
 
@@ -29,32 +29,50 @@ export async function handleGetMyProfile(req: Request, res: Response, next: Next
   }
 }
 
-// --- NOUVELLE FONCTION ---
-export async function handleUpdateMyProfile(
-    // On type le corps de la requête avec notre type Zod
-    req: Request<{}, {}, UpdateProfileInput>,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      // 1. On récupère l'ID de l'utilisateur depuis le token (fourni par `isAuthenticated`)
-      const userId = req.user!.userId;
-  
-      // 2. On récupère les données validées du corps de la requête
-      const dataToUpdate = req.body;
-  
-      // 3. On appelle le service pour effectuer la mise à jour
-      const updatedUser = await updateUserProfile(userId, dataToUpdate);
-  
-      // 4. On renvoie l'utilisateur mis à jour avec un statut 200 OK
-      res.status(200).json(updatedUser);
-    } catch (error) {
-      // 5. On passe les erreurs (ex: email déjà pris par un autre user) au gestionnaire global
-      next(error);
-    }
+/**
+ * Gère la mise à jour des informations de base de l'utilisateur (prénom, nom).
+ * S'attend à ce que les données aient déjà été validées par un middleware Zod.
+ */
+export async function handleUpdateUserProfile(
+  // On type le corps de la requête avec notre type Zod spécifique au profil
+  req: Request<{}, {}, UpdateUserProfileInput>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.user!.userId; // L'ID vient du token (middleware d'authentification)
+    const dataToUpdate = req.body; // Les données sont déjà validées
+
+    const updatedUser = await updateUserProfileService(userId, dataToUpdate);
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    next(error); // On passe les erreurs au gestionnaire global
   }
+}
 
+/**
+ * Gère le changement de mot de passe de l'utilisateur.
+ * S'attend à ce que les données aient déjà été validées par un middleware Zod.
+ */
+export async function handleUpdateUserPassword(
+  // On type le corps de la requête avec notre type Zod spécifique au mot de passe
+  req: Request<{}, {}, UpdateUserPasswordInput>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const userId = req.user!.userId;
+    const passwordData = req.body;
 
+    const result = await updateUserPasswordService(userId, passwordData);
+
+    res.status(200).json(result);
+  } catch (error) {
+    // Si le service lève une erreur (ex: mauvais mot de passe actuel), on la passe ici
+    next(error);
+  }
+}
 // --- NOUVELLE FONCTION POUR LA SUPPRESSION DU PROFIL ---
 
 export async function handleDeleteMyProfile(req: Request, res: Response, next: NextFunction) {
