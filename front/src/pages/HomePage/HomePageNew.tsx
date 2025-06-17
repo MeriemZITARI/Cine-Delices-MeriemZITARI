@@ -4,12 +4,12 @@ import recipeService from '../../services/api/RecipeService';
 
 import type { IRecipe } from '../../types/Recipe';
 import type { IMovie } from '../../types/Movies';
-import RecipeImage from '../RecipeImage';
-import MoviePoster from '../MoviePoster';
-import { Button } from '../ui/button';
-import RecipeCarouselNew from '../RecipeCarousselNew';
+import RecipeImage from '../../components/RecipeImage';
+import MoviePoster from '../../components/MoviePoster';
+import { Button } from '../../components/ui/button';
+import RecipeCarouselNew from '../../components/RecipeCarousselNew';
 import './HomePageNew.css';
-import SearchForm from '../SearchForm/SearchForm';
+import SearchForm from '../../components/SearchForm/SearchForm';
 import { FaClock, FaTools } from 'react-icons/fa';
 import getDifficultyText from '../../utils/getDifficulty';
 
@@ -87,7 +87,7 @@ const HomePageNew: React.FC = () => {
 
       if (selectedDuration) {
         filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.preparationTime <= selectedDuration
+          recipe.duration <= selectedDuration
         );
       }
 
