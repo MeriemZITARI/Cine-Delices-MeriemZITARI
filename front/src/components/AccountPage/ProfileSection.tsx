@@ -37,6 +37,10 @@ const ProfileSection : React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
 
+  const handleEditToggle = () => {
+    setIsEditing(!isEditing);
+  };
+  
   /**
    * Traite les données du formulaire et fait les modifications
    * @param formData - Données du formulaire
@@ -66,13 +70,15 @@ const ProfileSection : React.FC = () => {
   }
 
   /**
-   * Change le mot de passe
-   * @param password - Données du formulaire
+   * Changer le mot de passe
+   * @param currentPassword - Mot de passe actuel
+   * @param newPassword - Nouveau mot de passe
   */
-  async function handlePasswordFormAction(password: String) {
+  async function handlePasswordFormAction(currentPassword: String, newPassword: String) {
     try {
       const data = {
-        password: password as string,
+        currentPassword: currentPassword as string,
+        newPassword: newPassword as string
       };
       
       // Changement du mot de passe
@@ -81,22 +87,18 @@ const ProfileSection : React.FC = () => {
       if (!response || !response.success) {
         throw new Error("Échec de la modification du mot de passe.");
       }
-      console.log(response);
+      
       setIsChangingPassword(false);
-      // Mise à jour de l'atome
-      //setAuthUser(response.user);
 
-      // Redirection vers la page de connexion après inscription réussie
-      //navigate('/');
+      checkCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+      
     } catch (err) {
-      setError('Une erreur est survenue lors de la modification du mot de passe');
+      setError('Le mot de passe actuel est incorrect, la modification n\'a pas été prise en compte.');
       //console.error('Erreur lors de la modification du mot de passe :', err);
     }
   }
-
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
 
   const handleInfoSave = () => {
     // Enregistrer les modifications
@@ -142,7 +144,7 @@ const ProfileSection : React.FC = () => {
         passwordSchema.parse({ password: newPassword });
         setError(""); // Réinitialise les erreurs si tout est valide
         
-        handlePasswordFormAction(newPassword);
+        handlePasswordFormAction(currentPassword, newPassword);
     } catch (err) {
         if (err instanceof z.ZodError) {
           // Récupère les messages d'erreur et les affiche
@@ -189,7 +191,7 @@ const ProfileSection : React.FC = () => {
             className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
             placeholder="Email"
           />
-          {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4">{error}</p>}
+          {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4 text-center">{error}</p>}
           {/* Boutons Annuler et Enregistrer */}
             <div className="flex justify-around w-full gap-3">
             <Button

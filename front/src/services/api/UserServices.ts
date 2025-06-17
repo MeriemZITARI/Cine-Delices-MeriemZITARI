@@ -23,9 +23,9 @@ const userService = {
     }    
   },
 
-  async updatePassword(data: { password: string }) {
+  async updatePassword(data: { currentPassword: string, newPassword: string }) {
     try {
-      const response = await axiosInstance.patch('/api/users/me', data);
+      const response = await axiosInstance.patch('/api/users/me/password', data);
       return {
         success: true,
         ... response.data as { token: string; user: IUser },
