@@ -16,6 +16,8 @@ import getDifficultyText from '../../utils/getDifficulty';
 
 // Composant principal de la page d'accueil
 const HomePage: React.FC = () => {
+  // Ref pour la section résultats de recherche
+  const resultsRef = React.useRef<HTMLDivElement>(null);
   // --- États principaux ---
   // Recette du jour (affichage en haut)
   const [featuredRecipe, setFeaturedRecipe] = useState<IRecipe | null>(null);
@@ -97,6 +99,14 @@ const HomePage: React.FC = () => {
   }, []);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Scroll automatique vers la section résultats après la recherche
+    setTimeout(() => {
+      if (resultsRef.current) {
+        resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 200); // Légère attente pour laisser le DOM se mettre à jour
+
     e.preventDefault();
     setLoading(true);
     setHasSearched(true);
@@ -256,7 +266,7 @@ const HomePage: React.FC = () => {
 
         {/* --- Résultats de recherche (desktop uniquement, affichés seulement après une recherche) --- */}
         {hasSearched && (
-          <section className="mb-16 hidden md:block">
+          <section ref={resultsRef} className="mb-16 hidden md:block">
             <h2 className="text-2xl font-bold mb-6 text-red-600">Résultats de la recherche</h2>
             {searchResults.length === 0 ? (
               <p className="text-gray-500 text-center">Aucun résultat trouvé.</p>
