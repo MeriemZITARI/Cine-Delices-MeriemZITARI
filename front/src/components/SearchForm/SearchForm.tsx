@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+// Imports principaux : React, hooks, service d'API pour les catégories, icône et bouton
+import React, { useState, useEffect } from 'react';
+import { categoryService, Category } from '../../services/api/CategoryService';
 import { Search } from 'lucide-react';
 import Button from "../Button/Button";
 
-// Interfaces
+// Interface des props attendues par le composant SearchForm
 interface SearchFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   searchTerm: string;
@@ -13,6 +15,7 @@ interface SearchFormProps {
   onTypeSelect: (type: string) => void;
 }
 
+// Composant SearchForm principal
 const SearchForm: React.FC<SearchFormProps> = ({
   onSubmit,
   searchTerm,
@@ -22,10 +25,27 @@ const SearchForm: React.FC<SearchFormProps> = ({
   selectedType,
   onTypeSelect
 }) => {
+  // State pour stocker les catégories récupérées depuis l'API
+  const [categories, setCategories] = useState<Category[]>([]);
+  // State pour indiquer si les catégories sont en cours de chargement
+  const [loadingCategories, setLoadingCategories] = useState(false);
+
+  // Effet qui charge les catégories au montage du composant
+  useEffect(() => {
+    setLoadingCategories(true);
+    categoryService.getCategories()
+      .then((data) => {
+        setCategories(Array.isArray(data) ? data : []);
+      })
+      .finally(() => setLoadingCategories(false));
+  }, []);
+
   return (
     <div className="bg-white p-4 h-[400px]">
+      {/* Champ de recherche textuelle */}
       <h3 className="text-base font-bold sm:text-lg mb-2">Je cherche...</h3>
       <form onSubmit={onSubmit}>
+        {/* Input texte pour la recherche */}
         <div className="flex items-center border rounded-md p-2 mb-4 sm:mb-5">
           <div className="flex items-center justify-center text-gray-400 mr-3">
             <Search size={18} />
@@ -39,6 +59,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
           />
         </div>
         
+        {/* Radios pour la durée */}
         <h3 className="text-base font-bold sm:text-lg mb-2">J'ai...</h3>
         <div className="grid grid-cols-2 gap-2 mb-4">
           {[15, 30, 45, 60].map((duration) => (
@@ -55,24 +76,27 @@ const SearchForm: React.FC<SearchFormProps> = ({
           ))}
         </div>
 
+        {/* Radios dynamiques pour les catégories */}
         <h3 className="text-base font-bold sm:text-lg mb-2">Je veux préparer...</h3>
         <div className="grid grid-cols-2 gap-2 mb-4">
-          {['entrée', 'plat', 'dessert', 'boisson'].map((type) => (
-            <label key={type} className="flex items-center">
+          {loadingCategories && (
+            <span className="text-gray-500 col-span-2">Chargement...</span>
+          )}
+          {categories.map((cat) => (
+            <label key={cat.id} className="flex items-center">
               <input
                 type="radio"
                 name="type"
-                checked={selectedType === type}
-                onChange={() => onTypeSelect(type)}
+                checked={selectedType === cat.name}
+                onChange={() => onTypeSelect(cat.name)}
                 className="custom-radio"
               />
-              {type === 'entrée' ? 'Une entrée' :
-              type === 'plat' ? 'Un plat principal' :
-              type === 'dessert' ? 'Un dessert' : 'Une boisson'}
+              {cat.name}
             </label>
           ))}
         </div>
 
+        {/* Bouton de validation */}
         <Button 
           text="C'est parti !" 
           type="submit" 

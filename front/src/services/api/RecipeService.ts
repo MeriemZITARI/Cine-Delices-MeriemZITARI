@@ -13,7 +13,7 @@ export const recipeService = {
       const response = await axiosInstance.get('/api/recipes');
       return {
         success: true,
-        data: response.data.recipes,
+        data: response.data,
         message: response.data.message
       };
     } catch (error) {
