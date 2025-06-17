@@ -1,0 +1,92 @@
+/* HomePageNew.css */
+
+/* Gradients */
+.bg-gradient-yellow {
+    background: linear-gradient(180deg, #FFD700 0%, #FFF8DC 100%);
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.5s ease-in;
+  }
+  
+  /* Responsive images */
+  .recipe-image {
+    transition: transform 0.3s ease;
+  }
+  
+  .recipe-image:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Media Queries */
+  @media (min-width: 768px) {
+    .featured-recipe {
+      height: 400px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .featured-recipe {
+      height: 500px;
+    }
+  }
+  
+  /* Ombres personnalisées */
+  .custom-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* Style des boutons radio personnalisés */
+  .custom-radio {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #E5E7EB;
+    border-radius: 50%;
+    margin-right: 8px;
+    position: relative;
+  }
+  
+  .custom-radio:checked {
+    border-color: #EF4444;
+  }
+  
+  .custom-radio:checked::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: #EF4444;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Style du formulaire de recherche */
+  .search-form {
+    transition: transform 0.3s ease;
+  }
+  
+  @media (min-width: 1024px) {
+    .search-form {
+      transform: translateX(-50%);
+    }
+  }
+  
+  /* Style des cartes de recettes */
+  .recipe-card {
+    transition: all 0.3s ease;
+  }
+  
+  .recipe-card:hover {
+    transform: translateY(-4px);
+  }
+  

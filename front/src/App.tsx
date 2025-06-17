@@ -4,10 +4,12 @@ import Footer from "./components/Footer/Footer";
 
 import HomePageMobileFinal from "./components/HomePage/HomePage";
 import RecipeDetailPage from "./components/RecipeDetailPage";
-import RegisterPage from "./components/RegisterPage/RegisterPage";
-import LoginPage from "./components/LoginPage/LoginPage";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import AccountPage from "./pages/AccountPage/AccountPage";
 import { SearchModalProvider } from "./context/SearchModalContext";
 import TestApi from './components/TestApi';
+import NotFoundPage from "./pages/errors/404";
 import NotFoundPage from "./components/errors/404";
 import AddRecipePage from "./components/AddRecipePage";
 import AllRecipesPage from './components/AllRecipesPage';

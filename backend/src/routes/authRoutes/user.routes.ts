@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import { isAuthenticated } from '../../middlewares/isAuthenticated';
-import { handleDeleteMyProfile, handleGetMyProfile, handleUpdateMyProfile } from '../../controllers/user.controller';
+import { handleDeleteMyProfile, handleGetMyProfile,  handleUpdateUserPassword, handleUpdateUserProfile } from '../../controllers/user.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
-import { updateProfileSchema } from '../../validations/users';
+import {  updateUserPasswordSchema, updateUserProfileSchema } from '../../validations/users';
+import { handleGetMyRecipes } from '../../controllers/user.controller';
 
 const userRouter = Router();
 
@@ -28,10 +29,10 @@ userRouter.get('/me', handleGetMyProfile);
 
 /**
  * @swagger
- * /users/me:
+ * /users/me/password:
  *   patch:
- *     summary: Mettre à jour le profil de l'utilisateur connecté
- *     description: Met à jour les informations du profil de l'utilisateur actuellement connecté.
+ *     summary: Changer le mot de passe de l'utilisateur
+ *     description: Met à jour le mot de passe de l'utilisateur après vérification de l'ancien.
  *     tags:
  *       - Utilisateurs
  *     requestBody:
@@ -41,24 +42,75 @@ userRouter.get('/me', handleGetMyProfile);
  *           schema:
  *             type: object
  *             properties:
- *               name:
+ *               currentPassword:
  *                 type: string
- *                 example: "John Doe"
- *               email:
+ *                 example: "AncienMotDePasse123!"
+ *               newPassword:
  *                 type: string
- *                 example: "john@example.com"
+ *                 example: "NouveauMotDePasse456!"
  *     responses:
- *       200:
- *         description: Profil mis à jour avec succès.
- *       400:
- *         description: Requête invalide.
- *       401:
- *         description: Non authentifié, veuillez vous connecter.
- *       500:
- *         description: Erreur interne du serveur lors de la mise à jour du profil.
+ *       '200':
+ *         description: Mot de passe mis à jour avec succès.
+ *       '400':
+ *         description: Données invalides (ex: mot de passe trop court).
+ *       '403':
+ *         description: Mot de passe actuel incorrect.
  */
-userRouter.patch('/me', validateRequest(updateProfileSchema), handleUpdateMyProfile);
-
+userRouter.patch(
+    '/me/password',
+    validateRequest(updateUserPasswordSchema),
+    handleUpdateUserPassword
+  );
+  
+  /**
+   * @swagger
+   * /users/me:
+   *   patch:
+   *     summary: Mettre à jour les informations de base (prénom/nom)
+   *     description: Met à jour le prénom et/ou le nom de l'utilisateur actuellement connecté.
+   *     tags:
+   *       - Utilisateurs
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               firstName:
+   *                 type: string
+   *                 example: "Jane"
+   *               lastName:
+   *                 type: string
+   *                 example: "Doe"
+   *     responses:
+   *       200:
+   *         description: Profil mis à jour avec succès.
+   */
+  userRouter.patch(
+    '/me',
+    validateRequest(updateUserProfileSchema),
+    handleUpdateUserProfile
+  );
+/**
+ * @swagger
+ * /users/me/recipes:
+ *   get:
+ *     summary: Récupérer mes recettes
+ *     description: Retourne la liste des recettes créées par l'utilisateur connecté.
+ *     tags:
+ *       - Utilisateurs
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Succès - Une liste des recettes de l'utilisateur.
+ *       '401':
+ *         description: Non authentifié.
+ */
+userRouter.get('/me/recipes', handleGetMyRecipes);
+  
+  
 /**
  * @swagger
  * /users/me:

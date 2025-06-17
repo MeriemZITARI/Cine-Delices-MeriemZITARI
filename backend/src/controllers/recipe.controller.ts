@@ -1,7 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { CreateRecipeInput,UpdateRecipeInput } from "../validations/recipe";  
+import { CreateRecipeInput,filterRecipesSchema,UpdateRecipeInput } from "../validations/recipe";  
 import { createRecipeService,updateRecipeService,getRecipeByIdService, getAllRecipesService, deleteRecipeService } from "../services/recipe.service";
 import { json } from "stream/consumers";
+import { getRecipesByAuthorIdService } from "services/user.service";
 
 
 // --- Gérer la création d'une nouvelle recette ---
@@ -102,14 +103,28 @@ export async function handleGetRecipeById(
     next: NextFunction
   ) {
     try {
-    //   ici on verrifei pas si l'tulisateur est conncete car dan note conception les recette sont accessibles à tous, même aux utilisateurs non authentifiés.
-      // Pon recuepre le service getAllRecipesService :
-      const recipes = await getAllRecipesService();
+      // 2. On valide les paramètres de l'URL (req.query) avec Zod
+      const validationResult = filterRecipesSchema.safeParse(req.query);
   
-      // Pour l'instant, on va juste renvoyer un message de succès.
-      res.status(200).json({ recipes,
-        message: 'Toutes les recettes récupérées avec succès.' });
+      // Si la validation échoue, on renvoie une erreur 400 (Bad Request)
+      if (!validationResult.success) {
+        return res.status(400).json({
+          message: "Les paramètres de filtrage sont invalides.",
+          errors: validationResult.error.flatten().fieldErrors,// ici flatten() permet de transformer les erreurs en un objet plus simple contenant les messages d'erreur pour chaque champ.
+        });
+      }
+  
+      // Les filtres sont valides, on les récupère depuis validationResult.data
+      const filters = validationResult.data;
+  
+      // 3. On appelle le service en lui passant les filtres validés
+      const recipes = await getAllRecipesService(filters);
+  
+      // 4. On renvoie les recettes trouvées
+      res.status(200).json(recipes);
+      
     } catch (error) {
+      // En cas d'erreur inattendue (ex: problème de base de données), on passe au middleware d'erreur
       next(error);
     }
   }
