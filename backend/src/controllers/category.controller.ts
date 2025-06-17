@@ -1,7 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
-import { createCategoryService } from '../services/category.service';
+import { createCategoryService, getAllCategoriesService } from '../services/category.service';
 import { updateCategoryService } from '../services/category.service';
 import { deleteCategoryService } from '../services/category.service';
+
+
+export async function handleGetAllCategories(req: Request, res: Response, next: NextFunction) {
+  try {
+    // Appeler le service pour récupérer toutes les catégories
+    const categories = await getAllCategoriesService();
+
+    // Retourner les catégories récupérées
+    res.status(200).json(categories);
+  } catch (error) {
+    // Passer l'erreur au middleware de gestion des erreurs
+    next(error);
+  }
+};
 
 export async function handleCreateCategory(req: Request, res: Response, next: NextFunction) {
   try {

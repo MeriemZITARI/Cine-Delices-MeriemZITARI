@@ -5,6 +5,7 @@ import authRoutes from './authRoutes/auth.routes';
 import loginRoutes from './authRoutes/auth.routes'; 
 import userRoutes from './authRoutes/user.routes';
 import categoryRoutes from './categoryRoutes/category.routes';
+import adminRoutes from './adminRoutes/admin.user.routes';
 
 const router = Router();
 
@@ -23,6 +24,9 @@ router.use('/categories', categoryRoutes);
 
 // routes de l'utilisateur
 router.use('/users', userRoutes);
+
+// routes de l'admin pour gérer les utilisateurs
+ router.use('/admin', adminRoutes); 
 
 
 export default router;
