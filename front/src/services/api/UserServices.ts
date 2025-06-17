@@ -8,7 +8,7 @@ const userService = {
       const response = await axiosInstance.patch('/api/users/me', data);
       return {
         success: true,
-        ... response.data as { message: string; user: IUser },
+        user: response.data as IUser,
       };
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -42,6 +42,24 @@ const userService = {
       return { success: false, status: 500, message: 'Erreur inconnue' };
     }
   },
+
+  async getUserRecipes() {
+    try {
+      const response = await axiosInstance.get(`/api/users/me/recipes`);
+      return {
+        success: true,
+        recipes: response.data, 
+      };
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        return {
+          success: false,
+          message: error.response?.data?.message || 'Erreur lors de la récupération des recettes',
+        };
+      }
+    }
+  },
+
 };
 
 export default userService;
