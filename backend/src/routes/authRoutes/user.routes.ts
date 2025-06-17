@@ -3,6 +3,7 @@ import { isAuthenticated } from '../../middlewares/isAuthenticated';
 import { handleDeleteMyProfile, handleGetMyProfile,  handleUpdateUserPassword, handleUpdateUserProfile } from '../../controllers/user.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
 import {  updateUserPasswordSchema, updateUserProfileSchema } from '../../validations/users';
+import { handleGetMyRecipes } from '../../controllers/user.controller';
 
 const userRouter = Router();
 
@@ -91,6 +92,23 @@ userRouter.patch(
     validateRequest(updateUserProfileSchema),
     handleUpdateUserProfile
   );
+/**
+ * @swagger
+ * /users/me/recipes:
+ *   get:
+ *     summary: Récupérer mes recettes
+ *     description: Retourne la liste des recettes créées par l'utilisateur connecté.
+ *     tags:
+ *       - Utilisateurs
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: Succès - Une liste des recettes de l'utilisateur.
+ *       '401':
+ *         description: Non authentifié.
+ */
+userRouter.get('/me/recipes', handleGetMyRecipes);
   
   
 /**

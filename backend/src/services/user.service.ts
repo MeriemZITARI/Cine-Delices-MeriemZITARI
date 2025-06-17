@@ -69,7 +69,43 @@ export async function updateUserPasswordService(userId: string, data: UpdateUser
 
   return { message: "Mot de passe mis à jour avec succès." };
 }
+// (Gardez vos autres services existants : createRecipeService, getAllRecipesService, etc.)
 
+/**
+ * Récupère toutes les recettes créées par un utilisateur spécifique.
+ * @param authorId L'ID de l'auteur des recettes à trouver.
+ * @returns Un tableau des recettes trouvées.
+ */
+export async function getRecipesByAuthorIdService(authorId: string) {
+  //  log pour  débogage
+  console.log(`Recherche des recettes pour l'utilisateur : ${authorId}`);
+
+  const recipes = await prisma.recipe.findMany({
+    // La condition principale : ne prendre que les recettes où le 'userId' correspond.
+    where: {
+      userId: authorId,
+    },
+    // Optionnel mais recommandé : trier pour afficher les plus récentes en premier.
+    orderBy: {
+      createdAt: 'desc',
+    },
+    // On inclut toutes les données liées pour avoir une réponse complète, comme pour getAllRecipesService.
+    include: {
+      author: {
+        select: { id: true, firstName: true, lastName: true },
+      },
+      category: true,
+      movie: true,
+      ingredients: {
+        include: {
+          ingredient: true,
+        },
+      },
+    },
+  });
+
+  return recipes;
+}
 export async function deleteUserAccount(userId: string) {
   // On supprime l'utilisateur de la base de données
   const deletedUser = await prisma.user.delete({
