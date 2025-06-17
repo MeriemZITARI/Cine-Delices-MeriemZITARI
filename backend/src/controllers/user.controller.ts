@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { findUserById,  deleteUserAccount, updateUserProfileService, updateUserPasswordService } from '../services/user.service';
+import { findUserById,  deleteUserAccount, updateUserProfileService, updateUserPasswordService, getRecipesByAuthorIdService } from '../services/user.service';
 import {  UpdateUserPasswordInput, UpdateUserProfileInput } from '../validations/users';
 
 
@@ -28,7 +28,22 @@ export async function handleGetMyProfile(req: Request, res: Response, next: Next
     next(error);
   }
 }
+export async function handleGetMyRecipes(req: Request, res: Response, next: NextFunction) {
+  try {
+    // Le middleware 'isAuthenticated' garantit que req.user.userId existe.
+    // Le '!' dit à TypeScript : "Je suis sûr que user n'est pas null ici".
+    const userId = req.user!.userId;
 
+    // On appelle notre nouveau service avec l'ID de l'utilisateur connecté
+    const myRecipes = await getRecipesByAuthorIdService(userId);
+
+    // On renvoie la liste des recettes trouvées
+    res.status(200).json(myRecipes);
+  } catch (error) {
+    // En cas d'erreur, on la passe au gestionnaire central
+    next(error);
+  }
+}
 /**
  * Gère la mise à jour des informations de base de l'utilisateur (prénom, nom).
  * S'attend à ce que les données aient déjà été validées par un middleware Zod.
@@ -73,6 +88,10 @@ export async function handleUpdateUserPassword(
     next(error);
   }
 }
+
+
+
+
 // --- NOUVELLE FONCTION POUR LA SUPPRESSION DU PROFIL ---
 
 export async function handleDeleteMyProfile(req: Request, res: Response, next: NextFunction) {

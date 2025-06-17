@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { CreateRecipeInput,filterRecipesSchema,UpdateRecipeInput } from "../validations/recipe";  
 import { createRecipeService,updateRecipeService,getRecipeByIdService, getAllRecipesService, deleteRecipeService } from "../services/recipe.service";
 import { json } from "stream/consumers";
+import { getRecipesByAuthorIdService } from "services/user.service";
 
 
 // --- Gérer la création d'une nouvelle recette ---
