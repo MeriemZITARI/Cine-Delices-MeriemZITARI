@@ -2,7 +2,21 @@ import { prisma } from '../client/prismaClient';
 import type { CreateCategoryInput, UpdateCategoryInput } from '../validations/category';
 
 
+export async function getAllCategoriesService() {
+  try {
+    // Récupérer toutes les catégories
+    const categories = await prisma.category.findMany({
+      orderBy: {
+        name: 'asc', // Trier les catégories par nom (ordre alphabétique)
+      },
+    });
 
+    return categories;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des catégories :', error);
+    throw error; // Relancez l'erreur pour qu'elle soit gérée par le contrôleur
+  }
+};
 
 export async function createCategoryService(data: CreateCategoryInput) {
   try {
