@@ -122,18 +122,10 @@ const HomePage: React.FC = () => {
         );
       }
 
-      // --- Mapping entre valeurs du filtre et noms réels de catégories ---
+      // --- Filtrage direct sur la catégorie sélectionnée ---
       if (selectedType) {
-        // Ce mapping permet de faire correspondre la valeur du bouton à la vraie catégorie en base
-        const categoryMap: Record<string, string> = {
-          'entrée': 'Entrées',
-          'plat': 'Plats Principaux',
-          'dessert': 'Desserts',
-          'boisson': 'Boissons'
-        };
-        const mappedCategory = categoryMap[selectedType];
         filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.category && recipe.category.name === mappedCategory
+          recipe.category && recipe.category.name === selectedType
         );
       }
 
