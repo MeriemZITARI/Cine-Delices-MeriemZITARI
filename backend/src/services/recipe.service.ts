@@ -39,10 +39,21 @@ export async function createRecipeService(data: CreateRecipeInput, userId: strin
         create: ingredients.map(ing => ({
           quantity: ing.quantity,
           unit: ing.unit,
-          ingredient: {
-            connect: { id: ing.ingredientId }, // Connecte l'ingrédient existant
-          },
-        })),
+          // On utilise une condition pour choisir la bonne méthode Prisma
+          ingredient: ing.ingredientId
+            // CAS 1 : Si un ingredientId est fourni, on utilise "connect"
+            ? { connect: { id: ing.ingredientId } }
+            // CAS 2 : Sinon (un ingredientName est fourni), on utilise "connectOrCreate"
+            : { 
+                connectOrCreate: {
+                  // Prisma cherche un ingrédient avec ce nom...
+                  where: { name: ing.ingredientName! },
+                  // ...et s'il ne le trouve pas, il le crée avec ce même nom. 
+                  create: { name: ing.ingredientName! },
+                // On utilise l'opérateur "!" pour indiquer que ingredientName est défini ici.
+                }
+              }
+        }))
       },
       isValidated: false, // Par défaut, une recette n'est pas validée à la création par l'utilisateur
     },
