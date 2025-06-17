@@ -129,10 +129,11 @@ const HomePage: React.FC = () => {
         );
       }
 
-      // --- Filtrage sur le titre de la recette ---
+      // --- Filtrage sur le titre ou la description de la recette ---
       if (searchTerm) {
         filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
+          recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          recipe.description.toLowerCase().includes(searchTerm.toLowerCase())
         );
       }
 
