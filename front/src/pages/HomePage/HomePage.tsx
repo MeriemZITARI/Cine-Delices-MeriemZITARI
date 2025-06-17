@@ -4,21 +4,12 @@ import recipeService from '../../services/api/RecipeService';
 
 import type { IRecipe } from '../../types/Recipe';
 import type { IMovie } from '../../types/Movies';
-<<<<<<< HEAD:front/src/components/HomePage/HomePage.tsx
-import RecipeImage from '../RecipeImage';
-import MoviePoster from '../MoviePoster';
-import { Button } from '../ui/button';
-import RecipeCarouselNew from '../RecipeCarousselNew';
-import './HomePage.css';
-import SearchForm from '../SearchForm/SearchForm';
-=======
 import RecipeImage from '../../components/RecipeImage';
 import MoviePoster from '../../components/MoviePoster';
-import { Button } from '../../components/ui/button';
+
 import RecipeCarouselNew from '../../components/RecipeCarousselNew';
-import './HomePageNew.css';
+import './HomePage.css';
 import SearchForm from '../../components/SearchForm/SearchForm';
->>>>>>> dev:front/src/pages/HomePage/HomePageNew.tsx
 import { FaClock, FaTools } from 'react-icons/fa';
 import getDifficultyText from '../../utils/getDifficulty';
 
@@ -138,11 +129,13 @@ const HomePage: React.FC = () => {
         );
       }
 
-      // --- Filtrage sur le titre ou la description de la recette ---
+      // --- Filtrage sur le titre ou les ingrédients de la recette ---
       if (searchTerm) {
         filteredRecipes = filteredRecipes.filter(recipe =>
           recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          recipe.description.toLowerCase().includes(searchTerm.toLowerCase())
+          (recipe.ingredients && recipe.ingredients.some(ing =>
+            ing.ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
+          ))
         );
       }
 
