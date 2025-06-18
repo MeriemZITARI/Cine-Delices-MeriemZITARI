@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { createCategoryService, getAllCategoriesService } from '../services/category.service';
-import { updateCategoryService } from '../services/category.service';
-import { deleteCategoryService } from '../services/category.service';
+import { createCategoryService, getAllCategoriesService } from '../../services/adminService/category.service';
+import { updateCategoryService } from '../../services/adminService/category.service';
+import { deleteCategoryService } from '../../services/adminService/category.service';
 
 
 export async function handleGetAllCategories(req: Request, res: Response, next: NextFunction) {

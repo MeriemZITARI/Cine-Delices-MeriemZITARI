@@ -21,7 +21,7 @@ userRouter.use(isAuthenticated);
  *       200:
  *         description: Profil de l'utilisateur récupéré avec succès.
  *       401:
- *         description: Non authentifié, veuillez vous connecter.
+ *         description: "Non authentifié, veuillez vous connecter."
  *       500:
  *         description: Erreur interne du serveur lors de la récupération du profil.
  */
