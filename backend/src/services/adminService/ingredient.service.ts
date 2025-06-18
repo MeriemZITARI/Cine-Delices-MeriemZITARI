@@ -1,5 +1,5 @@
-import { prisma } from '../client/prismaClient';
-import type { CreateIngredientInput, UpdateIngredientInput, SearchIngredientInput } from '../validations/ingredient';
+import { prisma } from '../../client/prismaClient';
+import type { CreateIngredientInput, UpdateIngredientInput, SearchIngredientInput } from '../../validations/admin/ingredient';
 
 export async function getAllIngredients() {
   try {

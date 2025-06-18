@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { handleSearchIngredient, handleCreateIngredient, handleUpdateIngredient, handleDeleteIngredient, handleGetAllIngredients } from '../controllers/ingredient.controller';
-import { isAuthenticated } from '../middlewares/isAuthenticated';
-import { isAdmin } from '../middlewares/isAdmin';
+import { handleSearchIngredient, handleCreateIngredient, handleUpdateIngredient, handleDeleteIngredient, handleGetAllIngredients } from '../../controllers/adminController/ingredient.controller';
+import { isAuthenticated } from '../../middlewares/isAuthenticated';
+import { isAdmin } from '../../middlewares/isAdmin';
 
 const ingredientRouter = Router();
 
@@ -88,7 +88,7 @@ ingredientRouter.get('/', handleSearchIngredient);
  *       500:
  *         description: Erreur interne du serveur.
  */
-ingredientRouter.post('/', isAuthenticated, handleCreateIngredient);
+ingredientRouter.post('/', isAuthenticated, isAdmin, handleCreateIngredient);
 
 /**
  * @swagger
