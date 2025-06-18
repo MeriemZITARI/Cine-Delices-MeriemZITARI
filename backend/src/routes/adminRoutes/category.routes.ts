@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { handleCreateCategory, handleGetAllCategories } from '../../controllers/category.controller';
+import { handleCreateCategory, handleGetAllCategories } from '../../controllers/adminController/category.controller';
 import { isAuthenticated } from '../../middlewares/isAuthenticated'; // Vérifie si l'utilisateur est connecté
 import { isAdmin } from '../../middlewares/isAdmin'; // Vérifie si l'utilisateur est un administrateur
-import { handleUpdateCategory } from '../../controllers/category.controller'; // Import du contrôleur pour la mise à jour de la catégorie
-import { handleDeleteCategory } from '../../controllers/category.controller'; // Import du contrôleur pour la suppression de la catégorie
+import { handleUpdateCategory } from '../../controllers/adminController/category.controller'; // Import du contrôleur pour la mise à jour de la catégorie
+import { handleDeleteCategory } from '../../controllers/adminController/category.controller'; // Import du contrôleur pour la suppression de la catégorie
 
 const categoryRouter = Router();
 
