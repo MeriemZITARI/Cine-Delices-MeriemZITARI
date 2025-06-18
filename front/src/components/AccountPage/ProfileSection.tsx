@@ -35,7 +35,8 @@ const ProfileSection : React.FC = () => {
   const [currentPassword, checkCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [errorPassword, setErrorPassword] = useState('');
+  const [errorInfo, setErrorInfo] = useState('');
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -64,7 +65,7 @@ const ProfileSection : React.FC = () => {
       // Mise à jour de l'atome
       setAuthUser(response.user);
     } catch (err) {
-      setError('Une erreur est survenue lors de la modification des informations de l\'utilisateur');
+      setErrorInfo('Une erreur est survenue lors de la modification des informations de l\'utilisateur');
       //console.error('Erreur lors de la modification des informations de l\'utilisateur :', err);
     }
   }
@@ -95,7 +96,7 @@ const ProfileSection : React.FC = () => {
       setConfirmPassword('');
       
     } catch (err) {
-      setError('Le mot de passe actuel est incorrect, la modification n\'a pas été prise en compte.');
+      setErrorPassword('Le mot de passe actuel est incorrect, la modification n\'a pas été prise en compte.');
       //console.error('Erreur lors de la modification du mot de passe :', err);
     }
   }
@@ -106,7 +107,7 @@ const ProfileSection : React.FC = () => {
         try {
             // Valide les données avec Zod
             userSchema.parse({ firstName, lastName, email });
-            setError(""); // Réinitialise les erreurs si tout est valide
+            setErrorInfo(""); // Réinitialise les erreurs si tout est valide
             
             const formData = new FormData();
             formData.append("firstName", firstName);
@@ -118,40 +119,40 @@ const ProfileSection : React.FC = () => {
             if (err instanceof z.ZodError) {
               // Récupère les messages d'erreur et les affiche
               const errorMessages = err.errors.map((error) => error.message).join(" ");
-              setError(errorMessages);
+              setErrorInfo(errorMessages);
             } else {
-              setError("Une erreur inconnue est survenue.");
+              setErrorInfo("Une erreur inconnue est survenue.");
             }
         }
     } else {
-        setError("");
+        setErrorInfo("");
         setIsEditing(false);
     }
   };
 
   const handlePasswordChange = () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      setError("Tous les champs sont obligatoires !");
+      setErrorPassword("Tous les champs sont obligatoires !");
       return;
     }
     if (newPassword !== confirmPassword) {
-      setError("Les nouveaux mots de passe ne correspondent pas.");
+      setErrorPassword("Les nouveaux mots de passe ne correspondent pas.");
       return;
     }
     
     try {
         // Valide les données avec Zod
         passwordSchema.parse({ password: newPassword });
-        setError(""); // Réinitialise les erreurs si tout est valide
+        setErrorPassword(""); // Réinitialise les erreurs si tout est valide
         
         handlePasswordFormAction(currentPassword, newPassword);
     } catch (err) {
         if (err instanceof z.ZodError) {
           // Récupère les messages d'erreur et les affiche
           const errorMessages = err.errors.map((error) => error.message).join(" ");
-          setError(errorMessages);
+          setErrorPassword(errorMessages);
         } else {
-          setError("Une erreur inconnue est survenue.");
+          setErrorPassword("Une erreur inconnue est survenue.");
         }
     }
   };
@@ -182,7 +183,7 @@ const ProfileSection : React.FC = () => {
           className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
           placeholder="Email"
         />
-        {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4 text-center">{error}</p>}
+        {errorInfo && <p className="font-bold text-red-500 text-sm mt-2 mb-4 text-center">{errorInfo}</p>}
         <div className="flex justify-end w-full gap-3">
           <Button
             text="Enregistrer"
@@ -216,7 +217,7 @@ const ProfileSection : React.FC = () => {
           className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
           placeholder="Confirmer le nouveau mot de passe"
         />
-        {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4">{error}</p>}
+        {errorPassword && <p className="font-bold text-red-500 text-sm mt-2 mb-4">{errorPassword}</p>}
         <div className="flex justify-end w-full gap-3">
           <Button
             text="Enregistrer"

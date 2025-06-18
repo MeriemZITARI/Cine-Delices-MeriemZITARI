@@ -12,7 +12,8 @@ import './HomePage.css';
 import SearchForm from '../../components/SearchForm/SearchForm';
 import { FaClock, FaTools } from 'react-icons/fa';
 import getDifficultyText from '../../utils/getDifficulty';
-
+// Fonction pour gérer la recherche de recettes
+import { searchRecipes } from '../../utils/handleSearch';
 
 // Composant principal de la page d'accueil
 const HomePage: React.FC = () => {
@@ -100,49 +101,27 @@ const HomePage: React.FC = () => {
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+  
     // Scroll automatique vers la section résultats après la recherche
     setTimeout(() => {
       if (resultsRef.current) {
         resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
-    }, 200); // Légère attente pour laisser le DOM se mettre à jour
-
-    e.preventDefault();
+    }, 200);
+  
     setLoading(true);
     setHasSearched(true);
+  
     try {
-      const response = await recipeService.getRecipes();
-      let filteredRecipes = response.data;
-      console.log("Recettes à filtrer:", filteredRecipes);
-
-      // --- Filtrage sur la durée ---
-      if (selectedDuration) {
-        filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.duration <= selectedDuration
-        );
-      }
-
-      // --- Filtrage direct sur la catégorie sélectionnée ---
-      if (selectedType) {
-        filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.category && recipe.category.name === selectedType
-        );
-      }
-
-      // --- Filtrage sur le titre ou les ingrédients de la recette ---
-      if (searchTerm) {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (recipe.ingredients && recipe.ingredients.some(ing =>
-            ing.ingredient.name.toLowerCase().includes(searchTerm.toLowerCase())
-          ))
-        );
-      }
-
-      console.log("Recettes filtrées:", filteredRecipes);
+      const filteredRecipes = await searchRecipes({
+        searchTerm,
+        selectedDuration,
+        selectedType,
+      });
+      console.log('Recettes filtrées:', filteredRecipes);
       setSearchResults(filteredRecipes);
     } catch (error) {
-      console.error("Erreur lors de la recherche:", error);
+      console.error('Erreur lors de la recherche:', error);
     } finally {
       setLoading(false);
     }
@@ -175,20 +154,20 @@ const HomePage: React.FC = () => {
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
               <div className="order-2 lg:order-1 lg:flex-1">
-                <div className="relative overflow-hidden shadow-lg">
-                  <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
-                    <h2 className="text-2xl lg:text-4xl font-bold">La recette du jour !</h2>
-                  </div>
-                  <RecipeImage
-                    recipe={featuredRecipe}
-                    alt={featuredRecipe.title}
-                    className="w-full h-48 lg:h-[400px] object-cover"
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
-                    <Link to={`/recettes/${featuredRecipe.id}`} className="group">
-                      <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow transition-colors">
+                <Link to={`/recettes/${featuredRecipe.id}`} className="group">
+                  <div className="relative overflow-hidden shadow-lg">
+                    <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
+                      <h1 className="text-2xl lg:text-4xl font-bold group-hover:text-customYellow transition-colors">La recette du jour !</h1>
+                    </div>
+                    <RecipeImage
+                      recipe={featuredRecipe}
+                      alt={featuredRecipe.title}
+                      className="w-full h-48 lg:h-[400px] object-cover"
+                    />
+                    <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent group-hover:text-customYellow transition-colors">
+                      <h2 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md">
                         {featuredRecipe.title}
-                      </h1>
+                      </h2>
                       <div className="flex items-center gap-4 text-sm">
                         <span className="flex items-center gap-2">
                           <span className="text-customYellow">
@@ -203,9 +182,9 @@ const HomePage: React.FC = () => {
                           {getDifficultyText(featuredRecipe.difficulty)}
                         </span>
                       </div>
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             )}
 
@@ -261,7 +240,7 @@ const HomePage: React.FC = () => {
 
         {/* --- Résultats de recherche (desktop uniquement, affichés seulement après une recherche) --- */}
         {hasSearched && (
-          <section ref={resultsRef} className="mb-16 hidden md:block">
+          <section ref={resultsRef} className="mb-16">
             <h2 className="text-2xl font-bold mb-6 text-red-600">Résultats de la recherche</h2>
             {searchResults.length === 0 ? (
               <p className="text-gray-500 text-center">Aucun résultat trouvé.</p>
@@ -311,7 +290,6 @@ const HomePage: React.FC = () => {
             )}
           </section>
         )}
-
         
         {/* Dernières recettes - Mobile uniquement */}
         <section className="block lg:hidden mb-16">
@@ -368,12 +346,6 @@ const HomePage: React.FC = () => {
             </Link>
           </div>
         </section>
-
-        {/* Liens sociaux */}
-        {/* Footer sans liens sociaux */}
-        <footer className="mt-16 py-8 border-t">
-          {/* Footer épuré, liens sociaux retirés */}
-        </footer>
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { FaBars, FaSearch, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import Button from "../Button/Button";
 import { useAtom } from "jotai";
 import { authUserAtom } from "../../store/authUserAtom";
+import SearchForm from "../SearchForm/SearchForm";
+import { searchRecipes } from '../../utils/handleSearch';
+import { IRecipe } from "../../types/Recipe";
 
 interface NavMobileProps {
   className?: string; // Permet de passer des classes CSS pour afficher/masquer le menu mobile
@@ -11,6 +13,12 @@ interface NavMobileProps {
 
 const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
     const [authUser] = useAtom(authUserAtom);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
+    const [selectedType, setSelectedType] = useState<string | null>(null);
+    const [searchResults, setSearchResults] = useState<IRecipe[]>([]);
+    const [loading, setLoading] = useState(false);
 
     const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
     const toggleSearchModal = () => {
@@ -22,6 +30,27 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
       setIsMenuOpen(!isMenuOpen);
     };
   
+    const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+    
+      setLoading(true);
+    
+      try {
+        const filteredRecipes = await searchRecipes({
+          searchTerm,
+          selectedDuration,
+          selectedType,
+        });
+        console.log('Recettes filtrées:', filteredRecipes);
+        setSearchResults(filteredRecipes);
+      } catch (error) {
+        console.error('Erreur lors de la recherche:', error);
+      } finally {
+        setLoading(false);
+        toggleSearchModal(); // Ferme la modale après la recherche
+      }
+    };
+
     return (
       <>
         <header 
@@ -118,126 +147,18 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
           }}
         >
           <div 
-            className="bg-white p-6 rounded-lg shadow-lg w-11/12 max-w-md"
+            className="bg-white p-1 rounded-lg shadow-lg w-11/12 max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-xl font-bold mb-4">Rechercher</h2>
-            <form>
-              {/* Champ "Je cherche" */}
-              <div className="mb-4">
-                <label htmlFor="search" className="block text-m font-bold text-gray-700 mb-2">
-                  Je cherche...
-                </label>
-                <input
-                  id="search"
-                  type="text"
-                  placeholder="Lasagnes, Star Wars, ..."
-                  className="w-full p-2 border border-gray-300 rounded"
-                />
-              </div>
-
-              {/* Champ "J'ai..." */}
-              <div className="mb-4">
-                <label htmlFor="time" className="block text-m font-bold text-gray-700 mb-2">
-                  J'ai...
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="time"
-                      value="15"
-                      className="mr-2"
-                    />
-                    15 minutes
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="time"
-                      value="30"
-                      className="mr-2"
-                    />
-                    30 minutes
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="time"
-                      value="45"
-                      className="mr-2"
-                    />
-                    45 minutes
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="time"
-                      value="60+"
-                      className="mr-2"
-                    />
-                    60+ minutes
-                  </label>
-                </div>
-              </div>
-              
-              {/* Champ "Je veux préparer..." */}
-              <div className="mb-4">
-                <label htmlFor="type" className="block text-m font-bold text-gray-700 mb-2">
-                  Je veux préparer...
-                </label>
-                <div className="grid grid-cols-2 gap-2">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="entrée"
-                      className="mr-2"
-                    />
-                    Entrée
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="plat"
-                      className="mr-2"
-                    />
-                    Plat
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="dessert"
-                      className="mr-2"
-                    />
-                    Dessert
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="type"
-                      value="boisson"
-                      className="mr-2"
-                    />
-                    Boisson
-                  </label>
-                </div>
-              </div>
-
-              {/* Boutons */}
-              <div className="flex justify-end gap-2">
-                <Button
-                  text="Annuler"
-                  className="bg-gray-500 hover:bg-gray-600"
-                  onClick={toggleSearchModal}
-                />
-                <Button
-                  text="Rechercher"
-                />
-              </div>
-            </form>
+            <SearchForm
+                onSubmit={handleSearch}
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+                selectedDuration={selectedDuration}
+                onDurationSelect={setSelectedDuration}
+                selectedType={selectedType}
+                onTypeSelect={setSelectedType}
+              />
           </div>
         </div>
       )}
