@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { searchIngredientByName, createIngredient, updateIngredient, deleteIngredient, getAllIngredients } from '../services/ingredient.service';
-import { createIngredientSchema, updateIngredientSchema, searchIngredientSchema } from '../validations/ingredient';
+import { searchIngredientByName, createIngredient, updateIngredient, deleteIngredient, getAllIngredients } from '../../services/adminService/ingredient.service';
+import { createIngredientSchema, updateIngredientSchema, searchIngredientSchema } from '../../validations/admin/ingredient';
 
 export async function handleGetAllIngredients(req: Request, res: Response, next: NextFunction) {
     try {
