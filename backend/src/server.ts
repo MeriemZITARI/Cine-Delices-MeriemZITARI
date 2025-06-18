@@ -1,4 +1,4 @@
-// Fichier: src/server.ts
+// Fichier: src/server.ts (Version Corrigée et Réorganisée)
 import dotenv from 'dotenv';
 dotenv.config();
 import express from 'express';
@@ -8,43 +8,34 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
 import { setupSwagger } from './swagger';
-// import errorHandler from './middlewares/errorHandler';
 import router from './routes';
 
-// --- NOTRE SONDE DE DÉBOGAGE ---
-console.log('--- Début du débogage ---');
-console.log('Chemin de travail actuel:', process.cwd());
-console.log('PORT:', process.env.PORT);
-console.log('DATABASE_URL:', process.env.DATABASE_URL);
-console.log('--- Fin du débogage ---');
-// ---------------------------------
-
 const app = express();
-
-// Middleware pour servir des fichiers statiques
-app.use(express.static('public'));
-
-// Documentation Swagger
-setupSwagger(app);
-
-
 const PORT = process.env.PORT || 3001;
-app.use(express.json());
 
-// Middlewares globaux
-app.use(helmet());
+// --- 1. MIDDLEWARES GLOBAUX ESSENTIELS (à déclarer en premier) ---
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
-
+app.use(helmet());
+app.use(express.json());
 app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
 
-// Routes de l'API
+
+// --- 2. ROUTES DE L'APPLICATION ---
+
+// Routes pour les fichiers statiques (ex: images) et la documentation
+app.use(express.static('public'));
+setupSwagger(app);
+
+// Routes principales de l'API
 app.use('/api', router);
 
 
-
+// --- 3. GESTIONNAIRE D'ERREURS (doit toujours être en dernier) ---
 app.use(errorHandler);
 
+
+// --- 4. LANCEMENT DU SERVEUR ---
 app.listen(PORT, () => {
   console.log(`🚀 Server ready at http://localhost:${PORT}`);
 });
