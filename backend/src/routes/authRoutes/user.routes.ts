@@ -1,9 +1,17 @@
 import { Router } from 'express';
 import { isAuthenticated } from '../../middlewares/isAuthenticated';
-import { handleDeleteMyProfile, handleGetMyProfile,  handleUpdateUserPassword, handleUpdateUserProfile } from '../../controllers/user.controller';
+import {
+  handleDeleteMyProfile,
+  handleGetMyProfile,
+  handleGetMyRecipes,
+  handleUpdateUserPassword,
+  handleUpdateUserProfile
+} from '../../controllers/user.controller';
 import { validateRequest } from '../../middlewares/validateRequest';
-import {  updateUserPasswordSchema, updateUserProfileSchema } from '../../validations/users';
-import { handleGetMyRecipes } from '../../controllers/user.controller';
+import {
+  updateUserPasswordSchema,
+  updateUserProfileSchema
+} from '../../validations/users';
 
 const userRouter = Router();
 
@@ -18,11 +26,11 @@ userRouter.use(isAuthenticated);
  *     tags:
  *       - Utilisateurs
  *     responses:
- *       200:
+ *       '200':
  *         description: Profil de l'utilisateur récupéré avec succès.
- *       401:
+ *       '401':
  *         description: Non authentifié, veuillez vous connecter.
- *       500:
+ *       '500':
  *         description: Erreur interne du serveur lors de la récupération du profil.
  */
 userRouter.get('/me', handleGetMyProfile);
@@ -50,48 +58,50 @@ userRouter.get('/me', handleGetMyProfile);
  *                 example: "NouveauMotDePasse456!"
  *     responses:
  *       '200':
- *         description: Mot de passe mis à jour avec succès.
+ *         description: "Mot de passe mis à jour avec succès."
  *       '400':
- *         description: Données invalides (ex: mot de passe trop court).
+ *         description: "Données invalides (ex: mot de passe trop court)."
  *       '403':
- *         description: Mot de passe actuel incorrect.
+ *         description: "Mot de passe actuel incorrect."
+ */
+
+userRouter.patch(
+  '/me/password',
+  validateRequest(updateUserPasswordSchema),
+  handleUpdateUserPassword
+);
+
+/**
+ * @swagger
+ * /users/me:
+ *   patch:
+ *     summary: Mettre à jour les informations de base (prénom/nom)
+ *     description: Met à jour le prénom et/ou le nom de l'utilisateur actuellement connecté.
+ *     tags:
+ *       - Utilisateurs
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               firstName:
+ *                 type: string
+ *                 example: "Jane"
+ *               lastName:
+ *                 type: string
+ *                 example: "Doe"
+ *     responses:
+ *       '200':
+ *         description: Profil mis à jour avec succès.
  */
 userRouter.patch(
-    '/me/password',
-    validateRequest(updateUserPasswordSchema),
-    handleUpdateUserPassword
-  );
-  
-  /**
-   * @swagger
-   * /users/me:
-   *   patch:
-   *     summary: Mettre à jour les informations de base (prénom/nom)
-   *     description: Met à jour le prénom et/ou le nom de l'utilisateur actuellement connecté.
-   *     tags:
-   *       - Utilisateurs
-   *     requestBody:
-   *       required: true
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             properties:
-   *               firstName:
-   *                 type: string
-   *                 example: "Jane"
-   *               lastName:
-   *                 type: string
-   *                 example: "Doe"
-   *     responses:
-   *       200:
-   *         description: Profil mis à jour avec succès.
-   */
-  userRouter.patch(
-    '/me',
-    validateRequest(updateUserProfileSchema),
-    handleUpdateUserProfile
-  );
+  '/me',
+  validateRequest(updateUserProfileSchema),
+  handleUpdateUserProfile
+);
+
 /**
  * @swagger
  * /users/me/recipes:
@@ -109,8 +119,7 @@ userRouter.patch(
  *         description: Non authentifié.
  */
 userRouter.get('/me/recipes', handleGetMyRecipes);
-  
-  
+
 /**
  * @swagger
  * /users/me:
@@ -120,11 +129,11 @@ userRouter.get('/me/recipes', handleGetMyRecipes);
  *     tags:
  *       - Utilisateurs
  *     responses:
- *       204:
+ *       '204':
  *         description: Compte supprimé avec succès.
- *       401:
+ *       '401':
  *         description: Non authentifié, veuillez vous connecter.
- *       500:
+ *       '500':
  *         description: Erreur interne du serveur lors de la suppression du compte.
  */
 userRouter.delete('/me', handleDeleteMyProfile);
