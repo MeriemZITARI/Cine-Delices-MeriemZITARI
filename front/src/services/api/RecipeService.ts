@@ -15,11 +15,7 @@ export const recipeService = {
       return {
         success: true,
         data: response.data,
-<<<<<<< HEAD
         message: response.data.message
-=======
-        message: response.data
->>>>>>> feature/accountPage
       };
     } catch (error) {
       console.error('Erreur dans getRecipes:', error);
