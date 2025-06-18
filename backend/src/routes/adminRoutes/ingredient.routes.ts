@@ -40,7 +40,7 @@ const ingredientRouter = Router();
  *       500:
  *         description: Erreur interne du serveur.
  */
-ingredientRouter.get('/all', isAuthenticated, isAdmin, handleGetAllIngredients);
+ingredientRouter.get('/all', handleGetAllIngredients);
 
 /**
  * @swagger
@@ -62,7 +62,7 @@ ingredientRouter.get('/all', isAuthenticated, isAdmin, handleGetAllIngredients);
  *       500:
  *         description: Erreur interne du serveur.
  */
-ingredientRouter.get('/', isAuthenticated, isAdmin, handleSearchIngredient);
+ingredientRouter.get('/', handleSearchIngredient);
 
 /**
  * @swagger
