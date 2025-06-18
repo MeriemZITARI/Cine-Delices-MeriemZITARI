@@ -6,7 +6,7 @@ import loginRoutes from './authRoutes/auth.routes';
 import userRoutes from './authRoutes/user.routes';
 import categoryRoutes from './categoryRoutes/category.routes';
 import adminRoutes from './adminRoutes/admin.user.routes';
-import ingredientRoutes from './ingredient.routes';
+import ingredientRoutes from './adminRoutes/ingredient.routes';
 
 const router = Router();
 

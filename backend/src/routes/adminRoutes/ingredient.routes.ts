@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { handleSearchIngredient, handleCreateIngredient, handleUpdateIngredient, handleDeleteIngredient, handleGetAllIngredients } from '../controllers/ingredient.controller';
-import { isAuthenticated } from '../middlewares/isAuthenticated';
-import { isAdmin } from '../middlewares/isAdmin';
+import { handleSearchIngredient, handleCreateIngredient, handleUpdateIngredient, handleDeleteIngredient, handleGetAllIngredients } from '../../controllers/adminController/ingredient.controller';
+import { isAuthenticated } from '../../middlewares/isAuthenticated';
+import { isAdmin } from '../../middlewares/isAdmin';
 
 const ingredientRouter = Router();
 
@@ -40,7 +40,7 @@ const ingredientRouter = Router();
  *       500:
  *         description: Erreur interne du serveur.
  */
-ingredientRouter.get('/all', handleGetAllIngredients);
+ingredientRouter.get('/all', isAuthenticated, isAdmin, handleGetAllIngredients);
 
 /**
  * @swagger
@@ -62,7 +62,7 @@ ingredientRouter.get('/all', handleGetAllIngredients);
  *       500:
  *         description: Erreur interne du serveur.
  */
-ingredientRouter.get('/', handleSearchIngredient);
+ingredientRouter.get('/', isAuthenticated, isAdmin, handleSearchIngredient);
 
 /**
  * @swagger
@@ -88,7 +88,7 @@ ingredientRouter.get('/', handleSearchIngredient);
  *       500:
  *         description: Erreur interne du serveur.
  */
-ingredientRouter.post('/', isAuthenticated, handleCreateIngredient);
+ingredientRouter.post('/', isAuthenticated, isAdmin, handleCreateIngredient);
 
 /**
  * @swagger
