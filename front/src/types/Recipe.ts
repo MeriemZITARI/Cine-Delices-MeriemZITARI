@@ -16,7 +16,7 @@ export interface IRecipe {
     duration: number;
     difficulty: number;
     servings: number;
-    anecdote?: string;
+    quote?: string;
     category: {
       id: string;
       name: string;

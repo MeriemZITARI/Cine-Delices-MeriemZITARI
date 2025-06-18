@@ -18,6 +18,7 @@ function App() {
   return (
     <SearchModalProvider>
       <div className="min-h-screen flex flex-col">
+        <div id="modal-root"></div>
         <Header />
         <main className="flex-grow">
           <Routes>

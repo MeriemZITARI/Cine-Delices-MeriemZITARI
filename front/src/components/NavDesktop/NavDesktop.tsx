@@ -68,8 +68,8 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
                 to="/mon-compte"
                 className="flex items-center justify-center h-full text-black"
               >
+                <p className="mr-2">{authUser.firstName} {authUser.lastName}</p>
                 <FaUserCircle size={36} />
-                <p className="ml-2">{authUser.firstName} {authUser.lastName}</p>
               </Link>
               
             <button

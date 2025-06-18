@@ -157,114 +157,75 @@ const ProfileSection : React.FC = () => {
   };
   
   return (
-    <>
-      {!isEditing && !isChangingPassword && (
-        <button
-            className="absolute top-2 right-2 text-gray-700"
-            onClick={handleEditToggle}
-        >
-            <FaUserEdit size={24} />
-        </button>
-      )}
-
-      {/* Affichage ou édition des informations */}
-      {isEditing ? (
-        <>
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-            placeholder="Prénom"
-          />
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-            placeholder="Nom"
-          />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-            placeholder="Email"
-          />
-          {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4 text-center">{error}</p>}
-          {/* Boutons Annuler et Enregistrer */}
-            <div className="flex justify-around w-full gap-3">
-            <Button
-                text="Annuler"
-                className="bg-gray-500 hover:bg-gray-700 flex-1"
-                onClick={() => {
-                    setIsEditing(false); // Quitter le mode édition
-                    setFirstName(authUser?.firstName || '');
-                  setLastName(authUser?.lastName || '');
-                  setEmail(authUser?.email || '');
-                  checkCurrentPassword(''); // Réinitialiser le mot de passe
-                }}
-            />
-            <Button
-              text="Enregistrer"
-              className="flex-1"
-              onClick={handleInfoSave}
-              />
-            </div>
-        </>
-      ) : isChangingPassword ? (
-        <>
-          <input
-            type="password"
-            value={currentPassword}
-            onChange={(e) => checkCurrentPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-            placeholder="Mot de passe actuel"
-          />
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-            placeholder="Nouveau mot de passe"
-          />
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-4"
-            placeholder="Confirmer le nouveau mot de passe"
-          />
-          {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4">{error}</p>}
-          <div className="flex justify-around w-full gap-3">
-            <Button
-              text="Annuler"
-              className="bg-gray-500 hover:bg-gray-700 flex-1"
-              onClick={() => {
-                setIsChangingPassword(false);
-                checkCurrentPassword('');
-                setNewPassword('');
-                setConfirmPassword('');
-              }}
-            />
-            <Button
-              text="Enregistrer"
-              className="flex-1"
-              onClick={handlePasswordChange}
-            />
-          </div>
-        </>
-      ) : (
-        <>
-          <h2 className="text-lg sm:text-2xl font-bold text-black">{authUser?.firstName} {authUser?.lastName}</h2>
+    <div className="flex flex-col md:flex-row gap-8">
+      {/* Colonne gauche : Informations utilisateur */}
+      <div className="flex-1">
+        <h2 className="text-lg sm:text-2xl font-bold text-black mb-4">Informations utilisateur</h2>
+        <input
+          type="text"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
+          placeholder="Prénom"
+        />
+        <input
+          type="text"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
+          placeholder="Nom"
+        />
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
+          placeholder="Email"
+        />
+        {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4 text-center">{error}</p>}
+        <div className="flex justify-end w-full gap-3">
           <Button
-            text="Modifier le mot de passe"
-            className="mt-4"
-            onClick={() => setIsChangingPassword(true)}
+            text="Enregistrer"
+            className="flex-1"
+            onClick={handleInfoSave}
           />
-        </>
-      )}
-    </>
+        </div>
+      </div>
+  
+      {/* Colonne droite : Modification du mot de passe */}
+      <div className="flex-1">
+        <h2 className="text-lg sm:text-2xl font-bold text-black mb-4">Modifier le mot de passe</h2>
+        <input
+          type="password"
+          value={currentPassword}
+          onChange={(e) => checkCurrentPassword(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
+          placeholder="Mot de passe actuel"
+        />
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
+          placeholder="Nouveau mot de passe"
+        />
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
+          placeholder="Confirmer le nouveau mot de passe"
+        />
+        {error && <p className="font-bold text-red-500 text-sm mt-2 mb-4">{error}</p>}
+        <div className="flex justify-end w-full gap-3">
+          <Button
+            text="Enregistrer"
+            className="flex-1"
+            onClick={handlePasswordChange}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

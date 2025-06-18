@@ -33,8 +33,18 @@ export const recipeService = {
   },
 
   async updateRecipe(id: string, recipe: Partial<IRecipe>): Promise<ApiResponse<IRecipe>> {
-    const response = await axiosInstance.put(`/api/recipes/${id}`, recipe);
-    return response.data;
+    try {
+      const response = await axiosInstance.patch(`/api/recipes/${id}`, recipe);
+      
+      return {
+        success: true,
+        data: response.data,
+        message: response.data.message
+      };
+    } catch (error) {
+      console.error('Erreur dans updateRecipe :', error);
+      throw error;
+    }
   },
 
   async deleteRecipe(id: string): Promise<ApiResponse<void>> {
