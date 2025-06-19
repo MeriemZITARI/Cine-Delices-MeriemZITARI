@@ -10,7 +10,7 @@ interface SearchFormProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
   selectedDuration: number | null;
-  onDurationSelect: (duration: number) => void;
+  onDurationSelect: (duration: number | null) => void;
   selectedType: string | null;
   onTypeSelect: (type: string) => void;
 }
@@ -41,12 +41,12 @@ const SearchForm: React.FC<SearchFormProps> = ({
   }, []);
 
   return (
-    <div className="bg-white p-4 h-[400px]">
+    <div className="bg-white p-4 md:h-[400px]">
       {/* Champ de recherche textuelle */}
-      <h3 className="text-base font-bold sm:text-lg mb-2">Je cherche...</h3>
+      <h3 className="text-base font-bold sm:text-lg mb-1">Je cherche...</h3>
       <form onSubmit={onSubmit}>
         {/* Input texte pour la recherche */}
-        <div className="flex items-center border rounded-md p-2 mb-4 sm:mb-5">
+        <div className="flex items-center border rounded-md p-2 mb-4 sm:mb-4">
           <div className="flex items-center justify-center text-gray-400 mr-3">
             <Search size={18} />
           </div>
@@ -60,24 +60,24 @@ const SearchForm: React.FC<SearchFormProps> = ({
         </div>
         
         {/* Radios pour la durée */}
-        <h3 className="text-base font-bold sm:text-lg mb-2">J'ai...</h3>
+        <h3 className="text-base font-bold sm:text-lg mb-1">J'ai...</h3>
         <div className="grid grid-cols-2 gap-2 mb-4">
-          {[15, 30, 45, 60].map((duration) => (
-            <label key={duration} className="flex items-center">
-              <input
-                type="radio"
-                name="duration"
-                checked={selectedDuration === duration}
-                onChange={() => onDurationSelect(duration)}
-                className="custom-radio"
-              />
-              {duration} minutes
-            </label>
-          ))}
+        {[30, 60, 90, null].map((duration) => (
+          <label key={duration ?? 'no-limit'} className="flex items-center">
+            <input
+              type="radio"
+              name="duration"
+              checked={selectedDuration === duration}
+              onChange={() => onDurationSelect(duration)}
+              className="custom-radio"
+            />
+            {duration ? `${duration} minutes` : 'Aucune limite'}
+          </label>
+        ))}
         </div>
 
         {/* Radios dynamiques pour les catégories */}
-        <h3 className="text-base font-bold sm:text-lg mb-2">Je veux préparer...</h3>
+        <h3 className="text-base font-bold sm:text-lg mb-1">Je veux préparer...</h3>
         <div className="grid grid-cols-2 gap-2 mb-4">
           {loadingCategories && (
             <span className="text-gray-500 col-span-2">Chargement...</span>
