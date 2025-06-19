@@ -82,7 +82,7 @@ const AllRecipesPage: React.FC = () => {
       {/* En-tête avec le formulaire de recherche */}
       <div className="bg-customYellow py-6">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mb-4">Toutes nos recettes</h1>
+          <h1 className="text-3xl font-bold text-center mb-4 font-broadway">Toutes nos recettes</h1>
           <div className="max-w-lg mx-auto rounded-lg overflow-hidden">
             <SearchForm
               onSubmit={handleSearch}
