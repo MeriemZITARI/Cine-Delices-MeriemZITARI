@@ -4,6 +4,8 @@ import { getIngredients, addIngredient } from '../services/api/IngredientService
 import { Button } from './ui/button';
 import { getImageUrl } from '../services/Tmdb.Api';
 import { getCategories, Category } from "../services/api/CategoryService";
+import { useNavigate } from 'react-router-dom';
+import { recipeService } from '../services/api/RecipeService';
 
 interface Ingredient {
   id: string;
@@ -11,7 +13,8 @@ interface Ingredient {
 }
 
 interface RecipeIngredient {
-  name: string;
+  id?: string;
+  ingredientName?: string; // Changé de name à ingredientName
   quantity: number;
   unit: string;
 }
@@ -24,6 +27,7 @@ interface Movie {
 }
 
 const AddRecipePage: React.FC = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -69,12 +73,19 @@ const AddRecipePage: React.FC = () => {
     if (!name.trim()) return;
     const quantityNumber = Number(quantityInput);
     if (isNaN(quantityNumber) || quantityNumber <= 0) return;
-    if (!selectedIngredients.some(i => i.name === name)) {
-      setSelectedIngredients([
-        ...selectedIngredients,
-        { name, quantity: quantityNumber, unit: unitInput }
-      ]);
-    }
+
+    const existingIngredient = ingredients.find(i => i.name.toLowerCase() === name.toLowerCase());
+
+    setSelectedIngredients([
+      ...selectedIngredients,
+      {
+        id: existingIngredient?.id,
+        ingredientName: name, // Changé de name à ingredientName
+        quantity: quantityNumber,
+        unit: unitInput
+      }
+    ]);
+    
     setIngredientInput("");
     setQuantityInput("");
     setUnitInput("");
@@ -86,15 +97,34 @@ const AddRecipePage: React.FC = () => {
     setLoading(true);
     setMessage("");
     try {
-      // Remplacez par votre appel API de création de recette
-      // await addRecipe({ name, description: desc, ingredients: selectedIngredients, category });
-      setMessage("Recette créée !");
-      setName("");
-      setDesc("");
-      setSelectedIngredients([]);
-      setCategory("");
+      const recipeData = {
+        title: name,
+        description: desc,
+        ingredients: selectedIngredients.map(ing => ({
+          ...(ing.id ? { ingredientId: ing.id } : { ingredientName: ing.ingredientName }), // Modifié pour utiliser ingredientName
+          quantity: ing.quantity,
+          unit: ing.unit
+        })),
+        categoryId: category,
+        movieId: selectedMovie?.id.toString(), // Conversion en string
+        duration: parseInt(duration),
+        difficulty: parseInt(difficulty),
+        servings: parseInt(servings),
+        image: image ? `http://localhost:3001/uploads/${image.name}` : null, // Ajout de l'URL complète
+        quote: movieDescription
+      };
+
+      const response = await recipeService.createRecipe(recipeData);
+      
+      if (response.success) {
+        setMessage("Recette créée avec succès !");
+        navigate('/recipes'); // Redirection vers la liste des recettes
+      } else {
+        setMessage("Erreur lors de la création de la recette.");
+      }
     } catch (err: any) {
-      setMessage("Erreur lors de la création.");
+      console.error('Erreur lors de la création de la recette:', err);
+      setMessage("Erreur lors de la création de la recette.");
     }
     setLoading(false);
   };
@@ -119,6 +149,10 @@ const AddRecipePage: React.FC = () => {
   const handleMovieSelect = (movie: any) => {
     setSelectedMovie(movie);
     setShowMovieSearch(false);
+  };
+
+  const handleCancel = () => {
+    navigate(-1); // Retourne à la page précédente
   };
 
   return (
@@ -384,7 +418,11 @@ const AddRecipePage: React.FC = () => {
                 <div className="font-bold text-lg">{selectedMovie.title}</div>
                 {selectedMovie.release_date && (
                   <div className="text-sm text-gray-500 mb-1">
-                    {new Date(selectedMovie.release_date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    {new Date(selectedMovie.release_date).toLocaleDateString('fr-FR', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
                   </div>
                 )}
                 {selectedMovie.overview && (
@@ -427,13 +465,23 @@ const AddRecipePage: React.FC = () => {
             )}
           </div>
         </div>
-        <Button
-          className="w-full py-2 rounded font-bold text-white bg-blue-600 hover:bg-blue-700 transition"
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? "Création..." : "Créer la recette"}
-        </Button>
+        <div className="flex gap-4 justify-end mt-4">
+          <Button
+            type="button"
+            variant="outline"
+            className="w-1/3 py-2 rounded font-bold"
+            onClick={handleCancel}
+          >
+            Annuler
+          </Button>
+          <Button
+            className="w-2/3 py-2 rounded font-bold text-white bg-blue-600 hover:bg-blue-700 transition"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Création..." : "Créer la recette"}
+          </Button>
+        </div>
         {message && (
           <div className={"mt-4 text-center " + (message.includes("Erreur") ? "text-red-600" : "text-green-600")}>
             {message}
@@ -452,4 +500,6 @@ const AddRecipePage: React.FC = () => {
 };
 
 export default AddRecipePage;
+
+
 
