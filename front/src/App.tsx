@@ -14,7 +14,7 @@ import AllRecipesPage from './components/AllRecipesPage';
 
 
 import { SearchModalProvider } from "./context/SearchModalContext";
-import MoviePage from "./pages/MoviePage/MoviePage";
+import AllMoviesPage from "./pages/MoviePage/AllMoviesPage";
 
 function App() {
   return (
@@ -33,7 +33,7 @@ function App() {
             <Route path="/mon-compte" element={<AccountPage />} />
             <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/films" element={<MoviePage />} />
+            <Route path="/films" element={<AllMoviesPage />} />
             
           
           </Routes>
