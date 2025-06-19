@@ -6,10 +6,10 @@ interface MovieImageProps {
   movie: {
     id: string;
     title: string;
-    year: string;
+    year?: string;
     poster?: string;
   };
-  alt: string;
+  alt?: string;
   className?: string;
 }
 

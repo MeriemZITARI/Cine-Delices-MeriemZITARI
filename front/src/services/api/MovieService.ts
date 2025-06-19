@@ -1,15 +1,18 @@
 import axios from 'axios';
 import type { IMovie } from '../../types/Movies';
+import { axiosInstance } from '../../utils/axios';
 
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
 
 const MovieService = {
   async getMovies(): Promise<IMovie[]> {
-    const response = await axios.get(`${apiUrl}/movies`);
+    const response = await axiosInstance.get(`api/movies`);
+    console.log('Réponse de getMovies:', response);
+  
     return response.data;
   },
 
-  async getMovie(id: string) {
+  /*async getMovie(id: string) {
     const response = await axios.get(`${apiUrl}/movies/${id}`);
     return response.data as IMovie;
   },
@@ -45,7 +48,7 @@ const MovieService = {
       params: { limit }
     });
     return response.data as IMovie[];
-  }
+  }*/
 };
 
 export default MovieService;
