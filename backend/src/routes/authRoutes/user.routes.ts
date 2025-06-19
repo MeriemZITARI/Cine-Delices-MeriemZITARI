@@ -28,15 +28,9 @@ userRouter.use(isAuthenticated);
  *     responses:
  *       '200':
  *         description: Profil de l'utilisateur récupéré avec succès.
-<<<<<<< HEAD
- *       401:
- *         description: "Non authentifié, veuillez vous connecter."
- *       500:
-=======
  *       '401':
  *         description: Non authentifié, veuillez vous connecter.
  *       '500':
->>>>>>> feature/crud-movie
  *         description: Erreur interne du serveur lors de la récupération du profil.
  */
 userRouter.get('/me', handleGetMyProfile);

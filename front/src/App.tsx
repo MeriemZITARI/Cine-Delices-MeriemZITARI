@@ -13,7 +13,9 @@ import RecipeDetailPage from "./components/RecipeDetailPage";
 import AddRecipePage from "./components/AddRecipePage";
 import AllRecipesPage from './components/AllRecipesPage';
 
+
 import { SearchModalProvider } from "./context/SearchModalContext";
+import AllMoviesPage from "./pages/MoviePage/AllMoviesPage";
 
 function App() {
   return (
@@ -34,6 +36,9 @@ function App() {
             <Route path="/films" element={ <AllMoviesPage />}  />         
             <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
+            <Route path="/films" element={<AllMoviesPage />} />
+            
+          
           </Routes>
         </main>
         <Footer />
