@@ -1,10 +1,7 @@
-<<<<<<< HEAD
+
 import { prisma } from '../../client/prismaClient';
 import type { CreateCategoryInput, UpdateCategoryInput } from '../../validations/admin/category';
-=======
-import { prisma } from '../client/prismaClient';
-import type { CreateCategoryInput, UpdateCategoryInput } from '../validations/category';
->>>>>>> featureCreateRecipe
+
 
 
 export async function getAllCategoriesService() {

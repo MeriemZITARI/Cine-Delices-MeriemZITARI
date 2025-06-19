@@ -58,8 +58,21 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
           >
             Films
           </NavLink>
+          {authUser ? (
+          <NavLink 
+            to="/add-recipe" 
+            title="Ajouter une recette"
+            className={({ isActive }) =>
+            `text-black font-medium ${isActive ? "underline" : ""}`
+            }
+          >
+            Créer recette
+          </NavLink>
+          ) : ( null )}
         </nav>
         
+
+
         <div className="flex items-center">
           {authUser ? (
             // Icône pour "Mon compte" si connecté

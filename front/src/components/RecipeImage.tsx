@@ -28,18 +28,15 @@ const RecipeImage: React.FC<RecipeImageProps> = ({
       return;
     }
     try {
-      let url;
-      if (recipe.image && recipe.image.startsWith("http")) {
-        url = recipe.image;
-      } else {
-        url = RecipeImageService.getRecipeImage(recipe.title);
-      }
+      const url = RecipeImageService.getRecipeImage(recipe.image);
       setImageUrl(url);
       setLoading(false);
     } catch (err) {
+      console.error("RecipeImage: erreur lors de la récupération de l'image", err);
       setError(true);
       setLoading(false);
     }
+
   }, [recipe]);
 
   if (loading) {

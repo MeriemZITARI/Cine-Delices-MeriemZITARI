@@ -4,10 +4,10 @@ import Footer from "./components/Footer/Footer";
 
 
 import HomePage from "./components/HomePage/HomePage";
-import RegisterPage from "./components/RegisterPage/RegisterPage";
-import LoginPage from "./components/LoginPage/LoginPage";
-import NotFoundPage from "./components/errors/404";
-
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import LoginPage from "./pages/LoginPage/LoginPage";
+import NotFoundPage from "./pages/errors/404";
+import AllMoviesPage from "./pages/MoviePage/AllMoviesPage";
 
 import RecipeDetailPage from "./components/RecipeDetailPage";
 import AddRecipePage from "./components/AddRecipePage";
@@ -31,7 +31,7 @@ function App() {
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/recipes" element={<AllRecipesPage />} />
             <Route path="/add-recipe" element={<AddRecipePage />} />
-            
+            <Route path="/films" element={ <AllMoviesPage />}  />         
             <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

@@ -1,50 +1,14 @@
-import croquemonsieurImage from "@/assets/recipes/croque-monsieur.jpg";
-import lasagnesImage from "@/assets/recipes/lasagnes.jpg";
-import ratatouilleImage from "@/assets/recipes/ratatouille.jpg";
-
-// Service pour récupérer des images de recettes
+// Service pour récupérer des images de recettes depuis le backend
 const RecipeImageService = {
-  // Collection d'images de recettes locales
-  recipeImages: {
-    "Croque Monsieur": croquemonsieurImage,
-    "Lasagnes": lasagnesImage,
-    "Ratatouille": ratatouilleImage,
-  },
-
-  // Fonction pour obtenir l'image d'une recette par son titre
-  getRecipeImage(title: string): string | null {
-    try {
-      console.log('RecipeImageService: recherche d\'image pour', title);
-      
-      // Si le titre est vide, retourner null
-      if (!title) {
-        console.error('RecipeImageService: titre vide');
-        return null;
-      }
-
-      const normalizedTitle = title.toLowerCase();
-      console.log('RecipeImageService: titre normalisé', normalizedTitle);
-
-      // Vérifier si nous avons une image locale pour cette recette
-      for (const [recipeTitle, imageUrl] of Object.entries(this.recipeImages)) {
-        const normalizedRecipeTitle = recipeTitle.toLowerCase();
-        console.log('RecipeImageService: comparaison avec', normalizedRecipeTitle);
-        
-        if (normalizedTitle === normalizedRecipeTitle || 
-            normalizedTitle.includes(normalizedRecipeTitle) || 
-            normalizedRecipeTitle.includes(normalizedTitle)) {
-          console.log('RecipeImageService: correspondance trouvée pour', recipeTitle, imageUrl);
-          return imageUrl;
-        }
-      }
-      
-      console.log('RecipeImageService: aucune image trouvée');
-      return null;
-    } catch (error) {
-      console.error("RecipeImageService: erreur lors de la récupération de l'image:", error);
-      return null;
+  // Fonction pour obtenir l'URL de l'image d'une recette
+  getRecipeImage(backendImage: string): string {
+    if (!backendImage) {
+      console.error("RecipeImageService: nom de fichier d'image manquant");
+      return "";
     }
-  }
+    const baseUrl = "http://localhost:3001/images-recettes";
+    return `${backendImage}?qf`;
+  },
 };
 
 export default RecipeImageService;

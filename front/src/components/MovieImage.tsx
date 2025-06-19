@@ -12,7 +12,14 @@ interface MovieImageProps {
   alt: string;
   className?: string;
 }
-
+const extractImdbId = (url: string): string | null => {
+  try {
+    const match = url.match(/title\/(tt\d+)/);
+    return match ? match[1] : null;
+  } catch {
+    return null;
+  }
+};
 const getFullImagePath = (path: string) => {
   if (!path) return null;
   if (path.startsWith("http")) return path;
@@ -40,9 +47,12 @@ const MovieImage: React.FC<MovieImageProps> = ({ movie, alt, className }) => {
             return;
           }
         }
+        const id = extractImdbId(movie.imdbLink);
+
         const posterUrl = await MovieImageService.getMoviePosterByTitle(
           movie.title,
-          movie.year
+          movie.year,
+          id
         );
         if (posterUrl) {
           const fullPath = getFullImagePath(posterUrl);
