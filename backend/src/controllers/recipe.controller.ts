@@ -21,6 +21,11 @@ export async function handleCreateRecipe(
       const userId = req.user.userId;
     //   req.suer.userId est défini dans le middleware isAuthenticated.ts
       const recipeData = req.body;
+
+      // ajouter une étape pour vérifier l'ID movieDB du film
+      console.log(recipeData.movieId)
+      // soit le film existe et dans ce cas on associe l'ID movieDB existant en BDD
+      // sinon le film n'existe pas et on doit le créer en BDD
   
       const newRecipe = await createRecipeService(recipeData, userId);
   
