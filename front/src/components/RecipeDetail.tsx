@@ -39,13 +39,13 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
   return (
     <div className="min-h-screen bg-white flex flex-col items-center">
       {/* Bandeau jaune pleine largeur sous le header */}
-      <div className="w-full background-gradient-yellow pt-8 sm:pt-10" style={{ paddingBottom: '1cm' }}>
+      <div className="w-full bg-customYellow py-8">
         <div className="w-full max-w-xl lg:max-w-4xl mx-auto">
           {/* Bloc blanc contenant infos et images, sans coins arrondis */}
-          <div className="bg-white p-4 shadow-lg lg:p-8 mt-10">
+          <div className="bg-white p-4 shadow-lg lg:p-8 rounded-t-lg">
             {/* Bloc titre/difficulté/film/auteur au-dessus des images en desktop */}
             <div className="hidden lg:block mb-4">
-              <h1 className="text-2xl font-bold text-center">{title}</h1>
+              <h1 className="text-3xl font-bold text-center font-broadway">{title}</h1>
               {movie && (
                 <div className="text-center text-sm text-gray-700 mt-1">
                   Inspiré par le film "{movie.title}"
@@ -83,7 +83,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
                 </div>
                 {/* Bloc film associé mobile, image à droite du texte, titre sous le texte */}
                 {movie && (
-                  <div className="block lg:hidden mt-4 flex flex-row items-center justify-between gap-2 px-2 w-full max-w-[400px] mx-auto">
+                  <div className="lg:hidden mt-4 flex flex-row items-center justify-between gap-2 px-2 w-full max-w-[400px] mx-auto">
                     <div className="flex-1 min-w-0 text-left">
                       <div className="text-base font-semibold text-gray-800 leading-tight">Inspiré par le film :</div>
                       <div className="text-sm font-medium text-gray-700 italic truncate max-w-[70vw]">{`"${movie.title}"`}</div>
@@ -114,17 +114,17 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
       </div>
       {/* Ingrédients & Instructions */}
       <div className="w-full max-w-xl lg:max-w-4xl mx-auto relative z-20" style={{ marginTop: '-1cm' }}>
-        <div className="bg-white p-4 mb-4 lg:flex lg:gap-8 shadow-none border-none">
-          <div className="mb-4 lg:mb-0 lg:w-1/2">
-            <h2 className="font-bold text-base mb-1">Ingrédients :</h2>
+        <div className="bg-white p-4 mb-4 lg:flex lg:gap-4 shadow-none border-none">
+          <div className="mb-4 lg:mb-0 lg:w-2/5 lg:pl-6">
+            <h2 className="font-bold text-base mb-2">Ingrédients :</h2>
             <ul className="list-disc list-inside text-sm text-gray-800">
               {ingredients.map((item, idx) => (
                 <li key={idx}>{item}</li>
               ))}
             </ul>
           </div>
-          <div className="lg:w-1/2">
-            <h2 className="font-bold text-base mb-1">Instructions :</h2>
+          <div className="lg:w-3/5">
+            <h2 className="font-bold text-base mb-2">Instructions :</h2>
             <p className="text-sm text-gray-800 whitespace-pre-line">{instructions}</p>
           </div>
         </div>
@@ -149,18 +149,18 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
           }}
         />
       </div>
-      <div className="mt-0 mb-8 flex justify-center">
+      <div className="my-4 flex justify-center">
         <div className="w-full" style={{maxWidth: 'calc(40rem + 3cm)'}}>
-          <div className="font-bold text-base mb-1 px-4 py-2 text-center">
-            La petite anecdote du chef
+          <div className="font-bold text-xl mb-1 px-4 py-2 text-center font-broadway">
+            L'anecdote du chef
           </div>
-          <div className="px-4 py-3 text-sm text-gray-900" style={{background: 'linear-gradient(90deg, #FFD43B 0%, #FFF7AE 100%)', borderRadius: '8px'}}>
+          <div className="px-4 py-3 text-sm text-gray-900 bg-customYellow rounded-lg mx-4">
             {anecdote}
           </div>
         </div>
       </div>
       {/* Trait rouge au-dessus du footer */}
-      <div className="container mx-auto px-4 mt-8">
+      <div className="container mx-auto px-4 mt-6 mb-4">
         <hr className="hidden sm:block border-t-2 border-red-400 my-0" />
       </div>
     </div>
