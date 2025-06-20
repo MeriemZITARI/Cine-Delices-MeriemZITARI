@@ -13,7 +13,7 @@ import AddRecipePage from "./pages/RecipePage/AddRecipePage";
 import AllRecipesPage from './components/AllRecipesPage';
 
 import { SearchModalProvider } from "./context/SearchModalContext";
-
+import AccountPage from "./pages/AccountPage/AccountPage";
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/recipes" element={<AllRecipesPage />} />
-           
+            <Route path="/mon-compte" element={<AccountPage />} />           
             <Route path="/films" element={ <AllMoviesPage />}  />         
             <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
