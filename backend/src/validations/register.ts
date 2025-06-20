@@ -1,55 +1,30 @@
-import z from "zod";
+import  z  from "zod";
 
-// Schéma pour chaque ingrédient dans une recette
-export const ingredientInRecipeSchema = z.object({
-    quantity: z.number().min(0.01, "La quantité doit être supérieure à 0").max(10000, "La quantité ne doit pas dépasser 10000"),
-    unit: z.string().min(1, "l'unité ne peut être vide").max(20, "L'unité ne doit pas dépasser 20 caractères"),
-    ingredientId: z.string().cuid("L'ID de l'ingrédient doit être un CUID valide").optional(),
-    ingredientName: z.string().min(2, "Le nom d'un nouvel ingrédient doit faire au moins 2 caractères.").optional(),
-})
-.refine(data => !!data.ingredientId || !!data.ingredientName, {
-    message: "Chaque ingrédient doit avoir soit un 'ingredientId' (existant) soit un 'ingredientName' (nouveau).",
-    path: ["ingredientId"],
-})
-.refine(data => !(data.ingredientId && data.ingredientName), {
-    message: "Vous ne pouvez pas fournir un 'ingredientId' et un 'ingredientName' en même temps.",
-    path: ["ingredientId"],
+export const registerSchema = z.object({
+    email: z.string()
+        .email("L'email doit être valide")
+        .max(50, "L'email ne doit pas dépasser 50 caractères")
+        .refine((val) => val.includes("@"), {
+            //refine est utilisé pour ajouter une vérification personnalisée
+            // Ici, on vérifie que l'email contient un '@'
+            // Cette vérification est redondante avec .email(), mais elle est ajoutée pour
+            // des raisons de clarté et surtout de personnalisation du message d'erreur.
+            
+            message: "L'email doit être valide et contenir un '@'",
+        }),
+    lastName: z.string()
+        .min(2, "Le nom  doit contenir au moins 3 caractères")
+        .max(20, "Le nom  ne doit pas dépasser 20 caractères"),
+    firstName: z.string()
+        .min(2, "Le prénom doit contenir au moins 3 caractères")
+        .max(20, "Le prénom ne doit pas dépasser 20 caractères"),
+    password: z.string()
+        .min(8, "Le mot de passe doit contenir au moins 8 caractères")
+        .max(24, "Le mot de passe ne doit pas dépasser 64 caractères")
+        .regex(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+            "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial"
+        )
 });
 
-// Schéma de base, non exporté
-const _baseRecipeSchema = z.object({
-    title: z.string().min(3, "Le titre doit contenir au moins 3 caractères").max(100, "Le titre ne doit pas dépasser 100 caractères"),
-    description: z.string().min(10, "La description doit contenir au moins 10 caractères").max(1000, "La description ne doit pas dépasser 1000 caractères"),
-    duration: z.number().min(1, "Le temps de préparation doit être supérieur à 0").max(360, "Le temps de préparation ne doit pas dépasser 6 heures"),
-    difficulty: z.number().min(1, "La difficulté doit être au moins 1").max(5, "La difficulté ne doit pas dépasser 5"),
-    image: z.string().url("L'URL de l'image doit être valide"),
-    quote: z.string().max(255, "La citation ne doit pas dépasser 255 caractères"),
-    categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide"),
-    movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(),
-    moviedbId: z.number().int().positive().optional(),
-    ingredients: z.array(ingredientInRecipeSchema).min(1, "La recette doit contenir au moins un ingrédient"),
-});
-
-// Schéma création
-export const createRecipeSchema = _baseRecipeSchema.refine(
-    data => !(data.movieId && data.moviedbId),
-    {
-        message: "Vous ne pouvez pas fournir un movieId (interne) et un moviedbId (externe) en même temps.",
-        path: ["movieId"],
-    }
-);
-
-// Schéma mise à jour (toutes propriétés optionnelles)
-export const updateRecipeSchema = _baseRecipeSchema.partial();
-
-// Types
-export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
-export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>;
-
-// Filtrage
-export const filterRecipesSchema = z.object({
-    search: z.string().optional(),
-    categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide").optional(),
-    movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(),
-});
-export type FilterRecipesInput = z.infer<typeof filterRecipesSchema>;
+export type RegisterInput = z.infer<typeof registerSchema>;
