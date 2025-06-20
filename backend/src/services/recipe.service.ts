@@ -1,4 +1,5 @@
 // src/services/recipe.service.ts
+import axios from 'axios';
 import { prisma } from '../client/prismaClient';
 import { CreateRecipeInput, UpdateRecipeInput,FilterRecipesInput } from '../validations/recipe'; 
 
@@ -8,13 +9,69 @@ import { CreateRecipeInput, UpdateRecipeInput,FilterRecipesInput } from '../vali
  * Service pour créer une nouvelle recette dans la base de données.
  */
 
+/**
+ * Service pour créer une nouvelle recette vace ces films et ingredients
+ */
+
 export async function createRecipeService(data: CreateRecipeInput, userId: string) {
   // Séparer les données de la recette des données d'ingrédients pour la création Prisma
-  const { ingredients, categoryId, movieId, ...baseRecipeData } = data;
+  const { ingredients, categoryId, movieId,moviedbId, ...baseRecipeData } = data;
 //   ... veut dire "tout le reste" dans l'objet data (destructuration)
 //   Ici, on extrait les propriétés de la recette (titre, description, etc.) et on laisse de côté les ingrédients, categoryId et movieId
 //   pour les traiter séparément.
+let finalMovieId = movieId; // On initialise une variable pour l'ID du film
+  // Si un ID de film est fourni, on le garde tel quel.
+  if (moviedbId) {
+    console.log("moviedbId fourni, on va chercher l'ID du film dans la base de données:", moviedbId);
+    // Si moviedbId est fourni, on cherche l'ID du film dans la base de données.
+    const existingMovie = await prisma.movie.findUnique({
+      where: { moviedbId: moviedbId }, // On cherche par moviedbId
+    });
+    if (existingMovie) {
+      // Si le film existe, on utilise son ID pour la recette.
+      finalMovieId = existingMovie.id;
+      console.log("Film trouvé, on utilise l'ID:", finalMovieId); 
+    }
+    else {
+      // --- DÉBUT DU BLOC MODIFIÉ ---
 
+      // 2. Si non, on appelle la VRAIE API OMDb
+      console.log(`Nouveau film (IMDB ID: ${moviedbId}). Appel à l'API OMDb...`);
+      
+      const apiKey = process.env.TMDB_API_KEY; // On récupère la clé API depuis les variables d'environnement
+      // Vérification de la clé API
+      if (!apiKey) {
+        throw new Error("Clé API OMDb manquante. Vérifiez votre fichier .env.");
+      }
+
+      // On fait la requête avec axios
+      const response = await axios.get(`https://api.themoviedb.org/3/movie/${moviedbId}?api_key=${apiKey}&language=fr-FR`);
+      const dataFromApi = response.data;
+
+      // On vérifie si OMDb a bien trouvé le film
+      if (dataFromApi.Response === 'False') {
+        throw new Error(`Film avec l'ID ${moviedbId} non trouvé sur OMDb. Erreur : ${dataFromApi.Error}`);
+      }
+      const releaseDateStr = dataFromApi.release_date;
+      const releaseDate = releaseDateStr && !isNaN(Date.parse(releaseDateStr))
+                    ? new Date(releaseDateStr)
+                    : null;
+
+      // 3. On crée le film dans notre BDD en mappant les champs
+      // (OMDb utilise des majuscules : Title, Plot, Released...)
+      const newMovie = await prisma.movie.create({
+        data: {
+          moviedbId: dataFromApi.id, // On utilise l'ID canonique renvoyé par l'API
+          title: dataFromApi.title,
+          description: dataFromApi.overview,
+          releaseDate: releaseDate, // On convertit la date de sortie en Date
+          imdbLink: `https://image.tmdb.org/t/p/w500${dataFromApi.poster_path}`},
+      });
+      console.log(`Nouveau film "${newMovie.title}" importé et créé avec succès.`);
+      finalMovieId = newMovie.id;
+      
+    }
+  }
   const recipe = await prisma.recipe.create({
     data: {
       ...baseRecipeData, // Titre, description, instructions, etc. 
@@ -30,9 +87,7 @@ export async function createRecipeService(data: CreateRecipeInput, userId: strin
       },
       
       // Connexion optionnelle au film
-      movie: movieId ? {
-        connect: { id: movieId },
-      } : undefined, // Si movieId est absent, ne pas tenter de connecter un film
+      movie: finalMovieId ? { connect: { id: finalMovieId } } : undefined, // Si movieId est absent, ne pas tenter de connecter un film
       
       // Création/Connexion des ingrédients via la table de liaison RecipeHasIngredient
       ingredients: {
@@ -53,9 +108,8 @@ export async function createRecipeService(data: CreateRecipeInput, userId: strin
                 // On utilise l'opérateur "!" pour indiquer que ingredientName est défini ici.
                 }
               }
-        }))
-      },
-      isValidated: false, // Par défaut, une recette n'est pas validée à la création par l'utilisateur
+        }))},
+        isValidated: false, // Par défaut, une recette n'est pas validée à la création par l'utilisateur
     },
     // Inclure les relations pour une réponse plus complète
     include: {

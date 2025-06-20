@@ -9,7 +9,6 @@
     "start": "node dist/server.js",
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "seed": "ts-node prisma/seed.ts"
-     
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
@@ -20,6 +19,7 @@
   "dependencies": {
     "@prisma/client": "^5.15.1",
     "argon2": "^0.40.3",
+    "axios": "^1.10.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",

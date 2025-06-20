@@ -106,7 +106,7 @@ const AddRecipePage: React.FC = () => {
           unit: ing.unit
         })),
         categoryId: category,
-        moviedbId: selectedMovie?.id.toString(), 
+        moviedbId: selectedMovie?.id ? Number(selectedMovie.id) : null, // Conversion en number 
         duration: parseInt(duration),
         difficulty: parseInt(difficulty),
         servings: parseInt(servings),

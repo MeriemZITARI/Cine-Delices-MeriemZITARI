@@ -31,10 +31,11 @@ model User {
 
 model Movie {
   id          String   @id @default(cuid())
+  moviedbId   Int?   @unique // Identifiant unique pour le film (par exemple, l'ID IMDb)
   title       String
   description String   @db.Text
   imdbLink    String   @db.Text
-  releaseDate DateTime
+  releaseDate DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

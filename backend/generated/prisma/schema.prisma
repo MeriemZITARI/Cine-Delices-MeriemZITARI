@@ -31,13 +31,14 @@ model User {
 }
 
 model Movie {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
+  moviedbId   Int?      @unique // Identifiant unique pour le film (par exemple, l'ID IMDb)
   title       String
-  description String   @db.Text
-  imdbLink    String   @db.Text
-  releaseDate DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  description String    @db.Text
+  imdbLink    String    @db.Text
+  releaseDate DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   // Un film peut être associé à plusieurs recettes
   recipes Recipe[]

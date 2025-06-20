@@ -2417,12 +2417,23 @@ export namespace Prisma {
 
   export type AggregateMovie = {
     _count: MovieCountAggregateOutputType | null
+    _avg: MovieAvgAggregateOutputType | null
+    _sum: MovieSumAggregateOutputType | null
     _min: MovieMinAggregateOutputType | null
     _max: MovieMaxAggregateOutputType | null
   }
 
+  export type MovieAvgAggregateOutputType = {
+    moviedbId: number | null
+  }
+
+  export type MovieSumAggregateOutputType = {
+    moviedbId: number | null
+  }
+
   export type MovieMinAggregateOutputType = {
     id: string | null
+    moviedbId: number | null
     title: string | null
     description: string | null
     imdbLink: string | null
@@ -2433,6 +2444,7 @@ export namespace Prisma {
 
   export type MovieMaxAggregateOutputType = {
     id: string | null
+    moviedbId: number | null
     title: string | null
     description: string | null
     imdbLink: string | null
@@ -2443,6 +2455,7 @@ export namespace Prisma {
 
   export type MovieCountAggregateOutputType = {
     id: number
+    moviedbId: number
     title: number
     description: number
     imdbLink: number
@@ -2453,8 +2466,17 @@ export namespace Prisma {
   }
 
 
+  export type MovieAvgAggregateInputType = {
+    moviedbId?: true
+  }
+
+  export type MovieSumAggregateInputType = {
+    moviedbId?: true
+  }
+
   export type MovieMinAggregateInputType = {
     id?: true
+    moviedbId?: true
     title?: true
     description?: true
     imdbLink?: true
@@ -2465,6 +2487,7 @@ export namespace Prisma {
 
   export type MovieMaxAggregateInputType = {
     id?: true
+    moviedbId?: true
     title?: true
     description?: true
     imdbLink?: true
@@ -2475,6 +2498,7 @@ export namespace Prisma {
 
   export type MovieCountAggregateInputType = {
     id?: true
+    moviedbId?: true
     title?: true
     description?: true
     imdbLink?: true
@@ -2522,6 +2546,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      * 
+     * Select which fields to average
+    **/
+    _avg?: MovieAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MovieSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
      * Select which fields to find the minimum value
     **/
     _min?: MovieMinAggregateInputType
@@ -2552,19 +2588,24 @@ export namespace Prisma {
     take?: number
     skip?: number
     _count?: MovieCountAggregateInputType | true
+    _avg?: MovieAvgAggregateInputType
+    _sum?: MovieSumAggregateInputType
     _min?: MovieMinAggregateInputType
     _max?: MovieMaxAggregateInputType
   }
 
   export type MovieGroupByOutputType = {
     id: string
+    moviedbId: number | null
     title: string
     description: string
     imdbLink: string
-    releaseDate: Date
+    releaseDate: Date | null
     createdAt: Date
     updatedAt: Date
     _count: MovieCountAggregateOutputType | null
+    _avg: MovieAvgAggregateOutputType | null
+    _sum: MovieSumAggregateOutputType | null
     _min: MovieMinAggregateOutputType | null
     _max: MovieMaxAggregateOutputType | null
   }
@@ -2585,6 +2626,7 @@ export namespace Prisma {
 
   export type MovieSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    moviedbId?: boolean
     title?: boolean
     description?: boolean
     imdbLink?: boolean
@@ -2597,6 +2639,7 @@ export namespace Prisma {
 
   export type MovieSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    moviedbId?: boolean
     title?: boolean
     description?: boolean
     imdbLink?: boolean
@@ -2607,6 +2650,7 @@ export namespace Prisma {
 
   export type MovieSelectScalar = {
     id?: boolean
+    moviedbId?: boolean
     title?: boolean
     description?: boolean
     imdbLink?: boolean
@@ -2628,10 +2672,11 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
+      moviedbId: number | null
       title: string
       description: string
       imdbLink: string
-      releaseDate: Date
+      releaseDate: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["movie"]>
@@ -3029,6 +3074,7 @@ export namespace Prisma {
    */ 
   interface MovieFieldRefs {
     readonly id: FieldRef<"Movie", 'String'>
+    readonly moviedbId: FieldRef<"Movie", 'Int'>
     readonly title: FieldRef<"Movie", 'String'>
     readonly description: FieldRef<"Movie", 'String'>
     readonly imdbLink: FieldRef<"Movie", 'String'>
@@ -7402,6 +7448,7 @@ export namespace Prisma {
 
   export const MovieScalarFieldEnum: {
     id: 'id',
+    moviedbId: 'moviedbId',
     title: 'title',
     description: 'description',
     imdbLink: 'imdbLink',
@@ -7635,10 +7682,11 @@ export namespace Prisma {
     OR?: MovieWhereInput[]
     NOT?: MovieWhereInput | MovieWhereInput[]
     id?: StringFilter<"Movie"> | string
+    moviedbId?: IntNullableFilter<"Movie"> | number | null
     title?: StringFilter<"Movie"> | string
     description?: StringFilter<"Movie"> | string
     imdbLink?: StringFilter<"Movie"> | string
-    releaseDate?: DateTimeFilter<"Movie"> | Date | string
+    releaseDate?: DateTimeNullableFilter<"Movie"> | Date | string | null
     createdAt?: DateTimeFilter<"Movie"> | Date | string
     updatedAt?: DateTimeFilter<"Movie"> | Date | string
     recipes?: RecipeListRelationFilter
@@ -7646,10 +7694,11 @@ export namespace Prisma {
 
   export type MovieOrderByWithRelationInput = {
     id?: SortOrder
+    moviedbId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrder
     imdbLink?: SortOrder
-    releaseDate?: SortOrder
+    releaseDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     recipes?: RecipeOrderByRelationAggregateInput
@@ -7657,29 +7706,33 @@ export namespace Prisma {
 
   export type MovieWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    moviedbId?: number
     AND?: MovieWhereInput | MovieWhereInput[]
     OR?: MovieWhereInput[]
     NOT?: MovieWhereInput | MovieWhereInput[]
     title?: StringFilter<"Movie"> | string
     description?: StringFilter<"Movie"> | string
     imdbLink?: StringFilter<"Movie"> | string
-    releaseDate?: DateTimeFilter<"Movie"> | Date | string
+    releaseDate?: DateTimeNullableFilter<"Movie"> | Date | string | null
     createdAt?: DateTimeFilter<"Movie"> | Date | string
     updatedAt?: DateTimeFilter<"Movie"> | Date | string
     recipes?: RecipeListRelationFilter
-  }, "id">
+  }, "id" | "moviedbId">
 
   export type MovieOrderByWithAggregationInput = {
     id?: SortOrder
+    moviedbId?: SortOrderInput | SortOrder
     title?: SortOrder
     description?: SortOrder
     imdbLink?: SortOrder
-    releaseDate?: SortOrder
+    releaseDate?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MovieCountOrderByAggregateInput
+    _avg?: MovieAvgOrderByAggregateInput
     _max?: MovieMaxOrderByAggregateInput
     _min?: MovieMinOrderByAggregateInput
+    _sum?: MovieSumOrderByAggregateInput
   }
 
   export type MovieScalarWhereWithAggregatesInput = {
@@ -7687,10 +7740,11 @@ export namespace Prisma {
     OR?: MovieScalarWhereWithAggregatesInput[]
     NOT?: MovieScalarWhereWithAggregatesInput | MovieScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Movie"> | string
+    moviedbId?: IntNullableWithAggregatesFilter<"Movie"> | number | null
     title?: StringWithAggregatesFilter<"Movie"> | string
     description?: StringWithAggregatesFilter<"Movie"> | string
     imdbLink?: StringWithAggregatesFilter<"Movie"> | string
-    releaseDate?: DateTimeWithAggregatesFilter<"Movie"> | Date | string
+    releaseDate?: DateTimeNullableWithAggregatesFilter<"Movie"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Movie"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Movie"> | Date | string
   }
@@ -8055,10 +8109,11 @@ export namespace Prisma {
 
   export type MovieCreateInput = {
     id?: string
+    moviedbId?: number | null
     title: string
     description: string
     imdbLink: string
-    releaseDate: Date | string
+    releaseDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     recipes?: RecipeCreateNestedManyWithoutMovieInput
@@ -8066,10 +8121,11 @@ export namespace Prisma {
 
   export type MovieUncheckedCreateInput = {
     id?: string
+    moviedbId?: number | null
     title: string
     description: string
     imdbLink: string
-    releaseDate: Date | string
+    releaseDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     recipes?: RecipeUncheckedCreateNestedManyWithoutMovieInput
@@ -8077,10 +8133,11 @@ export namespace Prisma {
 
   export type MovieUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    moviedbId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     imdbLink?: StringFieldUpdateOperationsInput | string
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    releaseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipes?: RecipeUpdateManyWithoutMovieNestedInput
@@ -8088,10 +8145,11 @@ export namespace Prisma {
 
   export type MovieUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    moviedbId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     imdbLink?: StringFieldUpdateOperationsInput | string
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    releaseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipes?: RecipeUncheckedUpdateManyWithoutMovieNestedInput
@@ -8099,30 +8157,33 @@ export namespace Prisma {
 
   export type MovieCreateManyInput = {
     id?: string
+    moviedbId?: number | null
     title: string
     description: string
     imdbLink: string
-    releaseDate: Date | string
+    releaseDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type MovieUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    moviedbId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     imdbLink?: StringFieldUpdateOperationsInput | string
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    releaseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MovieUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
+    moviedbId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     imdbLink?: StringFieldUpdateOperationsInput | string
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    releaseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8528,8 +8589,36 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type SortOrderInput = {
+    sort: SortOrder
+    nulls?: NullsOrder
+  }
+
   export type MovieCountOrderByAggregateInput = {
     id?: SortOrder
+    moviedbId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     imdbLink?: SortOrder
@@ -8538,8 +8627,13 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type MovieAvgOrderByAggregateInput = {
+    moviedbId?: SortOrder
+  }
+
   export type MovieMaxOrderByAggregateInput = {
     id?: SortOrder
+    moviedbId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     imdbLink?: SortOrder
@@ -8550,12 +8644,47 @@ export namespace Prisma {
 
   export type MovieMinOrderByAggregateInput = {
     id?: SortOrder
+    moviedbId?: SortOrder
     title?: SortOrder
     description?: SortOrder
     imdbLink?: SortOrder
     releaseDate?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+
+  export type MovieSumOrderByAggregateInput = {
+    moviedbId?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type CategoryCountOrderByAggregateInput = {
@@ -8624,11 +8753,6 @@ export namespace Prisma {
     every?: RecipeHasIngredientWhereInput
     some?: RecipeHasIngredientWhereInput
     none?: RecipeHasIngredientWhereInput
-  }
-
-  export type SortOrderInput = {
-    sort: SortOrder
-    nulls?: NullsOrder
   }
 
   export type RecipeHasIngredientOrderByRelationAggregateInput = {
@@ -8867,6 +8991,18 @@ export namespace Prisma {
     connectOrCreate?: RecipeCreateOrConnectWithoutMovieInput | RecipeCreateOrConnectWithoutMovieInput[]
     createMany?: RecipeCreateManyMovieInputEnvelope
     connect?: RecipeWhereUniqueInput | RecipeWhereUniqueInput[]
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type RecipeUpdateManyWithoutMovieNestedInput = {
@@ -9187,6 +9323,69 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -9243,17 +9442,6 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedStringNullableFilter<$PrismaModel>
     _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type RecipeCreateWithoutAuthorInput = {
@@ -9497,20 +9685,22 @@ export namespace Prisma {
 
   export type MovieCreateWithoutRecipesInput = {
     id?: string
+    moviedbId?: number | null
     title: string
     description: string
     imdbLink: string
-    releaseDate: Date | string
+    releaseDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type MovieUncheckedCreateWithoutRecipesInput = {
     id?: string
+    moviedbId?: number | null
     title: string
     description: string
     imdbLink: string
-    releaseDate: Date | string
+    releaseDate?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9619,20 +9809,22 @@ export namespace Prisma {
 
   export type MovieUpdateWithoutRecipesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    moviedbId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     imdbLink?: StringFieldUpdateOperationsInput | string
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    releaseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type MovieUncheckedUpdateWithoutRecipesInput = {
     id?: StringFieldUpdateOperationsInput | string
+    moviedbId?: NullableIntFieldUpdateOperationsInput | number | null
     title?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     imdbLink?: StringFieldUpdateOperationsInput | string
-    releaseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    releaseDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
