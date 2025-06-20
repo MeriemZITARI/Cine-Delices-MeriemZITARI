@@ -31,7 +31,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/recipes" element={<AllRecipesPage />} />
-            <Route path="/add-recipe" element={<AddRecipePage />} />
+           
             <Route path="/films" element={ <AllMoviesPage />}  />         
             <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
