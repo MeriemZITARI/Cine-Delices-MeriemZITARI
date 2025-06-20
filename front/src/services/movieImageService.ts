@@ -22,7 +22,7 @@ const MovieImageService = {
   },
 
   // Fonction pour obtenir l'affiche d'un film par son titre
-  async getMoviePosterByTitle(title: string, year: string = ""): Promise<string | null> {
+  async getMoviePosterByTitle(title: string, year: string = "", id: string): Promise<string | null> {
     try {
       console.log('MovieImageService: recherche d\'image pour', title);
       
@@ -52,9 +52,7 @@ const MovieImageService = {
       console.log('MovieImageService: aucune image locale trouvée, tentative avec OMDb');
       const yearParam = year ? `&y=${year}` : "";
       const response = await axios.get<OmdbResponse>(
-        `https://www.omdbapi.com/?apikey=${this.API_KEY}&t=${encodeURIComponent(
-          title
-        )}${yearParam}`
+        `https://www.omdbapi.com/?apikey=${this.API_KEY}&i=${id}`
       );
 
       if (

@@ -12,11 +12,11 @@ export interface IRecipe {
       };
     }[];
     instructions: string[];
-    imageUrl: string;
+    image: string;
     duration: number;
     difficulty: number;
     servings: number;
-    quote?: string;
+    anecdote?: string;
     category: {
       id: string;
       name: string;
