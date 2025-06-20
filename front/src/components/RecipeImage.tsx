@@ -6,7 +6,7 @@ interface RecipeImageProps {
   recipe: {
     id: string;
     title: string;
-    image?: string;
+    image: string; // Nom de fichier fourni par le backend
   };
   alt: string;
   className?: string;
@@ -22,11 +22,13 @@ const RecipeImage: React.FC<RecipeImageProps> = ({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!recipe || !recipe.title) {
+    if (!recipe || !recipe.image) {
+      console.error("RecipeImage: données de recette invalides");
       setError(true);
       setLoading(false);
       return;
     }
+
     try {
       const url = RecipeImageService.getRecipeImage(recipe.image);
       setImageUrl(url);
@@ -50,6 +52,7 @@ const RecipeImage: React.FC<RecipeImageProps> = ({
       </div>
     );
   }
+
   if (error || !imageUrl) {
     return (
       <img
@@ -59,6 +62,7 @@ const RecipeImage: React.FC<RecipeImageProps> = ({
       />
     );
   }
+
   return (
     <img src={imageUrl} alt={alt || recipe.title} className={className || ""} />
   );

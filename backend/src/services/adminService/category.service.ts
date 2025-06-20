@@ -1,7 +1,5 @@
-
 import { prisma } from '../../client/prismaClient';
 import type { CreateCategoryInput, UpdateCategoryInput } from '../../validations/admin/category';
-
 
 
 export async function getAllCategoriesService() {

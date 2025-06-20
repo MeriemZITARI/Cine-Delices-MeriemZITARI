@@ -19,7 +19,7 @@ const MovieService = {
   },
 
   async updateMovie(id: string, movie: Partial<IMovie>) {
-    const response = await axiosInstance.put(`/api/movies/${id}, movie`);
+    const response = await axiosInstance.put(`/api/movies/${id}`, movie);
     return response.data as IMovie;
   },
 

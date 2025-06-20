@@ -60,7 +60,7 @@ const AllMoviesPage: React.FC = () => {
       {/* En-tête et formulaire de recherche */}
       <div className="bg-customYellow py-8">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mb-6">Tous nos films</h1>
+          <h1 className="text-3xl font-bold text-center mb-6 font-broadway">Tous nos films</h1>
           <div className="max-w-lg mx-auto">
             <SearchFormMovie
               searchTerm={searchTerm}

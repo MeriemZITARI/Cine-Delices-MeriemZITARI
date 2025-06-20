@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import Button from "../Button/Button";
-import { FaSignOutAlt, FaUserCircle } from "react-icons/fa";
+import { FaPlusCircle, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import { useAtom } from "jotai";
 import { authUserAtom } from "../../store/authUserAtom";
 import authService from "../../services/api/AuthServices";
@@ -84,13 +84,12 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
                 <p className="mr-2">{authUser.firstName} {authUser.lastName}</p>
                 <FaUserCircle size={36} />
               </Link>
-              
-            <button
-            onClick={handleLogout}
-            className="flex items-center justify-center h-full text-black ml-4"
-          >
+              <button
+                onClick={handleLogout}
+                className="flex items-center justify-center h-full text-black ml-4"
+              >
                 <FaSignOutAlt size={36} />
-            </button>
+              </button>
             </>
           ) : (
             // Bouton pour "Se connecter / S'inscrire" si non connecté 

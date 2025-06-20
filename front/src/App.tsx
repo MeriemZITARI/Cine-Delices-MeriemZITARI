@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 
-
 import HomePage from "./components/HomePage/HomePage";
 import RegisterPage from "./pages/RegisterPage/RegisterPage";
 import LoginPage from "./pages/LoginPage/LoginPage";
@@ -12,7 +11,6 @@ import AllMoviesPage from "./pages/MoviePage/AllMoviesPage";
 import RecipeDetailPage from "./components/RecipeDetailPage";
 import AddRecipePage from "./pages/RecipePage/AddRecipePage";
 import AllRecipesPage from './components/AllRecipesPage';
-
 
 import { SearchModalProvider } from "./context/SearchModalContext";
 

@@ -8,6 +8,7 @@ interface MovieImageProps {
     title: string;
     year?: string;
     poster?: string;
+    imdbLink?: string;
   };
   alt?: string;
   className?: string;
