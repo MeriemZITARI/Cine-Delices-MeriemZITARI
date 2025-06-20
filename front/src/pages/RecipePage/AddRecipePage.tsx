@@ -101,18 +101,20 @@ const AddRecipePage: React.FC = () => {
         title: name,
         description: desc,
         ingredients: selectedIngredients.map(ing => ({
-          ...(ing.id ? { ingredientId: ing.id } : { ingredientName: ing.ingredientName }), // Modifié pour utiliser ingredientName
+          ...(ing.id ? { ingredientId: ing.id } : { ingredientName: ing.ingredientName }),
           quantity: ing.quantity,
           unit: ing.unit
         })),
         categoryId: category,
-        movieId: selectedMovie?.id.toString(), // Conversion en string
+        moviedbId: selectedMovie?.id.toString(), 
         duration: parseInt(duration),
         difficulty: parseInt(difficulty),
         servings: parseInt(servings),
-        image: image ? `http://localhost:3001/uploads/${image.name}` : null, // Ajout de l'URL complète
+        image: image ? `http://localhost:3001/uploads/${image.name}` : null,
         quote: movieDescription
       };
+
+      console.log("Données envoyées à l'API:", recipeData);
 
       const response = await recipeService.createRecipe(recipeData);
       
