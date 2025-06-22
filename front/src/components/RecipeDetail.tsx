@@ -2,14 +2,7 @@ import React from "react";
 import { FaClock } from 'react-icons/fa'; // Ajout de l'import
 import RecipeImage from "./RecipeImage";
 import MoviePoster from "./MoviePoster"; // Changer l'import
-
-interface MovieForDetail {
-  id: string;
-  title: string;
-  year: string;
-  poster?: string;
-  imdbLink?: string; // Ajouter cette propriété
-}
+import { IMovie } from "../types/Movies";
 
 interface RecipeDetailProps {
   title: string;
@@ -18,7 +11,7 @@ interface RecipeDetailProps {
   duration: number;
   image: string;
   category: string;
-  movie?: MovieForDetail;
+  movie?: IMovie;
   ingredients: string[];
   instructions: string;
   anecdote: string;
@@ -90,8 +83,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
                     </div>
                     <div className="flex-shrink-0 w-20 h-20 ml-2 rounded overflow-hidden border border-gray-200 bg-white flex items-center justify-center">
                       <MoviePoster 
-                        imdbLink={movie.imdbLink}
-                        alt={movie.title}
+                        movie={movie}
                         className="w-full h-full object-cover rounded shadow"
                       />
                     </div>
@@ -102,8 +94,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
               {movie && (
                 <div className="hidden lg:flex w-full lg:w-[30%] items-center justify-center">
                   <MoviePoster 
-                    imdbLink={movie.imdbLink}
-                    alt={movie.title}
+                    movie={movie}
                     className="w-full h-28 lg:h-64 object-cover rounded-md border"
                   />
                 </div>

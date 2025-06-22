@@ -8,14 +8,30 @@ export const validateRequest =
     // Debug : montre bien le corps reçu
     console.log('🍪 BODY À VALIDER →', req.body);
 
+    // Convertir les types des champs numériques
+    if (req.body.duration) req.body.duration = Number(req.body.duration);
+    if (req.body.difficulty) req.body.difficulty = Number(req.body.difficulty);
+    if (req.body.moviedbId) req.body.moviedbId = Number(req.body.moviedbId);
+
+    if (req.body.ingredients) {
+      req.body.ingredients = req.body.ingredients.map((ing: any) => ({
+        ...ing,
+        quantity: Number(ing.quantity),
+      }));
+    }
+
     // On parse *en mémoire*, sans lancer d’erreur
     const result = schema.safeParse(req.body);
 
     if (!result.success) {
       // Affiche clairement ce qui bloque
       console.error('🔴 Zod a trouvé ces issues →', result.error.issues);
-      // Passe l’erreur à ton errorHandler (qui renverra du JSON)
-      return next(result.error);
+
+      // Renvoie une réponse JSON détaillée au frontend
+      return res.status(400).json({
+        message: "Les données fournies sont invalides.",
+        errors: result.error.flatten().fieldErrors, // Utilise flatten() pour simplifier les erreurs
+      });
     }
 
     // Là, result.data contient l’objet typé correctement

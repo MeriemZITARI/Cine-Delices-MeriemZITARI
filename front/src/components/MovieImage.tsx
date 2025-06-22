@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from "react";
-import MovieImageService from "../services/movieImageService";
 import placeholderImg from "/images/placeholder.jpg?url";
+import { IMovie } from "../types/Movies";
 
 interface MovieImageProps {
-  movie: {
-    id: string;
-    title: string;
-    year?: string;
-    poster?: string;
-    imdbLink?: string;
-  };
+  movie: IMovie; // Contient `moviedbId` ou `imdbLink`
   alt?: string;
   className?: string;
 }
+
 const extractImdbId = (url: string): string | null => {
   try {
     const match = url.match(/title\/(tt\d+)/);
@@ -21,54 +16,84 @@ const extractImdbId = (url: string): string | null => {
     return null;
   }
 };
-const getFullImagePath = (path: string) => {
-  if (!path) return null;
-  if (path.startsWith("http")) return path;
-  const fullPath = path.startsWith("/") ? path : `/${path}`;
-  return fullPath;
-};
 
 const MovieImage: React.FC<MovieImageProps> = ({ movie, alt, className }) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState(false);
 
+  const tmdbApiKey = import.meta.env.VITE_TMDB_API_KEY;
+  const omdbApiKey = import.meta.env.VITE_OMDB_API_KEY;
+
   useEffect(() => {
     const loadMovieImage = async () => {
-      if (!movie || !movie.title) {
+      if (!movie || (!movie.moviedbId && !movie.imdbLink)) {
+        console.error("Aucun ID valide trouvé pour le film.");
         setError(true);
         setLoading(false);
         return;
       }
+
       try {
-        if (movie.poster) {
-          const fullPath = getFullImagePath(movie.poster);
-          if (fullPath) {
-            setImageUrl(fullPath);
+        setLoading(true);
+        setError(false);
+
+        let url = "";
+        let responseData = null;
+
+        // Utiliser TMDB si `moviedbId` est présent
+        if (movie.moviedbId) {
+          if (!tmdbApiKey) {
+            console.error("Clé API TMDB manquante.");
+            setError(true);
+            setLoading(false);
             return;
           }
-        }
-        const id = extractImdbId(movie.imdbLink);
-
-        const posterUrl = await MovieImageService.getMoviePosterByTitle(
-          movie.title,
-          movie.year,
-          id
-        );
-        if (posterUrl) {
-          const fullPath = getFullImagePath(posterUrl);
-          setImageUrl(fullPath);
-        } else {
-          setError(true);
+          url = `https://api.themoviedb.org/3/movie/${movie.moviedbId}?api_key=${tmdbApiKey}&language=fr-FR`;
+          const response = await fetch(url);
+          if (response.ok) {
+            responseData = await response.json();
+            if (responseData.poster_path) {
+              setImageUrl(`https://image.tmdb.org/t/p/w500${responseData.poster_path}`);
+            } else {
+              setError(true);
+            }
+          } else {
+            setError(true);
+          }
+        } 
+        // Utiliser OMDb si `imdbLink` est présent
+        else if (movie.imdbLink) {
+          const imdbId = extractImdbId(movie.imdbLink);
+          if (!imdbId || !omdbApiKey) {
+            console.error("Clé API OMDb manquante ou ID IMDb invalide.");
+            setError(true);
+            setLoading(false);
+            return;
+          }
+          url = `https://www.omdbapi.com/?i=${imdbId}&apikey=${omdbApiKey}`;
+          const response = await fetch(url);
+          if (response.ok) {
+            responseData = await response.json();
+            if (responseData.Poster && responseData.Poster !== "N/A") {
+              setImageUrl(responseData.Poster);
+            } else {
+              setError(true);
+            }
+          } else {
+            setError(true);
+          }
         }
       } catch (err) {
+        console.error("Erreur lors de la récupération de l'affiche :", err);
         setError(true);
       } finally {
         setLoading(false);
       }
     };
+
     loadMovieImage();
-  }, [movie]);
+  }, [movie, tmdbApiKey, omdbApiKey]);
 
   if (loading) {
     return (
@@ -81,6 +106,7 @@ const MovieImage: React.FC<MovieImageProps> = ({ movie, alt, className }) => {
       </div>
     );
   }
+
   if (error || !imageUrl) {
     return (
       <img
@@ -90,6 +116,7 @@ const MovieImage: React.FC<MovieImageProps> = ({ movie, alt, className }) => {
       />
     );
   }
+
   return (
     <img
       src={imageUrl}

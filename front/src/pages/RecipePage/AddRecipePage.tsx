@@ -96,28 +96,40 @@ const AddRecipePage: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
+  
     try {
-      const recipeData = {
-        title: name,
-        description: desc,
-        ingredients: selectedIngredients.map(ing => ({
-          ...(ing.id ? { ingredientId: ing.id } : { ingredientName: ing.ingredientName }),
-          quantity: ing.quantity,
-          unit: ing.unit
-        })),
-        categoryId: category,
-        moviedbId: selectedMovie?.id ? Number(selectedMovie.id) : null, // Conversion en number 
-        duration: parseInt(duration),
-        difficulty: parseInt(difficulty),
-        servings: parseInt(servings),
-        image: image ? `http://localhost:3001/uploads/${image.name}` : null,
-        quote: movieDescription
-      };
-
-      console.log("Données envoyées à l'API:", recipeData);
-
-      const response = await recipeService.createRecipe(recipeData);
-      
+      const formData = new FormData();
+      formData.append("title", name);
+      formData.append("description", desc);
+      formData.append("categoryId", category);
+      formData.append("moviedbId", selectedMovie?.id ? String(Number(selectedMovie.id)) : "");
+      formData.append("duration", String(Number(duration)));
+      formData.append("difficulty", String(Number(difficulty)));
+      formData.append("servings", String(Number(servings)));
+      formData.append("quote", movieDescription);
+  
+      // Ajouter les ingrédients
+      selectedIngredients.forEach((ing, index) => {
+        formData.append(`ingredients[${index}][quantity]`, String(Number(ing.quantity)));
+        formData.append(`ingredients[${index}][unit]`, ing.unit);
+        if (ing.id) {
+          formData.append(`ingredients[${index}][ingredientId]`, ing.id);
+        } else {
+          formData.append(`ingredients[${index}][ingredientName]`, ing.ingredientName || "");
+        }
+      });
+  
+      // Ajouter l'image si elle existe
+      if (image) {
+        formData.append("image", image);
+      } else {
+        console.error("Image requise mais non fournie.");
+      }
+  
+      console.log("Données envoyées à l'API:", formData);
+  
+      const response = await recipeService.createRecipe(formData);
+  
       if (response.success) {
         setMessage("Recette créée avec succès !");
         navigate('/recipes'); // Redirection vers la liste des recettes
@@ -128,6 +140,7 @@ const AddRecipePage: React.FC = () => {
       console.error('Erreur lors de la création de la recette:', err);
       setMessage("Erreur lors de la création de la recette.");
     }
+  
     setLoading(false);
   };
 
