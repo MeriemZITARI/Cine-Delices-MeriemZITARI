@@ -166,39 +166,38 @@ const HomePage: React.FC = () => {
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0 rounded-lg overflow-hidden shadow-md">
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
-              <div className="order-2 lg:order-1 lg:flex-1">
-                <div className="relative overflow-hidden shadow-lg">
-                  <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
-                    <h2 className="text-2xl lg:text-4xl font-bold">La recette du jour !</h2>
-                  </div>
-                  <RecipeImage
-                    recipe={featuredRecipe}
-                    alt={featuredRecipe.title}
-                    className="w-full h-48 lg:h-[400px] object-cover"
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
-                    <Link to={`/recettes/${featuredRecipe.id}`} className="group">
-                      <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow transition-colors">
-                        {featuredRecipe.title}
-                      </h1>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="flex items-center gap-2">
-                          <span className="text-customYellow">
-                            <FaClock />
-                          </span>
-                          {featuredRecipe.duration} min
-                        </span>
-                        <span className="flex items-center gap-2">
-                          <span className="text-customYellow">
-                            <FaTools />
-                          </span>
-                          {getDifficultyText(featuredRecipe.difficulty)}
-                        </span>
-                      </div>
-                    </Link>
+              <Link
+                to={`/recettes/${featuredRecipe.id}`}
+                className="group order-2 lg:order-1 lg:flex-1 relative overflow-hidden shadow-lg"
+              >
+                <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
+                  <h2 className="text-2xl lg:text-4xl font-bold group-hover:text-customYellow">La recette du jour !</h2>
+                </div>
+                <RecipeImage
+                  recipe={featuredRecipe}
+                  alt={featuredRecipe.title}
+                  className="w-full h-48 lg:h-[400px] object-cover"
+                />
+                <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
+                  <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow">
+                    {featuredRecipe.title}
+                  </h1>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="flex items-center gap-2 group-hover:text-customYellow">
+                      <span className="text-customYellow">
+                        <FaClock />
+                      </span>
+                      {featuredRecipe.duration} min
+                    </span>
+                    <span className="flex items-center gap-2 group-hover:text-customYellow">
+                      <span className="text-customYellow">
+                        <FaTools />
+                      </span>
+                      {getDifficultyText(featuredRecipe.difficulty)}
+                    </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
 
             {/* Formulaire de recherche */}
