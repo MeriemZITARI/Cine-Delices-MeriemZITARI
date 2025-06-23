@@ -60,7 +60,7 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
           </NavLink>
           {authUser ? (
           <NavLink 
-            to="/add-recipe" 
+            to="/ajouter-recette" 
             title="Ajouter une recette"
             className={({ isActive }) =>
             `text-black font-medium ${isActive ? "underline" : ""}`
@@ -94,7 +94,7 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
           ) : (
             // Bouton pour "Se connecter / S'inscrire" si non connecté 
             <Link
-              to="/login"
+              to="/connexion"
               className="flex items-center justify-center h-full text-black"
             >
                 <Button text="Se connecter / S'inscrire" />

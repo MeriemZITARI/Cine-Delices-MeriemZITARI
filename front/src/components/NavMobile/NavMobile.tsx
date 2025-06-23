@@ -103,7 +103,7 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
              ) : (
               // Icône pour "Mon compte" si connecté
               <Link
-                to="/login"
+                to="/connexion"
                 className="flex items-center justify-center h-full text-black"
               >
                 <FaUserCircle size={36} />

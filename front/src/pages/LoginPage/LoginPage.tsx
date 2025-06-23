@@ -137,7 +137,7 @@ const LoginPage: React.FC = () => {
 
         {/* Liens d'inscription et mot de passe oublié */}
         <div className="text-center mt-4 space-y-2">
-          <Link to="/register" className="block text-xs text-gray-700 underline hover:text-red-500">
+          <Link to="/creer-compte" className="block text-xs text-gray-700 underline hover:text-red-500">
             Pas encore de compte ? Inscrivez-vous
           </Link>
           <Link to="/forgot-password" className="block text-xs text-gray-700 underline hover:text-red-500">

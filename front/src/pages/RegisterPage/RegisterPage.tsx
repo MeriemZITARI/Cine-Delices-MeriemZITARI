@@ -199,7 +199,7 @@ const RegisterPage: React.FC = () => {
 
         {/* Lien de connexion */}
         <div className="text-center mt-4">
-          <Link to="/login" className="text-xs text-gray-700 underline hover:text-red-500">
+          <Link to="/connexion" className="text-xs text-gray-700 underline hover:text-red-500">
             Vous avez déjà un compte ? Connectez-vous
           </Link>
         </div>

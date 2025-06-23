@@ -26,10 +26,18 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/recettes/:id" element={<RecipeDetailPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/add-recipe" element={<AddRecipePage />} />
-            <Route path="/recipes" element={<AllRecipesPage />} />
+            <Route path="/recettes" element={<AllRecipesPage />} />
+            <Route path="/films" element={ <AllMoviesPage />} />
+            <Route path="/creer-compte" element={<RegisterPage />} />
+            <Route path="/connexion" element={<LoginPage />} />
+            <Route
+              path="/ajouter-recette"
+              element={
+                <ProtectedRoute>
+                  <AddRecipePage />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/mon-compte"
               element={
@@ -38,10 +46,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/films" element={ <AllMoviesPage />}  />         
-            <Route path="/recettes" element={<Navigate to="/recipes" replace />} />
             <Route path="*" element={<NotFoundPage />} />
-            <Route path="/films" element={<AllMoviesPage />} />
           </Routes>
         </main>
         <Footer />
