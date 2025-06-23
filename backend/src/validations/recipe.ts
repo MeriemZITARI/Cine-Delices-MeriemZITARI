@@ -22,13 +22,13 @@ const _baseRecipeSchema = z.object({
     description: z.string().min(10, "La description doit contenir au moins 10 caractères").max(1000, "La description ne doit pas dépasser 1000 caractères"),
     duration: z.number().min(1, "Le temps de préparation doit être supérieur à 0").max(360, "Le temps de préparation ne doit pas dépasser 6 heures"),
     difficulty: z.number().min(1, "La difficulté doit être au moins 1").max(5, "La difficulté ne doit pas dépasser 5"),
-    image: z.string().url("L'URL de l'image doit être valide"),
+    image: z.string().optional(), // Facultatif, car Multer gère le fichier
     quote: z.string().max(255, "La citation ne doit pas dépasser 255 caractères"),
     categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide"),
     movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(),
     moviedbId: z.number().int().positive().optional(),
     ingredients: z.array(ingredientInRecipeSchema).min(1, "La recette doit contenir au moins un ingrédient"),
-});
+  });
 
 // Schéma création
 export const createRecipeSchema = _baseRecipeSchema.refine(

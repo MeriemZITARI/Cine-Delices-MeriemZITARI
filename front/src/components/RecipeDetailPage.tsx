@@ -35,10 +35,10 @@ const RecipeDetailPage: React.FC = () => {
         const recipeData = await recipeService.getRecipe(id);
         
         // Ajout de plus de console.log pour déboguer
-        console.log("Données brutes de la recette:", recipeData);
-        console.log("Type de instructions:", typeof recipeData.instructions);
-        console.log("Type de anecdote:", typeof recipeData.anecdote);
-        console.log("Description:", recipeData.description);
+        //console.log("Données brutes de la recette:", recipeData);
+        //console.log("Type de instructions:", typeof recipeData.instructions);
+        //console.log("Type de anecdote:", typeof recipeData.anecdote);
+        //console.log("Description:", recipeData.description);
 
         if (!recipeData) {
           setError("Recette introuvable");
@@ -118,8 +118,8 @@ const RecipeDetailPage: React.FC = () => {
   const anecdote = recipe.anecdote || "Pas d'anecdote disponible pour cette recette.";
 
   // Ajout d'un console.log avant le rendu
-  console.log("Instructions formatées:", instructions);
-  console.log("Anecdote formatée:", anecdote);
+  //console.log("Instructions formatées:", instructions);
+  //console.log("Anecdote formatée:", anecdote);
 
   // Formatage du nom de l'auteur avec vérification
   const authorName = recipe.author
@@ -134,19 +134,7 @@ const RecipeDetailPage: React.FC = () => {
       duration={recipe.duration || 0} // Assurez-vous de passer duration
       image={recipe.image || "/images/placeholder.jpg"}
       category={recipe.category?.name || "Non catégorisé"}
-      movie={
-        recipe.movie
-          ? {
-              id: recipe.movie.id,
-              title: recipe.movie.title,
-              year: recipe.movie.releaseDate?.split("-")[0] || "",
-              description: recipe.movie.description || "",
-              imdbLink: recipe.movie.imdbLink || "",
-              poster: recipe.movie.imageUrl,
-              anecdote: recipe.movie.anecdote || ""
-            }
-          : undefined
-      }
+      movie={recipe.movie as IMovie}
       ingredients={formattedIngredients}
       instructions={instructions}
       anecdote={recipe.quote || "Pas d'anecdote disponible pour cette recette."}

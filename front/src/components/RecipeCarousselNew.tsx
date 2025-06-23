@@ -73,7 +73,7 @@ const RecipeCarouselNew: React.FC<RecipeCarouselProps> = ({ recipes }) => {
                     recipe={{
                       id: recipe.id,
                       title: recipe.title,
-                      image: recipe.imageUrl || (recipe as any).image // compatibilité imageUrl/image
+                      image: recipe.image || (recipe as any).image // compatibilité imageUrl/image
                     }}
                     alt={recipe.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
@@ -86,8 +86,7 @@ const RecipeCarouselNew: React.FC<RecipeCarouselProps> = ({ recipes }) => {
                       className="w-full h-full cursor-pointer"
                     >
                       <MoviePoster
-                        imdbLink={recipe.movie.imdbLink}
-                        alt={recipe.movie.title || ''}
+                        movie={recipe.movie}
                         className="w-full h-full object-contain bg-black transition-transform duration-300 hover:scale-105"
                       />
                     </div>

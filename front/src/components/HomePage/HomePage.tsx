@@ -6,13 +6,11 @@ import type { IRecipe } from '../../types/Recipe';
 import type { IMovie } from '../../types/Movies';
 import RecipeImage from '../RecipeImage';
 import MoviePoster from '../MoviePoster';
-import { Button } from '../ui/button';
 import RecipeCarouselNew from '../RecipeCarousselNew';
 import './HomePage.css';
 import SearchForm from '../SearchForm/SearchForm';
 import { FaClock, FaTools } from 'react-icons/fa';
 import getDifficultyText from '../../utils/getDifficulty';
-
 
 // Composant principal de la page d'accueil
 const HomePage: React.FC = () => {
@@ -27,12 +25,8 @@ const HomePage: React.FC = () => {
   const [searchResults, setSearchResults] = useState<IRecipe[]>([]);
   // Indique si l'utilisateur a lancé une recherche (pour afficher la section résultats)
   const [hasSearched, setHasSearched] = useState(false);
-  // Liste des films uniques extraits des recettes (pour le carrousel)
-  const [uniqueMovies, setUniqueMovies] = useState<IMovie[]>([]);
   // Film aléatoire à afficher à côté du carrousel
   const [randomMovieForCarrousel, setRandomMovieForCarrousel] = useState<IMovie | null>(null);
-  // Slide actif du carrousel (si besoin d’extension)
-  const [activeSlide, setActiveSlide] = useState(0);
   // Indique si les données sont en cours de chargement (affiche un loader)
   const [loading, setLoading] = useState(true);
 
@@ -52,10 +46,9 @@ const HomePage: React.FC = () => {
         const recipesResponse = await recipeService.getRecipes();
         if (recipesResponse?.data && recipesResponse.data.length > 0) {
           // Sélection aléatoire d'une recette pour la recette du jour
-          const randomIndex = Math.floor(Math.random() * recipesResponse.data.length);
-          console.log(recipesResponse);
-          setFeaturedRecipe(recipesResponse.data[randomIndex]);
-          setLatestRecipes(recipesResponse.data.slice(0, 3));
+          const shuffledRecipes = [...recipesResponse.data].sort(() => Math.random() - 0.5);
+          setFeaturedRecipe(shuffledRecipes[0]); // La première recette aléatoire
+          setLatestRecipes(shuffledRecipes.slice(1, 4)); // Les 3 recettes suivantes
           // Extraire les films uniques à partir des recettes
           const moviesMap: { [id: string]: IMovie } = {};
           recipesResponse.data.forEach((r: IRecipe) => {
@@ -64,6 +57,7 @@ const HomePage: React.FC = () => {
                 id: r.movie.id,
                 title: r.movie.title,
                 description: '',
+                moviedbId: r.movie.moviedbId,
                 imdbLink: (r.movie as any).imdbLink || '',
                 releaseDate: r.movie.releaseDate,
                 createdAt: '',
@@ -72,7 +66,7 @@ const HomePage: React.FC = () => {
             }
           });
           const moviesArr = Object.values(moviesMap);
-          setUniqueMovies(moviesArr);
+
           if (moviesArr.length > 0) {
             const randomMovie = moviesArr[Math.floor(Math.random() * moviesArr.length)];
             setRandomMovieForCarrousel(randomMovie);
@@ -82,13 +76,11 @@ const HomePage: React.FC = () => {
         } else {
           setFeaturedRecipe(null);
           setLatestRecipes([]);
-          setUniqueMovies([]);
           setRandomMovieForCarrousel(null);
         }
       } catch (error) {
         setFeaturedRecipe(null);
         setLatestRecipes([]);
-        setUniqueMovies([]);
         setRandomMovieForCarrousel(null);
         console.error("Erreur lors du chargement des données:", error);
       } finally {
@@ -174,39 +166,38 @@ const HomePage: React.FC = () => {
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0 rounded-lg overflow-hidden shadow-md">
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
-              <div className="order-2 lg:order-1 lg:flex-1">
-                <div className="relative overflow-hidden shadow-lg">
-                  <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
-                    <h2 className="text-2xl lg:text-4xl font-bold">La recette du jour !</h2>
-                  </div>
-                  <RecipeImage
-                    recipe={featuredRecipe}
-                    alt={featuredRecipe.title}
-                    className="w-full h-48 lg:h-[400px] object-cover"
-                  />
-                  <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
-                    <Link to={`/recettes/${featuredRecipe.id}`} className="group">
-                      <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow transition-colors">
-                        {featuredRecipe.title}
-                      </h1>
-                      <div className="flex items-center gap-4 text-sm">
-                        <span className="flex items-center gap-2">
-                          <span className="text-customYellow">
-                            <FaClock />
-                          </span>
-                          {featuredRecipe.duration} min
-                        </span>
-                        <span className="flex items-center gap-2">
-                          <span className="text-customYellow">
-                            <FaTools />
-                          </span>
-                          {getDifficultyText(featuredRecipe.difficulty)}
-                        </span>
-                      </div>
-                    </Link>
+              <Link
+                to={`/recettes/${featuredRecipe.id}`}
+                className="group order-2 lg:order-1 lg:flex-1 relative overflow-hidden shadow-lg"
+              >
+                <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
+                  <h2 className="text-2xl lg:text-4xl font-bold group-hover:text-customYellow">La recette du jour !</h2>
+                </div>
+                <RecipeImage
+                  recipe={featuredRecipe}
+                  alt={featuredRecipe.title}
+                  className="w-full h-48 lg:h-[400px] object-cover"
+                />
+                <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
+                  <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow">
+                    {featuredRecipe.title}
+                  </h1>
+                  <div className="flex items-center gap-4 text-sm">
+                    <span className="flex items-center gap-2 group-hover:text-customYellow">
+                      <span className="text-customYellow">
+                        <FaClock />
+                      </span>
+                      {featuredRecipe.duration} min
+                    </span>
+                    <span className="flex items-center gap-2 group-hover:text-customYellow">
+                      <span className="text-customYellow">
+                        <FaTools />
+                      </span>
+                      {getDifficultyText(featuredRecipe.difficulty)}
+                    </span>
                   </div>
                 </div>
-              </div>
+              </Link>
             )}
 
             {/* Formulaire de recherche */}
@@ -236,8 +227,7 @@ const HomePage: React.FC = () => {
                 <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
                   <div className="relative h-[320px] w-full flex items-center justify-center">
                     <MoviePoster
-                      imdbLink={randomMovieForCarrousel.imdbLink}
-                      alt={randomMovieForCarrousel.title}
+                      movie={randomMovieForCarrousel}
                       className="w-full h-full object-cover"
                     />
                   </div>

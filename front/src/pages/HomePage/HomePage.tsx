@@ -17,6 +17,7 @@ import { searchRecipes } from '../../utils/handleSearch';
 
 // Composant principal de la page d'accueil
 const HomePage: React.FC = () => {
+  console.log('Rendering HomePage component');
   // Ref pour la section résultats de recherche
   const resultsRef = React.useRef<HTMLDivElement>(null);
   // --- États principaux ---
@@ -54,7 +55,7 @@ const HomePage: React.FC = () => {
         if (recipesResponse?.data && recipesResponse.data.length > 0) {
           // Sélection aléatoire d'une recette pour la recette du jour
           const randomIndex = Math.floor(Math.random() * recipesResponse.data.length);
-          console.log(recipesResponse);
+          //console.log(recipesResponse);
           setFeaturedRecipe(recipesResponse.data[randomIndex]);
           setLatestRecipes(recipesResponse.data.slice(0, 3));
           // Extraire les films uniques à partir des recettes
@@ -72,6 +73,7 @@ const HomePage: React.FC = () => {
               };
             }
           });
+          console.log('moviesMap:', moviesMap);
           const moviesArr = Object.values(moviesMap);
           setUniqueMovies(moviesArr);
           if (moviesArr.length > 0) {

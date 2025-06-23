@@ -3,39 +3,46 @@ import { CreateRecipeInput,filterRecipesSchema,UpdateRecipeInput } from "../vali
 import { createRecipeService,updateRecipeService,getRecipeByIdService, getAllRecipesService, deleteRecipeService } from "../services/recipe.service";
 import { json } from "stream/consumers";
 import { getRecipesByAuthorIdService } from "services/user.service";
+import path from 'path';
 
 
 // --- Gérer la création d'une nouvelle recette ---
 export async function handleCreateRecipe(
-    req: Request<{}, {}, CreateRecipeInput>,
-    res: Response,
-    next: NextFunction
-  ) {
-    try {
-      if (!req.user || !req.user.userId) {
-        // Si l'utilisateur n'est pas authentifié ou si l'ID utilisateur est manquant dans le token,
-        // on renvoie une erreur 401 (non authentifié)
-        return res.status(401).json({ message: 'Non authentifié, veuillez vous connecter.' });
-      }
-  
-      const userId = req.user.userId;
-    //   req.suer.userId est défini dans le middleware isAuthenticated.ts
-      const recipeData = req.body;
-
-      // ajouter une étape pour vérifier l'ID movieDB du film
-      console.log(recipeData.movieId)
-      // soit le film existe et dans ce cas on associe l'ID movieDB existant en BDD
-      // sinon le film n'existe pas et on doit le créer en BDD
-  
-      const newRecipe = await createRecipeService(recipeData, userId);
-  
-      res.status(201).json(newRecipe);
-    } catch (error) {
-      next(error);
+  req: Request<{}, {}, CreateRecipeInput>,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    if (!req.user || !req.user.userId) {
+      return res.status(401).json({ message: 'Non authentifié, veuillez vous connecter.' });
     }
+
+    const userId = req.user.userId;
+
+    // Vérifier si un fichier a été uploadé
+    let imageUrl;
+    if (req.file) {
+      console.log('Fichier uploadé :', req.file);
+      imageUrl = `http://localhost:3001/images-recettes/${req.file.filename}`;
+    } else {
+      console.log('Aucun fichier uploadé');
+    }
+
+    const recipeData = {
+      ...req.body,
+      image: imageUrl, // Ajout de l'URL de l'image
+    };
+
+    console.log('Données après traitement :', recipeData);
+
+    const newRecipe = await createRecipeService(recipeData, userId);
+
+    res.status(201).json(newRecipe);
+  } catch (error) {
+    console.error('Erreur dans handleCreateRecipe:', error);
+    next(error);
   }
-
-
+}
 
 /**
  * Gère la mise à jour d'une recette existante.

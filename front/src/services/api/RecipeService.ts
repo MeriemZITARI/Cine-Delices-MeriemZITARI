@@ -11,7 +11,6 @@ export const recipeService = {
   async getRecipes(): Promise<ApiResponse<IRecipe[]>> {
     try {
       const response = await axiosInstance.get('/api/recipes');
-      console.log('Réponse de getRecipes:', response);
       return {
         success: true,
         data: response.data,
@@ -28,9 +27,22 @@ export const recipeService = {
     return response.data;
   },
 
-  async createRecipe(recipe: Omit<IRecipe, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<IRecipe>> {
-    const response = await axiosInstance.post('/api/recipes', recipe);
-    return response.data;
+  async createRecipe(recipeData: FormData): Promise<ApiResponse<IRecipe>> {
+    try {
+      const response = await axiosInstance.post('/api/recipes', recipeData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return {
+        success: true,
+        data: response.data,
+        message: response.data.message,
+      };
+    } catch (error) {
+      console.error('Erreur dans createRecipe:', error);
+      throw error;
+    }
   },
 
   async updateRecipe(id: string, recipe: Partial<IRecipe>): Promise<ApiResponse<IRecipe>> {

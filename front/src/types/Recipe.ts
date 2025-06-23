@@ -1,3 +1,5 @@
+import { IMovie } from "./Movies";
+
 export interface IRecipe {
     id: string;
     title: string;
@@ -21,12 +23,7 @@ export interface IRecipe {
       id: string;
       name: string;
     };
-    movie?: {
-      id: string;
-      title: string;
-      releaseDate: string;
-      imageUrl?: string;
-    };
+    movie?: IMovie;
     author?: {
       id: string;
       username: string;
