@@ -2,12 +2,14 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 interface RecipeCardProps {
+  id: string;
   title: string;
   imageUrl: string;
   description: string;
 }
 
 const RecipeCard: React.FC<RecipeCardProps> = ({
+  id,
   title,
   imageUrl,
   description,
@@ -19,7 +21,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         <h3 className="text-xl font-semibold mb-2">{title}</h3>
         <p className="text-gray-700 mb-4">{description}</p>
         <Link
-          to={`/recette/${title}`}
+          to={`/recettes/${id}`}
           className="text-blue-500 hover:underline"
         >
           Voir la recette

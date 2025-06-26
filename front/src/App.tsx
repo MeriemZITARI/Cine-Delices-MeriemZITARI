@@ -15,6 +15,7 @@ import AllRecipesPage from './components/AllRecipesPage';
 import { SearchModalProvider } from "./context/SearchModalContext";
 import AccountPage from "./pages/AccountPage/AccountPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MovieDetailPage from "./pages/MoviePage/MovieDetailsPage";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/films" element={ <AllMoviesPage />} />
             <Route path="/creer-compte" element={<RegisterPage />} />
             <Route path="/connexion" element={<LoginPage />} />
+            <Route path="/films/:id" element={<MovieDetailPage />} />
             <Route
               path="/ajouter-recette"
               element={
