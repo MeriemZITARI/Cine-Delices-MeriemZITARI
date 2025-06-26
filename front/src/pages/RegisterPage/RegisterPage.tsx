@@ -4,9 +4,10 @@
  */
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Button from "../../components/Button/Button";
-import authService from '../../services/api/AuthServices';
+import { Eye, EyeOff } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom'; // pour les redirections et liens
+import Button from "../../components/Button/Button"; // bouton personnalisé
+import authService from '../../services/api/AuthServices'; // service d'inscription API
 
 import { z } from 'zod';
 import { useAtom } from 'jotai';
@@ -29,9 +30,10 @@ const RegisterPage: React.FC = () => {
   // Navigation et références
   const navigate = useNavigate();
   const inputEmailRef = useRef<HTMLInputElement>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Utilisation de l'atome pour gérer l'utilisateur connecté
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
+  const [authUser, setAuthUser] = useAtom(authUserAtom); 
 
   // États pour gérer les champs du formulaire et les erreurs
   const [firstName, setFirstName] = useState('');
@@ -51,6 +53,7 @@ const RegisterPage: React.FC = () => {
    */
   async function handleFormAction(formData: FormData) {
     try {
+      // Extraction des données depuis le FormData
       const data = {
         firstName: formData.get('firstName') as string,
         lastName: formData.get('lastName') as string,
@@ -58,15 +61,21 @@ const RegisterPage: React.FC = () => {
         password: formData.get('password') as string,
       };
       
-      // Inscription via le service d'authentification
+      // Appel API d’inscription via le service
       const response = await authService.register(data);
-      
+      // Si l'API renvoie un échec
       if (!response || !response.success) {
         throw new Error("Échec de la création du compte utilisateur.");
       }
+      // Si un utilisateur est retourné dans la réponse, on le stocke dans l’atome
+
+      if ('user' in response && !response.user) {
+        // Mise à jour de l'atome
+        setAuthUser(response.user);
+      }
+
       
-      // Mise à jour de l'atome
-      setAuthUser(response.user);
+      
 
       // Redirection vers la page de connexion après inscription réussie
       navigate('/');
@@ -82,8 +91,8 @@ const RegisterPage: React.FC = () => {
    * @param e - Événement de soumission du formulaire
    */
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
+    e.preventDefault(); // empêche le rechargement de la page
+    // Vérifie que tous les champs sont remplis
     if (!firstName || !lastName || !email || !password) {
       setError('Tous les champs sont obligatoires.');
       return;
@@ -93,17 +102,17 @@ const RegisterPage: React.FC = () => {
       // Valide les données avec Zod
       registerSchema.parse({ firstName, lastName, email, password });
       setError(""); // Réinitialise les erreurs si tout est valide
-
+      // Prépare les données du formulaire pour l'envoi
       const formData = new FormData();
       formData.append("firstName", firstName);
       formData.append("lastName", lastName);
       formData.append("email", email);
       formData.append("password", password);
-
+      // Appelle la fonction pour traiter l'inscription
       handleFormAction(formData);
     } catch (err) {
       if (err instanceof z.ZodError) {
-        // Récupère les messages d'erreur et les affiche
+        // Si Zod renvoie une erreur, on récupère les messages d'erreurs
         const errorMessages = err.errors.map((error) => error.message).join(" ");
         setError(errorMessages);
       } else {
@@ -171,12 +180,12 @@ const RegisterPage: React.FC = () => {
           </div>
 
           {/* Champ Mot de passe */}
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label className="block text-sm font-medium mb-1" htmlFor="password">Mot de passe</label>
             <input
               id="password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"} // Affiche ou masque le mot de passe
               value={password} // Associe l'état au champ
               onChange={(e) => setPassword(e.target.value)} // Met à jour l'état
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
@@ -184,6 +193,15 @@ const RegisterPage: React.FC = () => {
               autoComplete="new-password"
               required
             />
+              {/* Bouton œil */}
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+              tabIndex={-1} // pour ne pas gêner la tabulation du formulaire
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
           {/* Message d'erreur */}
