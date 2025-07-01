@@ -1,51 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import MovieService from "../../services/api/MovieService"; // Service pour les films
 import type { IMovie } from "../../types/Movies";
 import type { IRecipe } from "../../types/Recipe";
-import MovieImage from "../../components/MovieImage"; // Composant pour afficher l'image du film
-import RecipeCard from "../../components/RecipeCard"; // Composant pour afficher les recettes associées
+import MovieImage from "../../components/MovieImage";
+import RecipeCard from "../../components/RecipeCard";
+import { useMovieById } from "../../hooks/query/movie"; // Assure-toi que ce hook existe
 
 const MovieDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>(); // Récupérer l'ID du film depuis l'URL
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [movie, setMovie] = useState<IMovie | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchMovieDetails = async () => {
-      try {
-        setLoading(true);
-        if (!id) {
-          setError("ID du film manquant");
-          return;
-        }
+  const { data: movie, isLoading, isError } = useMovieById(id || '');
 
-        // Récupérer les détails du film avec ses recettes associées
-        const movieData = await MovieService.getMovie(id);
-        console.log("Données du film récupérées :", movieData); // Ajoutez ce log pour vérifier les données
-
-        if (!movieData) {
-          setError("Film introuvable");
-          return;
-        }
-
-        setMovie(movieData);
-        setError(null);
-      } catch (err) {
-        console.error("Erreur lors du chargement du film :", err);
-        setError("Impossible de charger le film");
-        setMovie(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMovieDetails();
-  }, [id]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500" />
@@ -53,14 +20,14 @@ const MovieDetailPage: React.FC = () => {
     );
   }
 
-  if (error || !movie) {
+  if (isError || !movie) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <div className="text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">Oups !</h2>
-          <p className="text-gray-600 mb-4">{error || "Film introuvable"}</p>
+          <p className="text-gray-600 mb-4">Film introuvable</p>
           <button
-            onClick={() => navigate("/movies")}
+            onClick={() => navigate("/films")}
             className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-colors"
           >
             Retourner aux films
@@ -82,17 +49,18 @@ const MovieDetailPage: React.FC = () => {
       {/* Détails du film */}
       <div className="container mx-auto max-w-4xl p-4">
         <div className="bg-white rounded-lg shadow-md p-4">
-        <div className="w-full h-64 flex items-center justify-center rounded-md mb-4">
-          <MovieImage
-            movie={movie}
-            alt={movie.title}
-            className="w-full h-full object-contain rounded-md"
-          />
-        </div>
+          <div className="w-full h-64 flex items-center justify-center rounded-md mb-4">
+            <MovieImage
+              movie={movie}
+              alt={movie.title}
+              className="w-full h-full object-contain rounded-md"
+            />
+          </div>
           <h2 className="text-lg font-semibold mt-2">{movie.title}</h2>
           <p className="text-gray-600 mb-4">{movie.description}</p>
           <p className="text-gray-600 mb-4">
-            <strong>Date de sortie :</strong> {new Date(movie.releaseDate).toLocaleDateString("fr-FR")}
+            <strong>Date de sortie :</strong>{" "}
+            {new Date(movie.releaseDate).toLocaleDateString("fr-FR")}
           </p>
           <p className="text-gray-600">
             <strong>IMDB :</strong>{" "}
@@ -123,7 +91,9 @@ const MovieDetailPage: React.FC = () => {
               />
             ))
           ) : (
-            <p className="text-center text-gray-600">Aucune recette associée à ce film.</p>
+            <p className="text-center text-gray-600">
+              Aucune recette associée à ce film.
+            </p>
           )}
         </div>
       </div>

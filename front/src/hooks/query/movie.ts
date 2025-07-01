@@ -9,4 +9,11 @@ export const useAllMovies = () => {
     queryFn: MovieService.getMovies,
   });
 };
+export const useMovieById = (id: string) => {
+    return useQuery<IMovie>({
+      queryKey: ['movie', id],
+      queryFn: () => MovieService.getMovie(id),
+      enabled: !!id, // n'exécute la requête que si un id est fourni
+    });
+  };
 
