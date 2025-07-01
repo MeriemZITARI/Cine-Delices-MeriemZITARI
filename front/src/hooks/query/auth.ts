@@ -17,8 +17,10 @@ export function useSignin() {
 export function useSignup() {
   const queryClient = useQueryClient();
   return useMutation({
+     // Pas besoin de clé de requête ici car c'est une mutation, on ne sauvegarde pas le résultat dans le cache
     mutationFn: authService.register,
     onSuccess(user) {
+        // Stp, sauvegarde mon utilisateur dans le cache de la requête du authUser
       queryClient.setQueryData(['authUser'], user);
     },
   });
