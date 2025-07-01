@@ -1,19 +1,11 @@
-/**
- * Composant de la page d'inscription - Implémentation mobile-first
- * Le formulaire s'adapte en largeur selon le device tout en restant centré
- */
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom'; // pour les redirections et liens
-import Button from "../../components/Button/Button"; // bouton personnalisé
-import authService from '../../services/api/AuthServices'; // service d'inscription API
-
+import { Link, useNavigate } from 'react-router-dom';
+import Button from '../../components/Button/Button';
+import { useSignup } from '../../hooks/query/auth';
 import { z } from 'zod';
-import { useAtom } from 'jotai';
-import { authUserAtom } from '../../store/authUserAtom';
 
-// Schéma de validation pour le formulaire d'inscription
+// Schéma de validation
 const registerSchema = z.object({
   firstName: z.string().min(1, "Le prénom est obligatoire."),
   lastName: z.string().min(1, "Le nom est obligatoire."),
@@ -27,110 +19,51 @@ const registerSchema = z.object({
 });
 
 const RegisterPage: React.FC = () => {
-  // Navigation et références
   const navigate = useNavigate();
   const inputEmailRef = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Utilisation de l'atome pour gérer l'utilisateur connecté
-  const [authUser, setAuthUser] = useAtom(authUserAtom); 
-
-  // États pour gérer les champs du formulaire et les erreurs
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Focus automatique sur l'email au chargement
+  const signupMutation = useSignup();
+
   useEffect(() => {
     inputEmailRef.current?.focus();
   }, []);
 
-  /**
-   * Traite les données du formulaire et effectue l'inscription
-   * @param formData - Données du formulaire
-   */
-  async function handleFormAction(formData: FormData) {
-    try {
-      // Extraction des données depuis le FormData
-      const data = {
-        firstName: formData.get('firstName') as string,
-        lastName: formData.get('lastName') as string,
-        email: formData.get('email') as string,
-        password: formData.get('password') as string,
-      };
-      
-      // Appel API d’inscription via le service
-      const response = await authService.register(data);
-      // Si l'API renvoie un échec
-      if (!response || !response.success) {
-        throw new Error("Échec de la création du compte utilisateur.");
-      }
-      // Si un utilisateur est retourné dans la réponse, on le stocke dans l’atome
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-      if ('user' in response && response.user) {
-        // Mise à jour de l'atome
-        setAuthUser(response.user);
-      }
-
-      
-      
-
-      // Redirection vers la page de connexion après inscription réussie
-      navigate('/');
-    } catch (err) {
-      setError('Une erreur est survenue lors de l\'inscription');
-      console.error('Erreur lors de l\'inscription:', err);
-    }
-  }
-
-  /**
-   * Gère la soumission du formulaire d'inscription
-   * Vérifie que tous les champs sont remplis avant de procéder
-   * @param e - Événement de soumission du formulaire
-   */
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); // empêche le rechargement de la page
-    // Vérifie que tous les champs sont remplis
     if (!firstName || !lastName || !email || !password) {
       setError('Tous les champs sont obligatoires.');
       return;
     }
 
     try {
-      // Valide les données avec Zod
       registerSchema.parse({ firstName, lastName, email, password });
-      setError(""); // Réinitialise les erreurs si tout est valide
-      // Prépare les données du formulaire pour l'envoi
-      const formData = new FormData();
-      formData.append("firstName", firstName);
-      formData.append("lastName", lastName);
-      formData.append("email", email);
-      formData.append("password", password);
-      // Appelle la fonction pour traiter l'inscription
-      handleFormAction(formData);
+      setError('');
+      await signupMutation.mutateAsync({ firstName, lastName, email, password });
+      navigate('/');
     } catch (err) {
       if (err instanceof z.ZodError) {
-        // Si Zod renvoie une erreur, on récupère les messages d'erreurs
         const errorMessages = err.errors.map((error) => error.message).join(" ");
         setError(errorMessages);
       } else {
-        setError("Une erreur inconnue est survenue.");
+        setError("Une erreur est survenue lors de l'inscription.");
+        console.error('Erreur lors de l\'inscription:', err);
       }
     }
   };
 
   return (
-    // Container principal - Pas de flex-col pour coller sous le header
     <div className="px-4 py-6 bg-white">
-      {/* Container du formulaire avec largeur maximale et centrage */}
       <div className="w-full max-w-md mx-auto">
         <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 font-broadway">Créer un compte</h1>
-
-        {/* Formulaire avec bordure et ombre légère */}
         <form onSubmit={handleSubmit} className="bg-white border border-gray-300 rounded-lg p-4 sm:p-8 shadow-md">
-          {/* Section Nom/Prénom - Côte à côte sur tous les écrans */}
           <div className="flex flex-row gap-3 mb-4">
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1" htmlFor="lastName">Nom</label>
@@ -138,8 +71,8 @@ const RegisterPage: React.FC = () => {
                 id="lastName"
                 name="lastName"
                 type="text"
-                value={lastName} // Associe l'état au champ
-                onChange={(e) => setLastName(e.target.value)} // Met à jour l'état
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
                 placeholder="Dupont"
                 autoComplete="family-name"
@@ -152,8 +85,8 @@ const RegisterPage: React.FC = () => {
                 id="firstName"
                 name="firstName"
                 type="text"
-                value={firstName} // Associe l'état au champ
-                onChange={(e) => setFirstName(e.target.value)} // Met à jour l'état
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
                 className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
                 placeholder="Jean"
                 autoComplete="given-name"
@@ -162,7 +95,6 @@ const RegisterPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Champ Email */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1" htmlFor="email">Adresse e-mail</label>
             <input
@@ -170,8 +102,8 @@ const RegisterPage: React.FC = () => {
               id="email"
               name="email"
               type="email"
-              value={email} // Associe l'état au champ
-              onChange={(e) => setEmail(e.target.value)} // Met à jour l'état
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
               placeholder="email@exemple.com"
               autoComplete="email"
@@ -179,43 +111,34 @@ const RegisterPage: React.FC = () => {
             />
           </div>
 
-          {/* Champ Mot de passe */}
           <div className="mb-6 relative">
             <label className="block text-sm font-medium mb-1" htmlFor="password">Mot de passe</label>
             <input
               id="password"
               name="password"
-              type={showPassword ? "text" : "password"} // Affiche ou masque le mot de passe
-              value={password} // Associe l'état au champ
-              onChange={(e) => setPassword(e.target.value)} // Met à jour l'état
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
               placeholder="********"
               autoComplete="new-password"
               required
             />
-              {/* Bouton œil */}
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              tabIndex={-1} // pour ne pas gêner la tabulation du formulaire
+              tabIndex={-1}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
 
-          {/* Message d'erreur */}
           {error && <div className="text-red-500 text-sm mb-3 text-center">{error}</div>}
 
-          {/* Bouton de soumission */}
-          <Button 
-            text="S'inscrire"
-            type="submit"
-            className="w-full"
-          />
+          <Button text="S'inscrire" type="submit" className="w-full" />
         </form>
 
-        {/* Lien de connexion */}
         <div className="text-center mt-4">
           <Link to="/connexion" className="text-xs text-gray-700 underline hover:text-red-500">
             Vous avez déjà un compte ? Connectez-vous
