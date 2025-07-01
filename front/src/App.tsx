@@ -17,7 +17,13 @@ import AccountPage from "./pages/AccountPage/AccountPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MovieDetailPage from "./pages/MoviePage/MovieDetailsPage";
 
+// 👇 Appelle simplement useAuthUser au chargement
+import { useAuthUser } from "./hooks/query/auth";
+
 function App() {
+  // Vérifie si l'utilisateur est authentifié
+  // et déclenche la requête pour récupérer les données de l'utilisateur
+  useAuthUser(); // Hook pour récupérer l'utilisateur authentifié
   return (
     <SearchModalProvider>
       <div className="min-h-screen flex flex-col">

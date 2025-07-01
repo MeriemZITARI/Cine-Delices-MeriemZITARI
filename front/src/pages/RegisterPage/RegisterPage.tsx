@@ -69,7 +69,7 @@ const RegisterPage: React.FC = () => {
       }
       // Si un utilisateur est retourné dans la réponse, on le stocke dans l’atome
 
-      if ('user' in response && !response.user) {
+      if ('user' in response && response.user) {
         // Mise à jour de l'atome
         setAuthUser(response.user);
       }

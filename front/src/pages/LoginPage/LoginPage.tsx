@@ -1,47 +1,32 @@
-/**
- * Composant de la page de connexion - Implémentation mobile-first
- * Le formulaire s'adapte en largeur selon le device tout en restant centré
-*/
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 import Button from "../../components/Button/Button";
-import authService from '../../services/api/AuthServices';
-
 import { z } from 'zod';
-import { useAtom } from 'jotai';
-import { authUserAtom } from '../../store/authUserAtom';
 
-// Schéma de validation pour le formulaire de connexion
+import { useSignin } from '../../hooks/query/auth';
+
+// Schéma de validation
 const loginSchema = z.object({
   email: z.string().email("L'adresse e-mail n'est pas valide."),
-  password: z
-    .string()
-    .min(8, "Le mot de passe doit contenir au moins 8 caractères."),
+  password: z.string().min(8, "Le mot de passe doit contenir au moins 8 caractères."),
 });
 
 const LoginPage: React.FC = () => {
-  // Navigation et références
   const navigate = useNavigate();
   const inputEmailRef = useRef<HTMLInputElement>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-  // Utilisation de l'atome pour gérer l'utilisateur connecté
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
-
-  // États pour gérer les champs du formulaire et les erreurs
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  // Focus automatique sur l'email au chargement
+  const loginMutation = useSignin();
+
   useEffect(() => {
     inputEmailRef.current?.focus();
   }, []);
 
-  /**
-   * Gère la soumission du formulaire de connexion
-   * @param e - Événement de soumission du formulaire
-   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -50,34 +35,16 @@ const LoginPage: React.FC = () => {
       return;
     }
 
-    loginSchema.parse({ email, password }); // Valide les champs
-    setError(""); // Réinitialise les erreurs si tout est valide
-
-    // Appeler le service d'authentification
-    //console.log("Données valides :", { email, password });
-
     try {
-      // Connexion via le service d'authentification
-      const response = await authService.login({ email, password });
-      
-      if (!response || !response.success) {
-        throw new Error("Échec de la connexion, utilisateur non trouvé.");
-      }
-      
-      // Si tout est correct, affichez l'utilisateur
-      //console.log("Utilisateur connecté :", response.user);
-
-      // Mettre à jour l'utilisateur dans l'atome
-      // const user = await authService.getMe();
-      setAuthUser(response.user);
-      
-      // Redirection vers la page d'accueil
+      loginSchema.parse({ email, password });
+      setError('');
+      await loginMutation.mutateAsync({ email, password });
       navigate('/');
     } catch (err) {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message);
       } else {
-        setError("Cette combinaison e-mail/mot de passe n'a pas été trouvée en base de données");
+        setError("Cette combinaison e-mail/mot de passe n'a pas été trouvée.");
         console.error("Erreur lors de la connexion :", err);
       }
     }
@@ -85,13 +52,9 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="px-4 py-6 bg-white">
-      {/* Container du formulaire avec largeur maximale et centrage */}
       <div className="w-full max-w-md mx-auto">
         <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 font-broadway">Connexion</h1>
-
-        {/* Formulaire avec bordure et ombre légère */}
         <form onSubmit={handleSubmit} className="bg-white border border-gray-300 rounded-lg p-4 sm:p-8 shadow-md">
-          {/* Champ Email */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1" htmlFor="email">Adresse e-mail</label>
             <input
@@ -108,13 +71,12 @@ const LoginPage: React.FC = () => {
             />
           </div>
 
-          {/* Champ Mot de passe */}
-          <div className="mb-6">
+          <div className="mb-6 relative">
             <label className="block text-sm font-medium mb-1" htmlFor="password">Mot de passe</label>
             <input
               id="password"
               name="password"
-              type="password"
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
@@ -122,20 +84,21 @@ const LoginPage: React.FC = () => {
               autoComplete="current-password"
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+              tabIndex={-1}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
 
-          {/* Message d'erreur */}
           {error && <div className="text-red-500 text-sm mb-3 text-center">{error}</div>}
 
-          {/* Bouton de soumission */}
-          <Button 
-            text="Se connecter"
-            type="submit"
-            className="w-full"
-          />
+          <Button text="Se connecter" type="submit" className="w-full" />
         </form>
 
-        {/* Liens d'inscription et mot de passe oublié */}
         <div className="text-center mt-4 space-y-2">
           <Link to="/creer-compte" className="block text-xs text-gray-700 underline hover:text-red-500">
             Pas encore de compte ? Inscrivez-vous
