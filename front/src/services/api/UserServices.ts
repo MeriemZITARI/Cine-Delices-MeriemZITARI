@@ -1,65 +1,78 @@
-import type { IUser } from '../../types/Auth';
 import { axiosInstance } from '../../utils/axios';
+import type { IUser } from '../../types/Auth';
 import { AxiosError } from 'axios';
 
 const userService = {
-  async updateInfo(data: { firstName: string; lastName: string; email: string; }) {
+  /**
+   * 🔍 Récupère les infos de l'utilisateur connecté
+   */
+  async getMyAccount(): Promise<IUser> {
     try {
-      const response = await axiosInstance.patch('/api/users/me', data);
-      return {
-        success: true,
-        user: response.data as IUser,
-      };
+      const res = await axiosInstance.get('/api/users/me'); // ✅ pas besoin d'Authorization, cookies envoyés automatiquement
+      console.log('API /me response:', res.data);
+      return res.data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        return {
-          success: false,
-          status: error.response?.status || 500,
-          message:
-            error.response?.data?.message || 'La modification a échoué',
-        };
+        throw new Error(error.response?.data?.message || 'Erreur lors de la récupération du profil');
       }
-      return { success: false, status: 500, message: 'Erreur inconnue' };
-    }    
-  },
-
-  async updatePassword(data: { currentPassword: string, newPassword: string }) {
-    try {
-      const response = await axiosInstance.patch('/api/users/me/password', data);
-      return {
-        success: true,
-        ... response.data as { token: string; user: IUser },
-      };
-    } catch (error) {
-      if (error instanceof AxiosError) {
-        return {
-          success: false,
-          status: error.response?.status || 500,
-          message:
-            error.response?.data?.message || 'La modification a échoué',
-        };
-      }
-      return { success: false, status: 500, message: 'Erreur inconnue' };
+      throw new Error('Erreur inconnue lors de la récupération du profil');
     }
   },
 
-  async getUserRecipes() {
+  /**
+   * ✏️ Met à jour les infos utilisateur (nom, prénom, email)
+   */
+  async updateInfo(data: {
+    firstName: string;
+    lastName: string;
+    email: string;
+  }): Promise<{ success: boolean; user: IUser }> {
     try {
-      const response = await axiosInstance.get(`/api/users/me/recipes`);
-      return {
-        success: true,
-        recipes: response.data, 
-      };
+      const res = await axiosInstance.patch('/api/users/me', data);
+      return res.data; // typiquement { success: true, user: {...} }
     } catch (error) {
       if (error instanceof AxiosError) {
-        return {
-          success: false,
-          message: error.response?.data?.message || 'Erreur lors de la récupération des recettes',
-        };
+        throw new Error(error.response?.data?.message || 'Erreur lors de la mise à jour du profil');
       }
+      throw new Error('Erreur inconnue lors de la mise à jour');
     }
   },
 
+  /**
+   * 🔐 Met à jour le mot de passe
+   */
+  async updatePassword(data: {
+    currentPassword: string;
+    newPassword: string;
+  }): Promise<{ success: boolean }> {
+    try {
+      const res = await axiosInstance.patch('/api/users/me/password', data);
+      return res.data; // typiquement { success: true }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data?.message || 'Erreur lors de la modification du mot de passe');
+      }
+      throw new Error('Erreur inconnue lors du changement de mot de passe');
+    }
+  },
+
+  /**
+ * ❌ Supprime le compte utilisateur connecté
+ */
+  async deleteAccount(){
+    try {
+      const res = await axiosInstance.delete('/api/users/me'); // Assure-toi que cette route existe côté backend
+      return res.data; // Typiquement : { success: true }
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        throw new Error(error.response?.data?.message || 'Erreur lors de la suppression du compte');
+      }
+      throw new Error('Erreur inconnue lors de la suppression du compte');
+    }
+  }
 };
+
+
+
 
 export default userService;

@@ -1,232 +1,139 @@
 import { z } from 'zod';
-import { useAtom } from 'jotai';
-import { authUserAtom } from '../../store/authUserAtom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from '../../components/Button/Button';
-import userService from '../../services/api/UserServices';
-import { FaUserEdit } from 'react-icons/fa';
+import { useMyAccount, useUpdateUserInfo, useUpdatePassword, useDeleteAccount } from '../../hooks/query/account';
+import PasswordModal from './PasswordModal'; // à créer ou adapter
 
-// Schéma de validation pour les informations de l'utilisateur
 const userSchema = z.object({
-    firstName: z.string().min(1, "Le prénom est obligatoire."),
-    lastName: z.string().min(1, "Le nom est obligatoire."),
-    email: z.string().email("L'adresse e-mail n'est pas valide."),
+  firstName: z.string().min(1, "Le prénom est obligatoire."),
+  lastName: z.string().min(1, "Le nom est obligatoire."),
+  email: z.string().email("L'adresse e-mail n'est pas valide."),
 });
-  
-// Schéma de validation pour le mot de passe
+
 const passwordSchema = z.object({
-    password: z.string().regex(
-        /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
-        "Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial."
-    ),
+  password: z.string().regex(
+    /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[\W_]).{8,}$/,
+    "Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial."
+  ),
 });
-  
 
-const ProfileSection : React.FC = () => {
-  // Utilisation de l'atome pour gérer l'utilisateur connecté
-  const [authUser, setAuthUser] = useAtom(authUserAtom);
+const ProfileSection: React.FC = () => {
+  const { data: authUser } = useMyAccount();
 
-  // États pour gérer les champs du formulaire et les erreurs
-  const [isEditing, setIsEditing] = useState(false);
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [firstName, setFirstName] = useState(authUser?.firstName || '');
-  const [lastName, setLastName] = useState(authUser?.lastName || '');
-  const [email, setEmail] = useState(authUser?.email || '');
-  const [currentPassword, checkCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errorPassword, setErrorPassword] = useState('');
+  // Initialiser les champs quand authUser change
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  console.log('authUser:', authUser);
+
+  useEffect(() => {
+    if (authUser) {
+      setFirstName(authUser.firstName);
+      setLastName(authUser.lastName);
+      setEmail(authUser.email);
+    }
+  }, [authUser]);
+
   const [errorInfo, setErrorInfo] = useState('');
 
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-  };
-  
-  /**
-   * Traite les données du formulaire et fait les modifications
-   * @param formData - Données du formulaire
-  */
-  async function handleInfoFormAction(formData: FormData) {
-    try {
-      const data = {
-        firstName: formData.get('firstName') as string,
-        lastName: formData.get('lastName') as string,
-        email: formData.get('email') as string,
-      };
-      
-      // Update via le UserService
-      const response = await userService.updateInfo(data);
-      
-      if (!response || !response.success || !response.user) {
-        throw new Error("Échec de la modification des informations de l'utilisateur.");
-      }
-      
-      setIsEditing(false);
-      // Mise à jour de l'atome
-      setAuthUser(response.user);
-    } catch (err) {
-      setErrorInfo('Une erreur est survenue lors de la modification des informations de l\'utilisateur');
-      //console.error('Erreur lors de la modification des informations de l\'utilisateur :', err);
-    }
-  }
+  const updateInfoMutation = useUpdateUserInfo();
+  const deleteAccountMutation = useDeleteAccount();
+  const updatePasswordMutation = useUpdatePassword();
 
-  /**
-   * Changer le mot de passe
-   * @param currentPassword - Mot de passe actuel
-   * @param newPassword - Nouveau mot de passe
-  */
-  async function handlePasswordFormAction(currentPassword: String, newPassword: String) {
-    try {
-      const data = {
-        currentPassword: currentPassword as string,
-        newPassword: newPassword as string
-      };
-      
-      // Changement du mot de passe
-      const response = await userService.updatePassword(data);
-      
-      if (!response || !response.success) {
-        throw new Error("Échec de la modification du mot de passe.");
-      }
-      
-      setIsChangingPassword(false);
-
-      checkCurrentPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      
-    } catch (err) {
-      setErrorPassword('Le mot de passe actuel est incorrect, la modification n\'a pas été prise en compte.');
-      //console.error('Erreur lors de la modification du mot de passe :', err);
-    }
-  }
+  // Modal mot de passe
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
   const handleInfoSave = () => {
-    // Enregistrer les modifications
-    if (authUser?.firstName !==  firstName || authUser?.lastName !== lastName || authUser?.email !== email) {
-        try {
-            // Valide les données avec Zod
-            userSchema.parse({ firstName, lastName, email });
-            setErrorInfo(""); // Réinitialise les erreurs si tout est valide
-            
-            const formData = new FormData();
-            formData.append("firstName", firstName);
-            formData.append("lastName", lastName);
-            formData.append("email", email);
-            
-            handleInfoFormAction(formData);
-        } catch (err) {
-            if (err instanceof z.ZodError) {
-              // Récupère les messages d'erreur et les affiche
-              const errorMessages = err.errors.map((error) => error.message).join(" ");
-              setErrorInfo(errorMessages);
-            } else {
-              setErrorInfo("Une erreur inconnue est survenue.");
-            }
-        }
-    } else {
-        setErrorInfo("");
-        setIsEditing(false);
+    try {
+      userSchema.parse({ firstName, lastName, email });
+      setErrorInfo('');
+      updateInfoMutation.mutate({ firstName, lastName, email });
+    } catch (err) {
+      if (err instanceof z.ZodError) {
+        setErrorInfo(err.errors.map(e => e.message).join(' '));
+      } else {
+        setErrorInfo("Une erreur inconnue est survenue.");
+      }
     }
   };
 
-  const handlePasswordChange = () => {
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setErrorPassword("Tous les champs sont obligatoires !");
-      return;
-    }
-    if (newPassword !== confirmPassword) {
-      setErrorPassword("Les nouveaux mots de passe ne correspondent pas.");
-      return;
-    }
-    
-    try {
-        // Valide les données avec Zod
-        passwordSchema.parse({ password: newPassword });
-        setErrorPassword(""); // Réinitialise les erreurs si tout est valide
-        
-        handlePasswordFormAction(currentPassword, newPassword);
-    } catch (err) {
-        if (err instanceof z.ZodError) {
-          // Récupère les messages d'erreur et les affiche
-          const errorMessages = err.errors.map((error) => error.message).join(" ");
-          setErrorPassword(errorMessages);
-        } else {
-          setErrorPassword("Une erreur inconnue est survenue.");
-        }
+  const handleDeleteAccount = () => {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.")) {
+      deleteAccountMutation.mutate();
     }
   };
-  
+
+  // Callback passé à la modale pour modifier le mot de passe
+  const handlePasswordChange = async(currentPassword: string, newPassword: string) : Promise<void> => {
+    try {
+      passwordSchema.parse({ password: newPassword });
+      updatePasswordMutation.mutate({ currentPassword, newPassword }, {
+        onSuccess: () => {
+          setIsPasswordModalOpen(false);
+        }
+      });
+    } catch (err) {
+      // On peut gérer une erreur ici si besoin, mais modale gère ses erreurs
+    }
+  };
+
   return (
-    <div className="flex flex-col md:flex-row gap-8">
-      {/* Colonne gauche : Informations utilisateur */}
-      <div className="flex-1">
-        <h2 className="text-lg sm:text-2xl font-bold text-black mb-4">Informations utilisateur</h2>
+    <>
+      <div className="max-w-md mx-auto p-6 border border-gray-300 rounded shadow-sm flex flex-col gap-6">
+        <h2 className="text-2xl font-bold text-center mb-6">Informations utilisateur</h2>
+
         <input
           type="text"
           value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-          placeholder="Prénom"
+          onChange={e => setFirstName(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2 text-center"
+          autoComplete="given-name"
         />
         <input
           type="text"
           value={lastName}
-          onChange={(e) => setLastName(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-          placeholder="Nom"
+          onChange={e => setLastName(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2 text-center"
+          autoComplete="family-name"
         />
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-          placeholder="Email"
+          onChange={e => setEmail(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2 text-center"
+          autoComplete="email"
         />
-        {errorInfo && <p className="font-bold text-red-500 text-sm mt-2 mb-4 text-center">{errorInfo}</p>}
-        <div className="flex justify-end w-full gap-3">
-          <Button
-            text="Enregistrer"
-            className="flex-1"
-            onClick={handleInfoSave}
-          />
-        </div>
+
+        {errorInfo && <p className="text-red-600 font-semibold text-center">{errorInfo}</p>}
+
+        <Button
+          text="Enregistrer"
+          onClick={handleInfoSave}
+          className="w-full"
+        />
+
+        <Button
+          text="Modifier le mot de passe"
+          onClick={() => setIsPasswordModalOpen(true)}
+          className="w-full bg-gray-300 hover:bg-gray-400"
+        />
       </div>
-  
-      {/* Colonne droite : Modification du mot de passe */}
-      <div className="flex-1">
-        <h2 className="text-lg sm:text-2xl font-bold text-black mb-4">Modifier le mot de passe</h2>
-        <input
-          type="password"
-          value={currentPassword}
-          onChange={(e) => checkCurrentPassword(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-          placeholder="Mot de passe actuel"
+
+      {/* Bouton suppression compte, large et en bas */}
+      <div className="max-w-md mx-auto mt-6">
+        <Button
+          text="Supprimer le compte"
+          className="w-full bg-red-600 hover:bg-red-700 text-white"
+          onClick={handleDeleteAccount}
         />
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-          placeholder="Nouveau mot de passe"
-        />
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full border border-gray-300 rounded px-3 py-2 text-base mb-2"
-          placeholder="Confirmer le nouveau mot de passe"
-        />
-        {errorPassword && <p className="font-bold text-red-500 text-sm mt-2 mb-4">{errorPassword}</p>}
-        <div className="flex justify-end w-full gap-3">
-          <Button
-            text="Enregistrer"
-            className="flex-1"
-            onClick={handlePasswordChange}
-          />
-        </div>
       </div>
-    </div>
+
+      <PasswordModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onPasswordChange={handlePasswordChange}
+      />
+    </>
   );
 };
 
