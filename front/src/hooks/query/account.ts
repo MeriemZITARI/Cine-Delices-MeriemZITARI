@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import userService from '../../services/api/UserServices';
+import { IRecipe } from '../../types/Recipe';
 
 // ✅ Hook pour récupérer les infos utilisateur
 export const useMyAccount = () => {
@@ -40,3 +41,32 @@ export const useDeleteAccount = () => {
     },
   });
 };
+// ✅ Hook pour récupérer les recettes de l'utilisateur connecté
+export const useUserRecipes = () => {
+    return useQuery({
+      queryKey: ['recipes', 'me'],
+      queryFn: userService.getUserRecipes,
+      staleTime: 5 * 60 * 1000, // cache 5 min
+    });
+};
+export const useUpdateRecipe = () => {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: ({ id, data }: { id: string; data: Partial<IRecipe> }) =>
+        userService.updateRecipe(id, data),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['recipes', 'me'] }); // Invalide la liste des recettes pour recharger
+      },
+    });
+  };
+  export const useDeleteRecipe = () => {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: (id: string) => userService.deleteRecipe(id),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['recipes', 'me'] }); // Rafraîchit la liste
+      },
+    });
+  };
