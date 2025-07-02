@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import Button from '../../components/Button/Button';
 import { useMyAccount, useUpdateUserInfo, useUpdatePassword, useDeleteAccount } from '../../hooks/query/account';
 import PasswordModal from './PasswordModal'; // à créer ou adapter
+import DeleteAccountModal from './DeleteAccountModal';
 
 const userSchema = z.object({
   firstName: z.string().min(1, "Le prénom est obligatoire."),
@@ -42,6 +43,7 @@ const ProfileSection: React.FC = () => {
 
   // Modal mot de passe
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleInfoSave = () => {
     try {
@@ -124,8 +126,14 @@ const ProfileSection: React.FC = () => {
         <Button
           text="Supprimer le compte"
           className="w-full bg-red-600 hover:bg-red-700 text-white"
-          onClick={handleDeleteAccount}
+          onClick={() => setIsDeleteModalOpen(true)}
         />
+        {isDeleteModalOpen && (
+  <DeleteAccountModal
+    isOpen={isDeleteModalOpen}
+    onClose={() => setIsDeleteModalOpen(false)}
+    onConfirm={handleDeleteAccount}
+/>)}
       </div>
 
       <PasswordModal
