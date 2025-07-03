@@ -1,88 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import recipeService from '../services/api/RecipeService';
+import { FaClock, FaTools } from 'react-icons/fa';
 
+import { useAllRecipes } from '../hooks/query/recipe'; // ✅ Hook TanStack Query
 import type { IRecipe } from '../types/Recipe';
+
 import RecipeImage from './RecipeImage';
 import SearchForm from './SearchForm/SearchForm';
-import { FaClock, FaTools } from 'react-icons/fa';
 import getDifficultyText from '../utils/getDifficulty';
 
 const AllRecipesPage: React.FC = () => {
-  const [recipes, setRecipes] = useState<IRecipe[]>([]);
-  const [loading, setLoading] = useState(true);
+  // 🌟 États locaux pour les filtres du formulaire de recherche
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const [selectedType, setSelectedType] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        setLoading(true);
-        const recipesResponse = await recipeService.getRecipes();
-        if (recipesResponse?.data && recipesResponse.data.length > 0) {
-          setRecipes(recipesResponse.data);
-        } else {
-          setRecipes([]);
-        }
-      } catch (error) {
-        console.error("Erreur lors du chargement des recettes:", error);
-        setRecipes([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchRecipes();
-  }, []);
+  // 🚀 Appel de l’API via TanStack Query
+  const { data, isLoading, isError } = useAllRecipes();
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  // 🧾 Extraction des vraies recettes à partir de l'objet de réponse
+  const recipes: IRecipe[] = data?.data ?? [];
+
+  // 🔍 Fonction appelée à la soumission du formulaire
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await recipeService.getRecipes();
-      let filteredRecipes = response.data;
-
-      if (selectedDuration) {
-        filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.duration <= selectedDuration
-        );
-      }
-
-      if (selectedType) {
-        filteredRecipes = filteredRecipes.filter(recipe => 
-          recipe.category && recipe.category.name.toLowerCase() === selectedType.toLowerCase()
-        );
-      }
-
-      if (searchTerm) {
-        filteredRecipes = filteredRecipes.filter(recipe =>
-          recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          recipe.description.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
-
-      setRecipes(filteredRecipes);
-    } catch (error) {
-      console.error("Erreur lors de la recherche:", error);
-    } finally {
-      setLoading(false);
-    }
+    // Rien à faire ici car le filtrage est fait localement via useMemo
   };
 
-  if (loading) {
+  // 🧠 Filtrage local des recettes selon les filtres actifs
+  const filteredRecipes = useMemo(() => {
+    return recipes.filter((recipe) => {
+      const matchSearch =
+        !searchTerm ||
+        recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        recipe.description.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchDuration =
+        !selectedDuration || recipe.duration <= selectedDuration;
+
+      const matchType =
+        !selectedType ||
+        (recipe.category?.name &&
+          recipe.category.name.toLowerCase() === selectedType.toLowerCase());
+
+      return matchSearch && matchDuration && matchType;
+    });
+  }, [recipes, searchTerm, selectedDuration, selectedType]);
+
+  // ⏳ Affichage du spinner pendant le chargement
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500" />
+      </div>
+    );
+  }
+
+  // ❌ Gestion d'erreur simple
+  if (isError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen text-red-600">
+        Erreur lors du chargement des recettes.
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* En-tête avec le formulaire de recherche */}
+      {/* 🧁 En-tête avec formulaire de recherche */}
       <div className="bg-customYellow py-6">
         <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center mb-4 font-broadway">Toutes nos recettes</h1>
+          <h1 className="text-3xl font-bold text-center mb-4 font-broadway">
+            Toutes nos recettes
+          </h1>
           <div className="max-w-lg mx-auto rounded-lg overflow-hidden">
             <SearchForm
               onSubmit={handleSearch}
@@ -96,14 +86,14 @@ const AllRecipesPage: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
+      {/* 🍲 Grille de recettes */}
       <div className="container mx-auto px-4 py-12">
-        {/* Liste des recettes */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {recipes.length > 0 ? (
-            recipes.map((recipe) => (
-              <Link 
-                key={recipe.id} 
+          {filteredRecipes.length > 0 ? (
+            filteredRecipes.map((recipe) => (
+              <Link
+                key={recipe.id}
                 to={`/recettes/${recipe.id}`}
                 className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200"
               >
@@ -144,7 +134,9 @@ const AllRecipesPage: React.FC = () => {
           ) : (
             <div className="col-span-full text-center py-12">
               <p className="text-gray-500 text-lg">Aucune recette trouvée.</p>
-              <p className="mt-2 text-gray-400">Essayez de modifier vos critères de recherche.</p>
+              <p className="mt-2 text-gray-400">
+                Essayez de modifier vos critères de recherche.
+              </p>
             </div>
           )}
         </div>
