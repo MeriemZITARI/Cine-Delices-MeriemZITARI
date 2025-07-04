@@ -1,74 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import MovieSearchModal from '../../components/MovieSearchModal';
-import { getIngredients, addIngredient } from '../../services/api/IngredientService';
+import { useIngredients } from '../../hooks/query/ingrédient';
+import { useCategories } from '../../hooks/query/category';
+import { useCreateRecipe } from '../../hooks/query/recipe';
 import { Button } from '../../components/ui/button';
-import { getImageUrl } from '../../services/Tmdb.Api';
-import { getCategories, Category } from "../../services/api/CategoryService";
 import { useNavigate } from 'react-router-dom';
-import { recipeService } from '../../services/api/RecipeService';
-
-interface Ingredient {
-  id: string;
-  name: string;
-}
 
 interface RecipeIngredient {
   id?: string;
-  ingredientName?: string; // Changé de name à ingredientName
+  ingredientName?: string;
   quantity: number;
   unit: string;
 }
 
-interface Movie {
-  id: string;
-  title: string;
-  posterUrl?: string;
-  // ...autres champs si besoin...
-}
-
 const AddRecipePage: React.FC = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState<string>("");
-  const [desc, setDesc] = useState<string>("");
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+
+  // États formulaire
+  const [name, setName] = useState("");
+  const [desc, setDesc] = useState("");
   const [selectedIngredients, setSelectedIngredients] = useState<RecipeIngredient[]>([]);
-  const [ingredientInput, setIngredientInput] = useState<string>("");
-  const [quantityInput, setQuantityInput] = useState<string>("");
-  const [unitInput, setUnitInput] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [difficulty, setDifficulty] = useState<string>("");
-  const [servings, setServings] = useState<string>("");
-  const [message, setMessage] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [showSuggestions, setShowSuggestions] = useState<boolean>(true);
+  const [ingredientInput, setIngredientInput] = useState("");
+  const [quantityInput, setQuantityInput] = useState("");
+  const [unitInput, setUnitInput] = useState("");
+  const [category, setCategory] = useState("");
+  const [difficulty, setDifficulty] = useState("");
+  const [servings, setServings] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState<any>(null);
   const [showMovieSearch, setShowMovieSearch] = useState(false);
-  const [duration, setDuration] = useState<string>("");
+  const [duration, setDuration] = useState("");
   const [image, setImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [movieDescription, setMovieDescription] = useState<string>("");
+  const [movieDescription, setMovieDescription] = useState("");
 
-  // Ajoutez cet état pour gérer l'édition d'un ingrédient
-  const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
+  // React Query hooks
+  const { data: ingredients = [], isLoading: loadingIngredients, error: errorIngredients } = useIngredients();
+  const { data: categories = [], isLoading: loadingCategories, error: errorCategories } = useCategories();
+  const createRecipeMutation = useCreateRecipe();
 
-  useEffect(() => {
-    getIngredients().then(setIngredients);
-  }, []);
-
-  useEffect(() => {
-    // Appel à l'API pour charger les catégories depuis CategoryService
-    getCategories()
-      .then((data) => setCategories(Array.isArray(data) ? data : []))
-      .catch(() => setCategories([]));
-  }, []);
-
-  const ingredientSuggestions: Ingredient[] = ingredientInput && showSuggestions
+  // Suggestions d'ingrédients filtrées
+  const ingredientSuggestions = ingredientInput && showSuggestions
     ? ingredients.filter(i =>
         i.name.toLowerCase().includes(ingredientInput.toLowerCase())
       )
     : [];
 
+  // Ajouter un ingrédient à la liste sélectionnée
   const handleAddIngredient = (name: string) => {
     if (!name.trim()) return;
     const quantityNumber = Number(quantityInput);
@@ -80,70 +58,73 @@ const AddRecipePage: React.FC = () => {
       ...selectedIngredients,
       {
         id: existingIngredient?.id,
-        ingredientName: name, // Changé de name à ingredientName
+        ingredientName: name,
         quantity: quantityNumber,
         unit: unitInput
       }
     ]);
-    
+
     setIngredientInput("");
     setQuantityInput("");
     setUnitInput("");
     setShowSuggestions(true);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-  
-    try {
-      const formData = new FormData();
-      formData.append("title", name);
-      formData.append("description", desc);
-      formData.append("categoryId", category);
-      formData.append("moviedbId", selectedMovie?.id ? String(Number(selectedMovie.id)) : "");
-      formData.append("duration", String(Number(duration)));
-      formData.append("difficulty", String(Number(difficulty)));
-      formData.append("servings", String(Number(servings)));
-      formData.append("quote", movieDescription);
-  
-      // Ajouter les ingrédients
-      selectedIngredients.forEach((ing, index) => {
-        formData.append(`ingredients[${index}][quantity]`, String(Number(ing.quantity)));
-        formData.append(`ingredients[${index}][unit]`, ing.unit);
-        if (ing.id) {
-          formData.append(`ingredients[${index}][ingredientId]`, ing.id);
-        } else {
-          formData.append(`ingredients[${index}][ingredientName]`, ing.ingredientName || "");
-        }
-      });
-  
-      // Ajouter l'image si elle existe
-      if (image) {
-        formData.append("image", image);
-      } else {
-        console.error("Image requise mais non fournie.");
-      }
-  
-      console.log("Données envoyées à l'API:", formData);
-  
-      const response = await recipeService.createRecipe(formData);
-  
-      if (response.success) {
-        setMessage("Recette créée avec succès !");
-        navigate('/recipes'); // Redirection vers la liste des recettes
-      } else {
-        setMessage("Erreur lors de la création de la recette.");
-      }
-    } catch (err: any) {
-      console.error('Erreur lors de la création de la recette:', err);
-      setMessage("Erreur lors de la création de la recette.");
-    }
-  
-    setLoading(false);
+  // Supprimer un ingrédient sélectionné
+  const handleRemoveIngredient = (index: number) => {
+    setSelectedIngredients(selectedIngredients.filter((_, i) => i !== index));
   };
 
+  // Soumission du formulaire
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!image) {
+      alert("Une image au format .webp est requise.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", name);
+    formData.append("description", desc);
+    formData.append("categoryId", category);
+    if (selectedMovie?.id != null && selectedMovie.id !== "") {
+      const parsedId = Number(selectedMovie.id);
+      if (!isNaN(parsedId)) {
+        formData.append("moviedbId", parsedId.toString());
+      }
+    }
+    formData.append("duration", String(Number(duration)));
+    formData.append("difficulty", String(Number(difficulty)));
+    formData.append("servings", String(Number(servings)));
+    formData.append("quote", movieDescription);
+
+    selectedIngredients.forEach((ing, index) => {
+      formData.append(`ingredients[${index}][quantity]`, String(Number(ing.quantity)));
+formData.append(`ingredients[${index}][unit]`, ing.unit);
+
+if (ing.id ) {
+  formData.append(`ingredients[${index}][ingredientId]`, ing.id);
+} else if (!ing.id && ing.ingredientName) {
+  formData.append(`ingredients[${index}][ingredientName]`, ing.ingredientName);
+} else {
+  console.warn("Ingrédient invalide : nécessite un id OU un nom.");
+}
+    });
+
+    formData.append("image", image);
+
+    createRecipeMutation.mutate(formData, {
+      onSuccess: () => {
+        navigate('/recettes');
+      },
+      onError: () => {
+        alert("Erreur lors de la création de la recette.");
+      }
+    });
+  };
+
+  // Gestion changement image
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     if (file && file.type === "image/webp") {
@@ -154,306 +135,231 @@ const AddRecipePage: React.FC = () => {
     } else {
       setImage(null);
       setImagePreview(null);
-      if (file) {
-        alert("Veuillez sélectionner une image au format .webp");
-      }
+      if (file) alert("Veuillez sélectionner une image au format .webp");
     }
   };
 
-  // Handler pour la sélection d'un film
+  // Sélection d’un film
   const handleMovieSelect = (movie: any) => {
     setSelectedMovie(movie);
     setShowMovieSearch(false);
   };
 
+  // Annuler l’ajout
   const handleCancel = () => {
-    navigate(-1); // Retourne à la page précédente
+    navigate(-1);
   };
 
   return (
-    <div className="w-full max-w-full md:max-w-3xl lg:max-w-4xl mx-auto mt-6 bg-white rounded-xl shadow p-4 sm:p-8">
-      <h2 className="text-xl sm:text-2xl font-bold text-center mb-6">Ajouter une nouvelle recette</h2>
+    <div className="max-w-4xl mx-auto mt-6 p-6 bg-white rounded shadow">
+      <h2 className="text-2xl font-bold mb-6 text-center">Ajouter une nouvelle recette</h2>
+
       <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-            <div className="flex-1">
-              <label className="block font-semibold mb-1">Titre de la recette</label>
-              <input
-                className="form-control w-full border border-gray-300 rounded px-3 py-2"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                required
-              />
-            </div>
-            <div className="flex-1 mt-4 md:mt-0">
-              <label className="block font-semibold mb-1">Durée (en minutes)</label>
-              <input
-                type="number"
-                min="0"
-                className="form-control w-full border border-gray-300 rounded px-3 py-2"
-                placeholder="Ex : 45"
-                value={duration}
-                onChange={e => setDuration(e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Description</label>
-          <textarea
-            className="form-control w-full border border-gray-300 rounded px-3 py-2"
-            value={desc}
-            onChange={e => setDesc(e.target.value)}
-            rows={3}
-          />
-        </div>
-        {/* Difficulté et Nombre de personnes sur la même ligne en desktop */}
-        <div className="mb-4">
-          <div className="flex flex-col md:flex-row md:items-center md:gap-6">
-            <div className="flex-1">
-              <label className="block font-semibold mb-1">Difficulté</label>
-              <select
-                className="form-control w-full border border-gray-300 rounded px-3 py-2"
-                value={difficulty}
-                onChange={e => setDifficulty(e.target.value)}
-                required
-              >
-                <option value="">Choisir...</option>
-                <option value="1">1 - Très facile</option>
-                <option value="2">2</option>
-                <option value="3">3 - Moyen</option>
-                <option value="4">4</option>
-                <option value="5">5 - Difficile</option>
-              </select>
-            </div>
-            <div className="flex-1 mt-4 md:mt-0">
-              <label className="block font-semibold mb-1">Nombre de personnes</label>
-              <input
-                type="number"
-                min="1"
-                className="form-control w-full border border-gray-300 rounded px-3 py-2"
-                placeholder="Ex : 4"
-                value={servings}
-                onChange={e => setServings(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-        </div>
-        {/* Composant de chargement d'image webp sous la difficulté */}
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Image (.webp uniquement)</label>
+
+        {/* Titre et durée */}
+        <div className="flex flex-col md:flex-row gap-6 mb-4">
           <input
-            type="file"
-            accept="image/webp"
-            onChange={handleImageChange}
-            className="block w-full text-sm text-gray-500
-              file:mr-4 file:py-2 file:px-4
-              file:rounded file:border-0
-              file:text-sm file:font-semibold
-              file:bg-blue-50 file:text-blue-700
-              hover:file:bg-blue-100"
+            className="flex-1 border rounded px-3 py-2"
+            placeholder="Titre de la recette"
+            value={name}
+            onChange={e => setName(e.target.value)}
+            required
           />
-          {imagePreview && (
-            <img
-              src={imagePreview}
-              alt="Aperçu"
-              className="mt-2 rounded max-h-40 border"
-            />
-          )}
-        </div>
-        {/* Champ Citation (optionnel) */}
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Citation (optionnel)</label>
           <input
-            type="text"
-            className="form-control w-full border border-gray-300 rounded px-3 py-2"
-            value={movieDescription}
-            onChange={e => setMovieDescription(e.target.value)}
-            placeholder="Saisissez une citation du film ou de la série"
+            type="number"
+            min={0}
+            className="w-32 border rounded px-3 py-2"
+            placeholder="Durée (minutes)"
+            value={duration}
+            onChange={e => setDuration(e.target.value)}
           />
         </div>
+
+        {/* Description */}
+        <textarea
+          className="w-full border rounded px-3 py-2 mb-4"
+          placeholder="Description"
+          rows={3}
+          value={desc}
+          onChange={e => setDesc(e.target.value)}
+        />
+
+        {/* Difficulté et nombre de personnes */}
+        <div className="flex flex-col md:flex-row gap-6 mb-4">
+          <select
+            className="flex-1 border rounded px-3 py-2"
+            value={difficulty}
+            onChange={e => setDifficulty(e.target.value)}
+            required
+          >
+            <option value="">Difficulté</option>
+            <option value="1">1 - Très facile</option>
+            <option value="2">2 - Facile</option>
+            <option value="3">3 - Intermédiaire</option>
+            <option value="4">4 - Confirmé </option>
+            <option value="5">5 - Difficile</option>
+          </select>
+
+          <input
+            type="number"
+            min={1}
+            className="flex-1 border rounded px-3 py-2"
+            placeholder="Nombre de personnes"
+            value={servings}
+            onChange={e => setServings(e.target.value)}
+            required
+          />
+        </div>
+
+        {/* Image */}
         <div className="mb-4">
-          <label className="block font-semibold mb-1">Ingrédients</label>
-          <div className="flex flex-col sm:flex-row gap-2 mt-1">
+          <label className="block mb-1 font-semibold">Image (.webp uniquement)</label>
+          <input type="file" accept="image/webp" onChange={handleImageChange} />
+          {imagePreview && <img src={imagePreview} alt="Aperçu" className="mt-2 max-h-40 rounded" />}
+        </div>
+
+        {/* Citation */}
+        <input
+          type="text"
+          placeholder="Citation (optionnel)"
+          className="w-full border rounded px-3 py-2 mb-4"
+          value={movieDescription}
+          onChange={e => setMovieDescription(e.target.value)}
+        />
+
+        {/* Ingrédients */}
+        <div className="mb-4">
+          <label className="font-semibold block mb-1">Ingrédients</label>
+          <div className="flex gap-2 mb-2">
             <input
-              className="form-control border border-gray-300 rounded px-3 py-2 flex-1"
+              className="flex-1 border rounded px-3 py-2"
               placeholder="Ajouter un ingrédient"
               value={ingredientInput}
               onChange={e => {
                 setIngredientInput(e.target.value);
                 setShowSuggestions(true);
               }}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} // délai pour pouvoir cliquer sur suggestion
             />
             <input
-              className="form-control border border-gray-300 rounded px-3 py-2 w-full sm:w-24"
-              placeholder="Quantité"
               type="number"
-              min="0"
+              min={0}
+              className="w-20 border rounded px-3 py-2"
+              placeholder="Quantité"
               value={quantityInput}
               onChange={e => setQuantityInput(e.target.value)}
             />
             <input
-              className="form-control border border-gray-300 rounded px-3 py-2 w-full sm:w-24"
+              className="w-20 border rounded px-3 py-2"
               placeholder="Unité"
               value={unitInput}
               onChange={e => setUnitInput(e.target.value)}
             />
             <Button
               type="button"
-              className="px-4 py-2 rounded border border-blue-600 text-blue-600 font-bold hover:bg-blue-50 transition"
               disabled={!ingredientInput || !quantityInput || !unitInput}
               onClick={() => handleAddIngredient(ingredientInput)}
             >
               +
             </Button>
           </div>
-          {/* Suggestions d'autocomplétion */}
-          {ingredientSuggestions.length > 0 && (
-            <ul className="absolute z-10 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-              {ingredientSuggestions.map((ingredient) => (
+
+          {/* Suggestions ingrédients */}
+          {showSuggestions && ingredientSuggestions.length > 0 && (
+            <ul className="border rounded max-h-40 overflow-y-auto bg-white">
+              {ingredientSuggestions.map((i) => (
                 <li
-                  key={ingredient.id}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => {
-                    setIngredientInput(ingredient.name);
-                    handleAddIngredient(ingredient.name);
+                  key={i.id}
+                  className="px-3 py-1 cursor-pointer hover:bg-gray-200"
+                  onMouseDown={() => {
+                    handleAddIngredient(i.name);
                     setShowSuggestions(false);
                   }}
                 >
-                  {ingredient.name}
+                  {i.name}
                 </li>
               ))}
             </ul>
           )}
-          
-          {/* Affichage des ingrédients sélectionnés */}
-          <div className="flex flex-wrap gap-2 mt-3">
+
+          {/* Liste ingrédients sélectionnés */}
+          <ul className="mt-2">
             {selectedIngredients.map((ing, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 bg-blue-100 px-3 py-1 rounded"
-              >
-                <span>
-                  {ing.ingredientName} - {ing.quantity} {ing.unit}
-                </span>
+              <li key={index} className="flex justify-between items-center py-1 border-b">
+                <span>{`${ing.ingredientName || ""} - ${ing.quantity} ${ing.unit}`}</span>
                 <button
                   type="button"
-                  onClick={() => {
-                    const newIngredients = [...selectedIngredients];
-                    newIngredients.splice(index, 1);
-                    setSelectedIngredients(newIngredients);
-                  }}
-                  className="text-red-500 hover:text-red-700"
+                  className="text-red-500"
+                  onClick={() => handleRemoveIngredient(index)}
                 >
-                  ×
+                  Supprimer
                 </button>
-              </div>
+              </li>
             ))}
-          </div>
+          </ul>
         </div>
-        {/* --- Début de la card film (identique AddRecipePage) --- */}
-        <div className="mb-4 border border-gray-200 rounded-lg p-4 bg-gray-50">
-          <div className="flex items-center justify-between mb-2">
-            <label className="block font-semibold mb-0">Film associé</label>
-            {!selectedMovie && (
-              <Button
-                type="button"
-                className="ml-auto"
-                onClick={() => setShowMovieSearch(true)}
-              >
-                Associer un film
-              </Button>
-            )}
-          </div>
+
+        {/* Catégorie */}
+        <div className="mb-4">
+          <label className="font-semibold block mb-1">Catégorie</label>
+          {loadingCategories && <p>Chargement des catégories...</p>}
+          {errorCategories && <p>Erreur chargement catégories</p>}
+          <select
+            className="w-full border rounded px-3 py-2"
+            value={category}
+            onChange={e => setCategory(e.target.value)}
+            required
+          >
+            <option value="">Sélectionner une catégorie</option>
+            {categories.map(cat => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Film lié */}
+        <div className="mb-4">
+          <label className="font-semibold block mb-1">Film lié (optionnel)</label>
+          <Button type="button" onClick={() => setShowMovieSearch(true)}> Rechercher un film</Button>
           {selectedMovie && (
-            <div className="flex flex-col sm:flex-row gap-4 items-start">
+            <div className="mt-2 p-2 border rounded flex items-center gap-3">
               {selectedMovie.poster_path && (
                 <img
-                  src={getImageUrl(selectedMovie.poster_path)}
+                  src={`https://image.tmdb.org/t/p/w92${selectedMovie.poster_path}`}
                   alt={selectedMovie.title}
-                  className="w-20 h-28 object-cover rounded"
+                  className="rounded"
                 />
               )}
               <div>
-                <div className="font-bold text-lg">{selectedMovie.title}</div>
-                {selectedMovie.release_date && (
-                  <div className="text-sm text-gray-500 mb-1">
-                    {new Date(selectedMovie.release_date).toLocaleDateString('fr-FR', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    })}
-                  </div>
-                )}
-                {selectedMovie.overview && (
-                  <div className="text-sm text-gray-700 mt-2">{selectedMovie.overview}</div>
-                )}
-                <Button
+                <p className="font-semibold">{selectedMovie.title}</p>
+                <button
                   type="button"
-                  className="mt-2"
-                  variant="ghost"
+                  className="text-red-500 text-sm"
                   onClick={() => setSelectedMovie(null)}
                 >
-                  Retirer
-                </Button>
+                  Supprimer la sélection
+                </button>
               </div>
             </div>
           )}
         </div>
-        <div className="mb-4">
-          <label className="block font-semibold mb-1">Catégorie</label>
-          <div className="flex flex-wrap gap-2">
-            {categories.length === 0 ? (
-              <span className="text-gray-400">Aucune catégorie disponible</span>
-            ) : (
-              categories.map(cat => (
-                <label
-                  key={cat.id}
-                  className="flex items-center gap-2 border rounded px-3 py-1 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name="categorie"
-                    value={cat.id}
-                    checked={category === cat.id}
-                    onChange={e => setCategory(e.target.value)}
-                    className="radio"
-                  />
-                  {cat.name}
-                </label>
-              ))
-            )}
-          </div>
-        </div>
-        <div className="flex gap-4 justify-end mt-4">
-          <Button
-            type="button"
-            variant="outline"
-            className="w-1/3 py-2 rounded font-bold"
-            onClick={handleCancel}
-          >
-            Annuler
+
+        {/* Boutons */}
+        <div className="flex gap-4">
+          <Button type="submit" disabled={createRecipeMutation.isPending}>
+           {createRecipeMutation.isPending ? "Enregistrement..." : "Ajouter la recette"}
           </Button>
-          <Button
-            className="w-2/3 py-2 rounded font-bold text-white bg-blue-600 hover:bg-blue-700 transition"
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? "Création..." : "Créer la recette"}
+          <Button type="button" variant="outline" onClick={handleCancel}>
+          Annuler
           </Button>
         </div>
-        {message && (
-          <div className={"mt-4 text-center " + (message.includes("Erreur") ? "text-red-600" : "text-green-600")}>
-            {message}
-          </div>
-        )}
       </form>
+
       {showMovieSearch && (
         <MovieSearchModal
-          open={showMovieSearch}
-          onClose={() => setShowMovieSearch(false)}
           onSelect={handleMovieSelect}
+          onClose={() => setShowMovieSearch(false)}
         />
       )}
     </div>
@@ -461,6 +367,3 @@ const AddRecipePage: React.FC = () => {
 };
 
 export default AddRecipePage;
-
-
-

@@ -26,7 +26,14 @@ const _baseRecipeSchema = z.object({
     quote: z.string().max(255, "La citation ne doit pas dépasser 255 caractères"),
     categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide"),
     movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(),
-    moviedbId: z.number().int().positive().optional(),
+    moviedbId: z.preprocess(
+        (val) => {
+          if (val === "" || val === null || val === undefined) return undefined;
+          const parsed = Number(val);
+          return isNaN(parsed) ? undefined : parsed;
+        },
+        z.number().int().positive().optional()
+      ),
     ingredients: z.array(ingredientInRecipeSchema).min(1, "La recette doit contenir au moins un ingrédient"),
   });
 

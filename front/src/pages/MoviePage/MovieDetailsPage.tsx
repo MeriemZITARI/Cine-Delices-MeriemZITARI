@@ -4,7 +4,7 @@ import type { IMovie } from "../../types/Movies";
 import type { IRecipe } from "../../types/Recipe";
 import MovieImage from "../../components/MovieImage";
 import RecipeCard from "../../components/RecipeCard";
-import { useMovieById } from "../../hooks/query/movie"; // Assure-toi que ce hook existe
+import { useMovieById } from "../../hooks/query/movie"; 
 
 const MovieDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
