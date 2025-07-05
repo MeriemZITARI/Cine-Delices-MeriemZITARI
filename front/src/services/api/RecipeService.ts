@@ -65,7 +65,7 @@ export const recipeService = {
     return response.data;
   },
 
-  async getRecipesByCategory(category: string): Promise<ApiResponse<IRecipe[]>> {
+  /*async getRecipesByCategory(category: string): Promise<ApiResponse<IRecipe[]>> {
     const response = await axiosInstance.get(`/api/recipes/category/${category}`);
     return response.data;
   },
@@ -87,7 +87,7 @@ export const recipeService = {
       params: { limit }
     });
     return response.data;
-  }
+  }*/
 };
 
 export default recipeService;

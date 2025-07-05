@@ -1,7 +1,7 @@
 // hooks/useCategories.ts
 import { useQuery } from '@tanstack/react-query';
 import { getCategories } from '../../services/api/CategoryService';
- interface Category {
+ export interface Category {
     id: string;
     name: string;
     createdAt: string;

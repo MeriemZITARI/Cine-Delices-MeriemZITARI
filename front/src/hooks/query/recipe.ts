@@ -2,6 +2,7 @@ import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import recipeService from '../../services/api/RecipeService';
 import { IRecipe } from '../../types/Recipe';
 import { ApiResponse } from '../../types';
+import { searchRecipes } from '../../utils/handleSearch';
 
 export const useAllRecipes = () => {
   return useQuery({
@@ -35,5 +36,19 @@ export const useRecipeById = (id: string) => {
         // Tu peux gérer l'erreur ici ou dans la page
         console.error("Erreur lors de la création de la recette :", error);
       },
+    });
+  };
+
+  interface SearchParams {
+    searchTerm?: string;
+    selectedDuration?: number | null;
+    selectedType?: string | null;
+  }
+  
+  export const useSearchRecipes = (params: SearchParams) => {
+    return useQuery<IRecipe[]>({
+      queryKey: ['searchRecipes', params],
+      queryFn: () => searchRecipes(params),
+      enabled: !!params, // ne lance la requête que si params existe
     });
   };
