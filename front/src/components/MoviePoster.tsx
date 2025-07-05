@@ -5,6 +5,7 @@ import { IMovie } from '../types/Movies';
 interface MoviePosterProps {
   movie: IMovie;
   className?: string;
+  alt?: string;
 }
 
 const extractImdbId = (url: string): string | null => {
