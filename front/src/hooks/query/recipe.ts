@@ -39,6 +39,11 @@ export const useRecipeById = (id: string) => {
     });
   };
 
+  /* Bien que la recherche soit locale (sans appel réseau), on utilise `useQuery`
+   pour profiter de la gestion automatique de cache, d'état (`loading`, `error`)
+   et de la possibilité de relancer manuellement la recherche via `refetch`.
+  */
+
   interface SearchParams {
     searchTerm?: string;
     selectedDuration?: number | null;
@@ -48,6 +53,7 @@ export const useRecipeById = (id: string) => {
   export const useSearchRecipes = (params: SearchParams) => {
     return useQuery<IRecipe[]>({
       queryKey: ['searchRecipes', params],
+      // Fonction de recherche définie dans `utils/handleSearch.ts`
       queryFn: () => searchRecipes(params),
       enabled: !!params, // ne lance la requête que si params existe
     });

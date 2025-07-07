@@ -36,7 +36,13 @@ const HomePage = () => {
     selectedDuration,
     selectedType,
   });
-
+  /*
+  Gère la soumission du formulaire de recherche.
+  - Empêche le comportement par défaut du formulaire (rechargement de la page)
+  - Marque que l'utilisateur a effectué une recherche (via `setHasSearched`)
+  - Relance manuellement la recherche locale avec les critères actuels (via `refetchSearch`)
+  - Attend la mise à jour des résultats, puis effectue un scroll fluide vers la section correspondante
+ */
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setHasSearched(true);
@@ -153,45 +159,50 @@ const HomePage = () => {
 
       <div className="container mx-auto px-4 py-12">
         {/* --- Section films et carrousel (toujours visible, non filtrée) --- */}
-        <section className="mb-16 hidden md:block" role="region" aria-labelledby="section-films">
-          <h2 className="text-2xl font-bold mb-6" id="section-films">Films et Recettes à l'affiche</h2>
-          <div className="flex flex-col lg:flex-row gap-8">
-            {/* Affiche de film aléatoire à gauche du carrousel (desktop uniquement) */}
-            <div className="hidden lg:block w-full lg:w-[30%]">
-              {randomMovie && (
-                <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
-                  <div className="relative h-[320px] w-full flex items-center justify-center">
-                    <MoviePoster
-                      movie={randomMovie}
-                      className="w-full h-full object-cover"
-                      alt={`Affiche du film : ${randomMovie.title}`}
-                    />
-                  </div>
-                  <div className="p-4 text-center">
-                    <h3 className="font-bold text-lg mb-2">{randomMovie.title}</h3>
-                    <p className="text-gray-500 text-sm">
-                      {new Date(randomMovie.releaseDate).getFullYear()}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
-            {/* Carrousel desktop uniquement (70%) */}
-            <div className="hidden lg:block w-full lg:w-[70%]">
-              {Array.isArray(latestRecipes) && latestRecipes.length > 0 ? (
-                <RecipeCarouselNew recipes={latestRecipes} />
-              ) : (
-                <p className="text-gray-500 text-center">
-                  Aucune recette à afficher pour le moment.
-                </p>
-              )}
-            </div>
-          </div>
-        </section>
+<section className="mb-16" role="region" aria-labelledby="section-films">
+  <h2 className="text-2xl font-bold mb-6" id="section-films">
+    Films et Recettes à l'affiche
+  </h2>
 
-        {/* --- Résultats de recherche (desktop uniquement, affichés seulement après une recherche) --- */}
+  <div className="flex flex-col md:flex-row gap-8 w-full">
+    {/* Film aléatoire : visible uniquement sur md+ */}
+    {randomMovie && (
+      <div className="hidden md:block md:w-full lg:w-[30%]">
+        <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
+          <div className="relative h-[320px] w-full flex items-center justify-center">
+            <MoviePoster
+              movie={randomMovie}
+              className="w-full h-full object-cover"
+              alt={`Affiche du film : ${randomMovie.title}`}
+            />
+          </div>
+          <div className="p-4 text-center">
+            <h3 className="font-bold text-lg mb-2">{randomMovie.title}</h3>
+            <p className="text-gray-500 text-sm">
+              {new Date(randomMovie.releaseDate).getFullYear()}
+            </p>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {/* Carrousel : visible sur toutes tailles */}
+    <div className="w-full md:w-full lg:w-[70%]">
+      {Array.isArray(latestRecipes) && latestRecipes.length > 0 ? (
+        <RecipeCarouselNew recipes={latestRecipes} />
+      ) : (
+        <p className="text-gray-500 text-center">
+          Aucune recette à afficher pour le moment.
+        </p>
+      )}
+    </div>
+  </div>
+</section>
+
+
+        {/* --- Résultats de recherche (affichés seulement après une recherche) --- */}
         {hasSearched && (
-          <section ref={resultsRef} className="mb-16 hidden md:block" role="region" aria-labelledby='section-results'>
+          <section ref={resultsRef} className="mb-16 block" role="region" aria-labelledby='section-results'>
             <h2 className="text-2xl font-bold mb-6 text-red-600" id="section-resultats">
               Résultats de la recherche
             </h2>
@@ -250,68 +261,78 @@ const HomePage = () => {
           </section>
         )}
 
+
         {/* Dernières recettes - Mobile uniquement */}
-        <section className="block lg:hidden mb-16" role="region" aria-labelledby="section-dernieres-recettes">
-          <h2 className="text-2xl font-bold mb-6" id="section-dernieres-recettes">Les dernières recettes</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {latestRecipes.slice(0, 6).map((recipe) => (
-              <Link
-                key={recipe.id}
-                to={`/recettes/${recipe.id}`}
-                className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-yellow-400"
-                 // ✅ Pas besoin de aria-label ici : le contenu textuel (titre) est visible et informatif
-              >
-                <div className="relative h-48">
-                  <RecipeImage
-                    recipe={recipe}
-                    alt={recipe.title} // ✅ Très important : alt descriptif visible pour les lecteurs d'écran
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{recipe.title}</h3>
-                   {/* ✅ Titre visible, donc pas besoin d'aria-label sur le Link */}
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {recipe.description}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
-                    {recipe.category?.name && (
-                      <span className="bg-gray-100 px-2 py-1 rounded">
-                        {recipe.category.name}
-                      </span>
-                    )}
-                    <span className="flex items-center gap-2">
-                      <span className="text-customYellow">
-                        <FaClock aria-hidden="true"/>
-                        {/* ✅ aria-hidden car décoratif : le texte "X min" suffit */}
-                      </span>
-                      {recipe.duration} min
-                    </span>
-                    <span className="flex items-center gap-2">
-                      <span className="text-customYellow">
-                        <FaTools aria-hidden="true"/>
-                         {/* ✅ idem : icône décorative */}
-                      </span>
-                      {getDifficultyText(recipe.difficulty)}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+{!hasSearched && (
+  <section
+    className="block lg:hidden mb-16"
+    role="region"
+    aria-labelledby="section-dernieres-recettes"
+  >
+    <h2 className="text-2xl font-bold mb-6" id="section-dernieres-recettes">
+      Les dernières recettes
+    </h2>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      {latestRecipes.slice(0, 6).map((recipe) => (
+        <Link
+          key={recipe.id}
+          to={`/recettes/${recipe.id}`}
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-yellow-400"
+          // ✅ Pas besoin de aria-label ici : le contenu textuel (titre) est visible et informatif
+        >
+          <div className="relative h-48">
+            <RecipeImage
+              recipe={recipe}
+              alt={recipe.title} // ✅ Très important : alt descriptif visible pour les lecteurs d'écran
+              className="w-full h-full object-cover"
+            />
           </div>
-          <div className="text-center mt-8">
-            <Link
-              to="/recettes"
-              className="inline-flex items-center gap-2 text-red-500 hover:text-red-600 font-medium group"
-              aria-label="Explorer toutes les recettes disponibles"
-            >
-              Explorer toutes les recettes{' '}
-              <span className="transform transition-transform group-hover:translate-x-1">
-                →
+          <div className="p-4">
+            <h3 className="font-semibold text-lg mb-2">{recipe.title}</h3>
+            {/* ✅ Titre visible, donc pas besoin d'aria-label sur le Link */}
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+              {recipe.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+              {recipe.category?.name && (
+                <span className="bg-gray-100 px-2 py-1 rounded">
+                  {recipe.category.name}
+                </span>
+              )}
+              <span className="flex items-center gap-2">
+                <span className="text-customYellow">
+                  <FaClock aria-hidden="true" />
+                  {/* ✅ aria-hidden car décoratif : le texte "X min" suffit */}
+                </span>
+                {recipe.duration} min
               </span>
-            </Link>
+              <span className="flex items-center gap-2">
+                <span className="text-customYellow">
+                  <FaTools aria-hidden="true" />
+                  {/* ✅ idem : icône décorative */}
+                </span>
+                {getDifficultyText(recipe.difficulty)}
+              </span>
+            </div>
           </div>
-        </section>
+        </Link>
+      ))}
+    </div>
+    <div className="text-center mt-8">
+      <Link
+        to="/recettes"
+        className="inline-flex items-center gap-2 text-red-500 hover:text-red-600 font-medium group"
+        aria-label="Explorer toutes les recettes disponibles"
+      >
+        Explorer toutes les recettes{' '}
+        <span className="transform transition-transform group-hover:translate-x-1">
+          →
+        </span>
+      </Link>
+    </div>
+  </section>
+)}
+
 
         {/* Liens sociaux */}
         {/* Footer sans liens sociaux */}

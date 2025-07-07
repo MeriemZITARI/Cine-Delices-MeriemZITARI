@@ -56,12 +56,23 @@ const NavDesktop: React.FC<NavMobileProps> = ({ className }) => {
           </NavLink>
 
           {authUser && (
-            <NavLink to="/ajouter-recette" title="Ajouter une recette" className={({ isActive }) =>
-              `text-black font-medium ${isActive ? "underline" : ""}`
-            }>
-              Créer recette
-            </NavLink>
-          )}
+  <>
+    <NavLink to="/ajouter-recette" title="Ajouter une recette" className={({ isActive }) =>
+      `text-black font-medium ${isActive ? "underline" : ""}`
+    }>
+      Créer recette
+    </NavLink>
+
+    {authUser.isAdmin && (
+      <NavLink to="/admin" className={({ isActive }) =>
+        `text-black font-medium ${isActive ? "underline" : ""}`
+      }>
+        Administration
+      </NavLink>
+    )}
+  </>
+)}
+
         </nav>
 
         <div className="flex items-center">

@@ -3,7 +3,8 @@ export interface IUser {
     email: string;
     firstName: string;
     lastName: string;
-    role: 'USER' | 'ADMIN';
+    //role: 'USER' | 'ADMIN';
+    isAdmin: boolean;
   }
   
   export interface ILoginCredentials {

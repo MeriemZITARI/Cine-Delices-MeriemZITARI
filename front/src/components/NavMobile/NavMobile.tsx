@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { FaBars, FaSearch, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaClock, FaSearch, FaTools, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import SearchForm from "../SearchForm/SearchForm";
 import { searchRecipes } from '../../utils/handleSearch';
 import { IRecipe } from "../../types/Recipe";
 
 import { useAuthUser } from "../../hooks/query/auth"; // ✅ Hook React Query
+import RecipeImage from "../RecipeImage";
+import getDifficultyText from "../../utils/getDifficulty";
 
 interface NavMobileProps {
   className?: string;
@@ -40,7 +42,7 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
       console.error('Erreur lors de la recherche:', error);
     } finally {
       setLoading(false);
-      toggleSearchModal();
+      
     }
   };
 
@@ -147,7 +149,69 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
               selectedType={selectedType}
               onTypeSelect={setSelectedType}
             />
+           {!loading && searchResults.length > 0 && (
+  <section
+    className="mb-16 block max-h-[60vh] overflow-auto"
+    role="region"
+    aria-labelledby="section-results-mobile"
+  >
+    <h2
+      className="text-2xl font-bold mb-6 text-red-600"
+      id="section-results-mobile"
+    >
+      Résultats de la recherche
+    </h2>
+    <div aria-live="polite" className="sr-only">
+      {searchResults.length === 0
+        ? "Aucun résultat trouvé."
+        : `${searchResults.length} recette${searchResults.length > 1 ? 's' : ''} trouvée${searchResults.length > 1 ? 's' : ''}`}
+    </div>
+    <div className="grid grid-cols-1 gap-6">
+      {searchResults.map(recipe => (
+        <Link
+          key={recipe.id}
+          to={`/recettes/${recipe.id}`}
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transform hover:scale-[1.02] transition-all duration-200"
+          onClick={toggleSearchModal}
+          aria-label={`Voir la recette ${recipe.title}`}
+        >
+          <div className="relative h-48">
+            <RecipeImage
+              recipe={recipe}
+              alt={recipe.title}
+              className="w-full h-full object-cover"
+            />
           </div>
+          <div className="p-4">
+            <h3 className="font-semibold text-lg mb-2">{recipe.title}</h3>
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+              {recipe.description}
+            </p>
+            <div className="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+              {recipe.category?.name && (
+                <span className="bg-gray-100 px-2 py-1 rounded">
+                  {recipe.category.name}
+                </span>
+              )}
+              <span className="flex items-center gap-2">
+                <FaClock className="text-customYellow" />
+                {recipe.duration} min
+              </span>
+              <span className="flex items-center gap-2">
+                <FaTools className="text-customYellow" />
+                {getDifficultyText(recipe.difficulty)}
+              </span>
+            </div>
+          </div>
+        </Link>
+      ))}
+    </div>
+  </section>
+)}
+  
+
+          </div>
+         
         </div>
       )}
     </>
