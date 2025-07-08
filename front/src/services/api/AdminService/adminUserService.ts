@@ -31,7 +31,9 @@ const adminService = {
   async updateUser(id: string, data: Partial<IUser>): Promise<IUser> {
     try {
       const res = await axiosInstance.patch(`/api/admin/users/${id}`, data);
-      return res.data;
+      console.log('Utilisateur mis à jour avec succès:', res.data.data);
+      return res.data.data;
+      
     } catch (error) {
       if (error instanceof AxiosError) {
         throw new Error(error.response?.data?.message || 'Erreur lors de la mise à jour de l\'utilisateur');
@@ -46,7 +48,7 @@ const adminService = {
   async deleteUser(id: string): Promise<{ success: boolean }> {
     try {
       const res = await axiosInstance.delete(`/api/admin/users/${id}`);
-      return res.data;
+      return res.data.data;
     } catch (error) {
       if (error instanceof AxiosError) {
         throw new Error(error.response?.data?.message || 'Erreur lors de la suppression de l\'utilisateur');
