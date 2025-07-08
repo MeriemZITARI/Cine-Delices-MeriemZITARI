@@ -5498,6 +5498,7 @@ export namespace Prisma {
   export type IngredientMinAggregateOutputType = {
     id: string | null
     name: string | null
+    isValidated: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5505,6 +5506,7 @@ export namespace Prisma {
   export type IngredientMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    isValidated: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5512,6 +5514,7 @@ export namespace Prisma {
   export type IngredientCountAggregateOutputType = {
     id: number
     name: number
+    isValidated: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5521,6 +5524,7 @@ export namespace Prisma {
   export type IngredientMinAggregateInputType = {
     id?: true
     name?: true
+    isValidated?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5528,6 +5532,7 @@ export namespace Prisma {
   export type IngredientMaxAggregateInputType = {
     id?: true
     name?: true
+    isValidated?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5535,6 +5540,7 @@ export namespace Prisma {
   export type IngredientCountAggregateInputType = {
     id?: true
     name?: true
+    isValidated?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5615,6 +5621,7 @@ export namespace Prisma {
   export type IngredientGroupByOutputType = {
     id: string
     name: string
+    isValidated: boolean
     createdAt: Date
     updatedAt: Date
     _count: IngredientCountAggregateOutputType | null
@@ -5639,6 +5646,7 @@ export namespace Prisma {
   export type IngredientSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isValidated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     recipes?: boolean | Ingredient$recipesArgs<ExtArgs>
@@ -5648,6 +5656,7 @@ export namespace Prisma {
   export type IngredientSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    isValidated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["ingredient"]>
@@ -5655,6 +5664,7 @@ export namespace Prisma {
   export type IngredientSelectScalar = {
     id?: boolean
     name?: boolean
+    isValidated?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
@@ -5673,6 +5683,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      isValidated: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["ingredient"]>
@@ -6071,6 +6082,7 @@ export namespace Prisma {
   interface IngredientFieldRefs {
     readonly id: FieldRef<"Ingredient", 'String'>
     readonly name: FieldRef<"Ingredient", 'String'>
+    readonly isValidated: FieldRef<"Ingredient", 'Boolean'>
     readonly createdAt: FieldRef<"Ingredient", 'DateTime'>
     readonly updatedAt: FieldRef<"Ingredient", 'DateTime'>
   }
@@ -7492,6 +7504,7 @@ export namespace Prisma {
   export const IngredientScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    isValidated: 'isValidated',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -7911,6 +7924,7 @@ export namespace Prisma {
     NOT?: IngredientWhereInput | IngredientWhereInput[]
     id?: StringFilter<"Ingredient"> | string
     name?: StringFilter<"Ingredient"> | string
+    isValidated?: BoolFilter<"Ingredient"> | boolean
     createdAt?: DateTimeFilter<"Ingredient"> | Date | string
     updatedAt?: DateTimeFilter<"Ingredient"> | Date | string
     recipes?: RecipeHasIngredientListRelationFilter
@@ -7919,6 +7933,7 @@ export namespace Prisma {
   export type IngredientOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    isValidated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     recipes?: RecipeHasIngredientOrderByRelationAggregateInput
@@ -7930,6 +7945,7 @@ export namespace Prisma {
     AND?: IngredientWhereInput | IngredientWhereInput[]
     OR?: IngredientWhereInput[]
     NOT?: IngredientWhereInput | IngredientWhereInput[]
+    isValidated?: BoolFilter<"Ingredient"> | boolean
     createdAt?: DateTimeFilter<"Ingredient"> | Date | string
     updatedAt?: DateTimeFilter<"Ingredient"> | Date | string
     recipes?: RecipeHasIngredientListRelationFilter
@@ -7938,6 +7954,7 @@ export namespace Prisma {
   export type IngredientOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    isValidated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: IngredientCountOrderByAggregateInput
@@ -7951,6 +7968,7 @@ export namespace Prisma {
     NOT?: IngredientScalarWhereWithAggregatesInput | IngredientScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Ingredient"> | string
     name?: StringWithAggregatesFilter<"Ingredient"> | string
+    isValidated?: BoolWithAggregatesFilter<"Ingredient"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Ingredient"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Ingredient"> | Date | string
   }
@@ -8357,6 +8375,7 @@ export namespace Prisma {
   export type IngredientCreateInput = {
     id?: string
     name: string
+    isValidated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     recipes?: RecipeHasIngredientCreateNestedManyWithoutIngredientInput
@@ -8365,6 +8384,7 @@ export namespace Prisma {
   export type IngredientUncheckedCreateInput = {
     id?: string
     name: string
+    isValidated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
     recipes?: RecipeHasIngredientUncheckedCreateNestedManyWithoutIngredientInput
@@ -8373,6 +8393,7 @@ export namespace Prisma {
   export type IngredientUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipes?: RecipeHasIngredientUpdateManyWithoutIngredientNestedInput
@@ -8381,6 +8402,7 @@ export namespace Prisma {
   export type IngredientUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     recipes?: RecipeHasIngredientUncheckedUpdateManyWithoutIngredientNestedInput
@@ -8389,6 +8411,7 @@ export namespace Prisma {
   export type IngredientCreateManyInput = {
     id?: string
     name: string
+    isValidated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -8396,6 +8419,7 @@ export namespace Prisma {
   export type IngredientUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8403,6 +8427,7 @@ export namespace Prisma {
   export type IngredientUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -8854,6 +8879,7 @@ export namespace Prisma {
   export type IngredientCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isValidated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -8861,6 +8887,7 @@ export namespace Prisma {
   export type IngredientMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isValidated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -8868,6 +8895,7 @@ export namespace Prisma {
   export type IngredientMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
+    isValidated?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -9942,6 +9970,7 @@ export namespace Prisma {
   export type IngredientCreateWithoutRecipesInput = {
     id?: string
     name: string
+    isValidated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9949,6 +9978,7 @@ export namespace Prisma {
   export type IngredientUncheckedCreateWithoutRecipesInput = {
     id?: string
     name: string
+    isValidated?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -10015,6 +10045,7 @@ export namespace Prisma {
   export type IngredientUpdateWithoutRecipesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10022,6 +10053,7 @@ export namespace Prisma {
   export type IngredientUncheckedUpdateWithoutRecipesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

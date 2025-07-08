@@ -85,6 +85,7 @@ model Recipe {
 model Ingredient {
   id        String   @id @default(cuid())
   name      String   @unique
+  isValidated Boolean @default(false) 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
