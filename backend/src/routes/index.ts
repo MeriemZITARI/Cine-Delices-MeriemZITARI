@@ -9,6 +9,7 @@ import adminRoutes from './adminRoutes/admin.user.routes';
 import ingredientRoutes from './adminRoutes/ingredient.routes';
 import movieRoutes from './movieRoutes/movie.routes'; 
 import adminMovieRoutes from './adminRoutes/admin.movies.routes'; // Import des routes d'admin pour les films
+import adminRouter from './adminRoutes/admin.user.routes';
 
 const router = Router();
 
@@ -29,8 +30,9 @@ router.use('/categories', categoryRoutes);
 // routes de l'utilisateur
 router.use('/users', userRoutes);
 
-// routes de l'admin pour gérer les utilisateurs
+// routes de l'admin pour gérer les film
  router.use('/admin/movies', adminMovieRoutes); 
+router.use('/admin/users', adminRouter); // routes d'admin pour les utilisateurs
 
 //routes d'ingrédients
 router.use('/ingredients', ingredientRoutes); 

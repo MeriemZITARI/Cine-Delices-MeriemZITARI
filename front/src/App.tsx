@@ -19,6 +19,8 @@ import MovieDetailPage from "./pages/MoviePage/MovieDetailsPage";
 
 // 👇 Appelle simplement useAuthUser au chargement
 import { useAuthUser } from "./hooks/query/auth";
+import AdminRoute from "./components/AdminRoute";
+import AdminDashboardPage from "./pages/AdminPage/AdminDashboardPage";
 
 function App() {
   // Vérifie si l'utilisateur est authentifié
@@ -54,6 +56,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+  path="/admin"
+  element={
+    <AdminRoute>
+      <AdminDashboardPage />
+    </AdminRoute>
+  }
+/>
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>

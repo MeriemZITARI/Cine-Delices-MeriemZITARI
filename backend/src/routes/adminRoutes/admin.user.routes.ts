@@ -44,7 +44,7 @@ const adminRouter = Router();
  *         description: Erreur interne du serveur.
  */
 
-adminRouter.get('/users',isAuthenticated, isAdmin, handleGetAllUsers);
+adminRouter.get('/',isAuthenticated, isAdmin, handleGetAllUsers);
 
 /**
 * @swagger
@@ -91,7 +91,7 @@ adminRouter.get('/users',isAuthenticated, isAdmin, handleGetAllUsers);
  *       500:
  *         description: Erreur interne du serveur.
  */
-adminRouter.patch('/users/:id', isAuthenticated, isAdmin, handleUpdateUser);
+adminRouter.patch('/:id', isAuthenticated, isAdmin, handleUpdateUser);
 
 /**
  * @swagger
@@ -116,7 +116,7 @@ adminRouter.patch('/users/:id', isAuthenticated, isAdmin, handleUpdateUser);
  *       500:
  *         description: Erreur interne du serveur.
  */
-adminRouter.delete('/users/:id', isAuthenticated, isAdmin, handleDeleteUser);
+adminRouter.delete('/:id', isAuthenticated, isAdmin, handleDeleteUser);
 
 
 export default adminRouter;
