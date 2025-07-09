@@ -11,6 +11,7 @@ const AdminUsersSection: React.FC = () => {
   const [searchFilters, setSearchFilters] = useState<UserFilters | null>(null);
   const [editUserId, setEditUserId] = useState<string | null>(null);
   const [localEditedUsers, setLocalEditedUsers] = useState<Record<string, Partial<IUser>>>({});
+  const [deleteErrorMessage, setDeleteErrorMessage] = useState<string | null>(null);
 
   const updateUserMutation = useAdminUpdateUser();
   const deleteUserMutation = useAdminDeleteUser();
@@ -103,6 +104,12 @@ const AdminUsersSection: React.FC = () => {
         {users && users.length === 0 && (
           <p className="text-center text-gray-500">Aucun utilisateur trouvé.</p>
         )}
+
+{deleteErrorMessage && (
+  <div className="mt-4 text-red-600 text-center">
+    {deleteErrorMessage}
+  </div>
+)}
         {users && users.length > 0 && (
           <table className="min-w-full border border-gray-300 rounded-md overflow-hidden mt-6">
             <thead className="bg-gray-100">
@@ -249,13 +256,17 @@ const AdminUsersSection: React.FC = () => {
                     onClick={() => {
                       if (window.confirm(`Supprimer ${user.firstName} ${user.lastName} ?`)) {
                         deleteUserMutation.mutate(user.id, {
-                          onSuccess: () => {
-                            alert(`✅ ${user.firstName} ${user.lastName} a bien été supprimé.`);
-                          },
+                         
                           onError: (err) => {
-                            alert("Erreur lors de la suppression.");
+                            setDeleteErrorMessage((err as Error).message);
+                            alert(`❌ Erreur lors de la suppression : ${(error as Error).message}`);
                             console.error(err);
                           },
+                          onSuccess: () => {
+                            setDeleteErrorMessage(null); 
+                            alert(`✅ ${user.firstName} ${user.lastName} a bien été supprimé.`);
+                          },
+                          
                         });
                       }
                     }}

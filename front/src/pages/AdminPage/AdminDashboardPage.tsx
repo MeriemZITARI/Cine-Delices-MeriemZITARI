@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import AdminUsersSection from '../../components/AdminDashboard/AdminUserSection';
+import AdminIngredientsSection from '../../components/AdminDashboard/AdminIngredientSection';
 
 
 const AdminDashboardPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'users' | 'recipes'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'recipes' | 'ingredients'>('users');
 
   return (
     <div className="bg-gray-50">
@@ -30,11 +31,18 @@ const AdminDashboardPage: React.FC = () => {
           >
             Recettes
           </button>
+          <button
+    className={`px-4 py-2 rounded ${activeTab === 'ingredients' ? 'bg-white text-black font-bold' : 'bg-gray-200 text-gray-600'}`}
+    onClick={() => setActiveTab('ingredients')}
+  >
+    Ingrédients
+  </button>
         </div>
 
         <div className="bg-white shadow-lg rounded-md p-6 w-[85%] md:max-w-[80%] mx-auto relative -mt-8 mb-6">
           {activeTab === 'users' && <AdminUsersSection />}
           {/* Plus tard : {activeTab === 'recipes' && <AdminRecipesSection />} */}
+          {activeTab === 'ingredients' && <AdminIngredientsSection />}
         </div>
       </div>
     </div>

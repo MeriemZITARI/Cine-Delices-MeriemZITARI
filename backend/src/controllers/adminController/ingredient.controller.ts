@@ -1,18 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
-import { searchIngredientByName, createIngredient, updateIngredient, deleteIngredient, getAllIngredients } from '../../services/adminService/ingredient.service';
+import { searchIngredientByName, createIngredient, updateIngredient, deleteIngredient, getAllIngredients, getPaginatedIngredients } from '../../services/adminService/ingredient.service';
 import { createIngredientSchema, updateIngredientSchema, searchIngredientSchema } from '../../validations/admin/ingredient';
 
 export async function handleGetAllIngredients(req: Request, res: Response, next: NextFunction) {
-    try {
-      // Appeler le service pour récupérer tous les ingrédients
-      const ingredients = await getAllIngredients();
-  
-      // Retourner les ingrédients récupérés
-      res.status(200).json(ingredients);
-    } catch (error) {
-      // Passer l'erreur au middleware de gestion des erreurs
-      next(error);
-    }
+  try {
+    // Récupérer les paramètres de pagination depuis la requête
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    // Valider les paramètres de pagination
+
+    const { data, total } = await getPaginatedIngredients(page, limit);
+    // Récupérer tous les ingrédients avec pagination
+
+    res.status(200).json({ data, total });
+  } catch (error) {
+    next(error);
+  }
   }
 
 
@@ -35,12 +38,22 @@ export async function handleSearchIngredient(req: Request, res: Response, next: 
 export async function handleCreateIngredient(req: Request, res: Response, next: NextFunction) {
   try {
     const data = createIngredientSchema.parse(req.body); // Valider les données avec Zod
+    
     const ingredient = await createIngredient(data);
     res.status(201).json({
       message: "Ingrédient créé avec succès.",
       ingredient,
     });
   } catch (error) {
+      // Vérifie le message d'erreur personnalisé
+      if (
+        error instanceof Error &&
+        error.message === "Un ingrédient avec ce nom existe déjà."
+      ) {
+        return res.status(409).json({ message: error.message });
+      }
+  
+      // Sinon, passer à l'erreur suivante (ex: erreur serveur, validation Zod, etc.)
     next(error);
   }
 }
@@ -69,6 +82,11 @@ export async function handleDeleteIngredient(req: Request, res: Response, next: 
       message: "Ingrédient supprimé avec succès.",
     });
   } catch (error) {
+    res.status(409).json({
+      message: "Cet ingrédient est utilisé dans au moins une recette et ne peut pas être supprimé.",
+    });
     next(error);
   }
 }
+
+

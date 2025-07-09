@@ -68,7 +68,44 @@ export async function deleteIngredient(id: string) {
     throw new Error("Ingrédient non trouvé.");
   }
 
+  const isUsed = await isIngredientInUse(id);
+  if (isUsed) {
+    const error = new Error("Cet ingrédient est utilisé dans au moins une recette et ne peut pas être supprimé.");
+    // Ajoute un code pour le traitement dans le middleware (ex: client)
+    (error as any).status = 409;
+    throw error;
+  }
+
   return prisma.ingredient.delete({
     where: { id },
   });
+}
+// Vérifier si un ingrédient est utilisé dans une recette
+export async function isIngredientInUse(id: string): Promise<boolean> {
+  const recipesUsingIngredient = await prisma.recipeHasIngredient.findFirst({
+    where: {
+      ingredientId: id,
+    },
+  });
+
+  return !!recipesUsingIngredient; // Renvoie true si au moins une recette utilise l’ingrédient
+}
+
+// Nouvelle fonction avec pagination
+export async function getPaginatedIngredients(page: number = 1, limit: number = 10) {
+  const skip = (page - 1) * limit;
+
+  const [ingredients, total] = await Promise.all([
+    prisma.ingredient.findMany({
+      skip,
+      take: limit,
+      orderBy: { name: 'asc' },
+    }),
+    prisma.ingredient.count(),
+  ]);
+
+  return {
+    data: ingredients,
+    total,
+  };
 }

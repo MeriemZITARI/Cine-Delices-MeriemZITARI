@@ -52,6 +52,9 @@ export async function handleDeleteUser(req: Request, res: Response, next: NextFu
         message: 'Utilisateur supprimé avec succès.',
       });
     } catch (error) {
+      res.status(409).json({
+        message: "cette utilisateur ne peut pas être supprimé car il possède des recettes associées.",
+      });
       // Passer l'erreur au middleware de gestion des erreurs
       next(error);
     }

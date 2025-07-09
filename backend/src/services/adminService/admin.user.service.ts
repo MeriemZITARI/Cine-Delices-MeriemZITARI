@@ -70,9 +70,26 @@ export async function deleteUser(userId: string) {
     if (!user) {
       throw new Error('Utilisateur non trouvé.');
     }
+
+  // Vérifier si l'utilisateur a des recettes associées
+  const hasRecipes = await userHasRecipes(userId);
+  if (hasRecipes) {
+    // Si l'utilisateur a des recettes associées, on ne le supprime pas
+    
+    throw new Error('Impossible de supprimer l\'utilisateur car il possède des recettes associées.');
+
+  }
+
   
     // Supprimer l'utilisateur
     await prisma.user.delete({
       where: { id: userId },
     });
   }
+// Vérifier si l'utilisateur a des recettes associées
+export async function userHasRecipes(userId: string) {
+  const recipes = await prisma.recipe.findMany({
+    where: { userId },
+  });
+  return recipes.length > 0; // Retourne true si l'utilisateur a au moins une recette
+};
