@@ -163,6 +163,11 @@ export async function updateRecipeService(recipeId: string, requestingUserId: st
       // Si ce n'est ni l'auteur, ni un admin, on refuse l'accès.
       throw new Error('Accès refusé : Seul l\'auteur ou un administrateur peut modifier cette recette.');
     }
+
+     // Bloquer l'accès à isValidated si non admin
+  if ('isValidated' in updateData && !isAdmin) {
+    throw new Error("Seuls les administrateurs peuvent modifier l'état de validation.");
+  }
   
     // 2. Préparer les données pour la mise à jour de la meme maniere que l'on  afait à la création.
     const {
@@ -188,6 +193,11 @@ export async function updateRecipeService(recipeId: string, requestingUserId: st
         disconnect: true } : { 
             connect: { id: movieId } }) : undefined,
     };
+
+     // ✅ Appliquer isValidated si admin
+  if (isAdmin && 'isValidated' in updateData) {
+    prismaUpdateData.isValidated = updateData.isValidated;
+  }
   
     // 3. Gérer la mise à jour des ingrédients .
     // Si le tableau 'ingredients' est fourni dans la requête de mise à jour,
@@ -316,6 +326,7 @@ export async function deleteRecipeService(recipeId: string, requestingUserId: st
   // Vérifier si l'utilisateur est l'auteur de la recette OU s'il est administrateur.
   const isAuthor = existingRecipe.userId === requestingUserId;
   const requestingUser = await prisma.user.findUnique({ where: { id: requestingUserId } });
+  // On inclut l'utilisateur qui fait la requête pour vérifier s'il est administrateur.
   const isAdmin = requestingUser ? requestingUser.isAdmin : false; // S'assure que isAdmin est false si l'utilisateur n'est pas trouvé
 
   if (!isAuthor && !isAdmin) {

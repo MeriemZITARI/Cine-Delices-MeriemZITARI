@@ -47,7 +47,7 @@ const adminRecipeRouter = Router();
  *       401:
  *         description: Non autorisé
  */
-adminRecipeRouter.post('/recipes',isAuthenticated, isAdmin, handleCreateRecipe);
+adminRecipeRouter.post('/',isAuthenticated, isAdmin, handleCreateRecipe);
 
 /**
  * @swagger
@@ -93,7 +93,7 @@ adminRecipeRouter.post('/recipes',isAuthenticated, isAdmin, handleCreateRecipe);
  *       404:
  *         description: Recette non trouvée
  */
-adminRecipeRouter.patch('/recipes/:id', isAuthenticated, isAdmin, handleUpdateRecipe);
+adminRecipeRouter.patch('/:id', isAuthenticated, isAdmin, handleUpdateRecipe);
 
 /**
  * @swagger
