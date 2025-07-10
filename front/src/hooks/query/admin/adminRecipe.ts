@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import adminRecipeService from '../../../services/api/AdminService/adminRecipeService';
 import type { IRecipe } from '../../../types/Recipe';
 
@@ -18,3 +19,17 @@ export function useAdminRecipes(filters: RecipeFilters, enabled = true) {
     enabled,
   });
 }
+
+export function useAdminDeleteRecipe() {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: (id: string) => adminRecipeService.deleteRecipe(id),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['admin-recipes'] });
+      },
+      onError: (error) => {
+        console.error("Erreur lors de la suppression de la recette :", error);
+      },
+    });
+  }

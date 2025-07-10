@@ -26,6 +26,20 @@ const adminRecipeService = {
       throw new Error('Erreur inconnue lors de la récupération des recettes');
     }
   },
+
+    /**
+     * 📝 supprimer une recette
+     */
+    async deleteRecipe(recipeId: string): Promise<void> {
+      try {
+        await axiosInstance.delete(`/api/admin/recipes/${recipeId}`);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          throw new Error(error.response?.data?.message || 'Erreur lors de la suppression de la recette');
+        }
+        throw new Error('Erreur inconnue lors de la suppression de la recette');
+      }
+    }
 };
 
 export default adminRecipeService;

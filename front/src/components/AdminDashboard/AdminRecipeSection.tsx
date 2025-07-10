@@ -1,8 +1,9 @@
 // src/components/AdminDashboard/AdminRecipesSection.tsx
 import { useState, useEffect } from "react";
-import { useAdminRecipes } from "../../hooks/query/admin/adminRecipe";
+import { useAdminRecipes, useAdminDeleteRecipe } from "../../hooks/query/admin/adminRecipe";
 import { IRecipe } from "../../types/Recipe";
 import { useCategories } from "../../hooks/query/category";
+import { useRef } from "react";
 
 const AdminRecipesSection: React.FC = () => {
   // Nouveaux filtres
@@ -11,11 +12,14 @@ const AdminRecipesSection: React.FC = () => {
   const [isValidated, setIsValidated] = useState<boolean | undefined>(undefined);
 
   const [filters, setFilters] = useState<any>({});
-  const [deleteMessage, setDeleteMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+const [statusType, setStatusType] = useState<'success' | 'error' | null>(null);
+const statusRef = useRef<HTMLParagraphElement>(null);
+
 
   const { data: recipes, isLoading, error, refetch } = useAdminRecipes(filters);
   const { data: categories = [], isLoading: loadingCategories } = useCategories();
-  // const deleteRecipeMutation = useAdminDeleteRecipe();
+  const deleteRecipeMutation = useAdminDeleteRecipe();
 
   const handleSearch = () => {
     setFilters({
@@ -28,6 +32,23 @@ const AdminRecipesSection: React.FC = () => {
   useEffect(() => {
     if (filters) refetch();
   }, [filters]);
+
+  useEffect(() => {
+    if (statusMessage) {
+      const timer = setTimeout(() => {
+        setStatusMessage(null);
+        setStatusType(null);
+      }, 4000); // 4 secondes
+  
+      return () => clearTimeout(timer);
+    }
+  }, [statusMessage]);
+  useEffect(() => {
+    if (statusMessage && statusRef.current) {
+      statusRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, [statusMessage]);
+  
 
   return (
     <div className="max-w-5xl mx-auto mt-8">
@@ -87,7 +108,17 @@ const AdminRecipesSection: React.FC = () => {
         {recipes && recipes.length === 0 && (
           <p className="text-center text-gray-600">Aucune recette trouvée.</p>
         )}
-        {deleteMessage && <p className="text-red-600 text-center mt-4">{deleteMessage}</p>}
+   
+{statusMessage && (
+  <p
+    ref={statusRef}
+    className={`text-center mt-4 font-semibold ${
+      statusType === 'success' ? 'text-green-600' : 'text-red-600'
+    }`}
+  >
+    {statusMessage}
+  </p>
+)}
 
         {recipes && recipes.length > 0 && (
           <table className="w-full mt-4 border border-gray-300 rounded overflow-hidden">
@@ -121,19 +152,20 @@ const AdminRecipesSection: React.FC = () => {
                       Éditer
                     </button>
                     <button
-                      /* onClick={() => {
+                       onClick={() => {
                         if (window.confirm(`Supprimer "${recipe.title}" ?`)) {
                           deleteRecipeMutation.mutate(recipe.id, {
-                            onSuccess: () => {
-                              setDeleteMessage(null);
-                              alert("Recette supprimée avec succès.");
-                            },
-                            onError: (err) => {
-                              setDeleteMessage((err as Error).message);
-                            },
+                          onSuccess: () => {
+  setStatusMessage("Recette supprimée avec succès.");
+  setStatusType('success');
+},
+onError: (err) => {
+  setStatusMessage((err as Error).message);
+  setStatusType('error');
+},
                           });
                         }
-                      }} */
+                      }} 
                       className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
                     >
                       Supprimer

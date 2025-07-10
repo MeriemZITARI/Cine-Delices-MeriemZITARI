@@ -93,7 +93,7 @@ adminRecipeRouter.post('/recipes',isAuthenticated, isAdmin, handleCreateRecipe);
  *       404:
  *         description: Recette non trouvée
  */
-adminRecipeRouter.put('/recipes/:id', isAuthenticated, isAdmin, handleUpdateRecipe);
+adminRecipeRouter.patch('/recipes/:id', isAuthenticated, isAdmin, handleUpdateRecipe);
 
 /**
  * @swagger
@@ -118,6 +118,6 @@ adminRecipeRouter.put('/recipes/:id', isAuthenticated, isAdmin, handleUpdateReci
  *       404:
  *         description: Recette non trouvée
  */
-adminRecipeRouter.delete('/recipes/:id',isAuthenticated, isAdmin, handleDeleteRecipe);
+adminRecipeRouter.delete('/:id',isAuthenticated, isAdmin, handleDeleteRecipe);
 
 export default adminRecipeRouter;

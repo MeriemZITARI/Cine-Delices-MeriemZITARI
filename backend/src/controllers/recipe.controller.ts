@@ -170,7 +170,7 @@ export async function handleDeleteRecipe(
       // le service lèvera une erreur qui sera capturée par le 'catch' et passée à 'errorHandler'.
   
       // Réponse de succès : statut 204 (No Content) car la ressource n'existe plus.
-      res.status(204).send(); // Utilise .send() car il n'y a pas de corps de réponse.
+      return res.status(200).json({ message: 'Recette supprimée avec succés' }); // Utilise .send() car il n'y a pas de corps de réponse.
     } catch (error) {
       // En cas d'erreur, on la passe au gestionnaire d'erreurs.
       next(error);
