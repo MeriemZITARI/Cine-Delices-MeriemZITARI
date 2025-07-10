@@ -4,6 +4,7 @@ export interface IRecipe {
     id: string;
     title: string;
     description: string;
+    isValidated: boolean;
     ingredients: {
       ingredientId: string;
       quantity: number;

@@ -53,10 +53,14 @@ export const updateRecipeSchema = _baseRecipeSchema.partial();
 export type CreateRecipeInput = z.infer<typeof createRecipeSchema>;
 export type UpdateRecipeInput = z.infer<typeof updateRecipeSchema>;
 
-// Filtrage
+// Filtrage étendu avec movieTitle, categoryName, authorName
 export const filterRecipesSchema = z.object({
-    search: z.string().optional(),
-    categoryId: z.string().cuid("L'ID de la catégorie doit être un CUID valide").optional(),
-    movieId: z.string().cuid("L'ID du film doit être un CUID valide").optional(),
-});
+    title: z.string().optional(),
+    categoryId: z.string().optional(),
+    isValidated: z.preprocess(
+        val => val === 'true' ? true : val === 'false' ? false : val,
+        z.boolean().optional()
+      )
+    .optional(),      
+  });
 export type FilterRecipesInput = z.infer<typeof filterRecipesSchema>;

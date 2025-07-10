@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AdminUsersSection from '../../components/AdminDashboard/AdminUserSection';
 import AdminIngredientsSection from '../../components/AdminDashboard/AdminIngredientSection';
+import AdminRecipeSection from '../../components/AdminDashboard/AdminRecipeSection';
 
 
 const AdminDashboardPage: React.FC = () => {
@@ -41,7 +42,8 @@ const AdminDashboardPage: React.FC = () => {
 
         <div className="bg-white shadow-lg rounded-md p-6 w-[85%] md:max-w-[80%] mx-auto relative -mt-8 mb-6">
           {activeTab === 'users' && <AdminUsersSection />}
-          {/* Plus tard : {activeTab === 'recipes' && <AdminRecipesSection />} */}
+          {activeTab === 'recipes' && <AdminRecipeSection />}
+          
           {activeTab === 'ingredients' && <AdminIngredientsSection />}
         </div>
       </div>

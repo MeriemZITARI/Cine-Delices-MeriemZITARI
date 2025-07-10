@@ -5,7 +5,7 @@ import {
   useAdminCreateIngredient,
   useAdminUpdateIngredient,
   useAdminDeleteIngredient,
-} from '../../hooks/query/admin/ingredientUser';
+} from '../../hooks/query/admin/adminIngredient';
 import type { IIngredient } from "../../services/api/AdminService/adminIngredientService";
 
 

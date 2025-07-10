@@ -253,37 +253,36 @@ export async function getRecipeByIdService(recipeId: string) {
  /**
  * Service pour RÉCUPÉRER TOUTES les recettes en appliquant des filtres.
  */
-export async function getAllRecipesService(filters: FilterRecipesInput = {}) {
-  // On extrait les filtres pour les utiliser
-  const { categoryId, movieId, search } = filters;
-
-  // On construit la clause de filtre pour Prisma.
-  // C'est un objet qui va contenir les conditions de recherche.
+ export async function getAllRecipesService (filters: FilterRecipesInput = {})  {
+  // Ici, on va construire dynamiquement la clause 'where' pour Prisma
+  const { title, categoryId, isValidated } = filters;
+//   'title' est le titre de la recette à filtrer (optionnel)
   const whereClause: any = {};
 
+  // On ajoute des conditions dynamiques selon les filtres fournis
+
+  if (title) {
+    whereClause.title = {
+      contains: title,
+      mode: "insensitive",
+    };
+  }
+  
   if (categoryId) {
     whereClause.categoryId = categoryId;
   }
-
-  if (movieId) {
-    whereClause.movieId = movieId;
+// 'isValidated' est un booléen pour filtrer les recettes validées (optionnel)
+  if (typeof isValidated === "boolean") {
+    whereClause.isValidated = isValidated;
   }
-
-  if (search) {
-    whereClause.OR = [
-      // OR permet de chercher dans plusieurs champs.Par exemple, si l'utilisateur cherche "pasta","poulet"etc
-      { title: { contains: search, mode: 'insensitive' } },
-      { description: { contains: search, mode: 'insensitive' } },
-    ];
-  }
-
-  console.log("Clause 'where' finale envoyée à Prisma:", whereClause);
+  // On utilise Prisma pour trouver toutes les recettes qui correspondent à ces filtres
+  // On inclut les relations pour avoir tous les détails des recettes
 
   const recipes = await prisma.recipe.findMany({
-    where: whereClause, // On utilise la clause de filtre ici
+    where: whereClause,
     include: {
-      author: { select: { id: true, firstName: true, lastName: true } },
       category: true,
+      author: true,
       movie: true,
       ingredients: { include: { ingredient: true } },
     },
@@ -291,6 +290,8 @@ export async function getAllRecipesService(filters: FilterRecipesInput = {}) {
 
   return recipes;
 }
+
+
 
 /**
  * Service pour SUPPRIMER une recette par son ID.
