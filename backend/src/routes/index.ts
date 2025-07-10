@@ -5,11 +5,12 @@ import authRoutes from './authRoutes/auth.routes';
 import loginRoutes from './authRoutes/auth.routes'; 
 import userRoutes from './authRoutes/user.routes';
 import categoryRoutes from './adminRoutes/category.routes';
-import adminRoutes from './adminRoutes/admin.user.routes';
+
 import ingredientRoutes from './adminRoutes/ingredient.routes';
 import movieRoutes from './movieRoutes/movie.routes'; 
 import adminMovieRoutes from './adminRoutes/admin.movies.routes'; // Import des routes d'admin pour les films
 import adminRouter from './adminRoutes/admin.user.routes';
+import adminRecipeRouter from './adminRoutes/admin..recipes.routes';
 
 const router = Router();
 
@@ -33,6 +34,8 @@ router.use('/users', userRoutes);
 // routes de l'admin pour gérer les film
  router.use('/admin/movies', adminMovieRoutes); 
 router.use('/admin/users', adminRouter); // routes d'admin pour les utilisateurs
+// routes d'admin pour les recettes
+router.use('/admin/recipes', adminRecipeRouter);
 
 //routes d'ingrédients
 router.use('/ingredients', ingredientRoutes); 
