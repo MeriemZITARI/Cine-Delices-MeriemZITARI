@@ -39,8 +39,37 @@ const adminRecipeService = {
         }
         throw new Error('Erreur inconnue lors de la suppression de la recette');
       }
-    }
+    },
+
+     /**
+   * ✅ Modifier une recette en tant qu'admin (validation ou autre champ autorisé)
+   */
+     async updateRecipe(recipeId: string, updateData: FormData): Promise<IRecipe> {
+        console.log("🔎 Données envoyées à updateRecipe :",updateData);
+
+        try {
+          const res = await axiosInstance.patch(
+            `/api/admin/recipes/${recipeId}`,
+            updateData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            }
+          );
+          console.log('Recette mise à jour avec succès:', res.data);
+          return res.data;
+        } catch (error) {
+          if (error instanceof AxiosError) {
+            throw new Error(error.response?.data?.message || 'Erreur lors de la mise à jour de la recette');
+          }
+          throw new Error('Erreur inconnue lors de la mise à jour de la recette');
+        }
+      }
+      
 };
+    
+
 
 export default adminRecipeService;
 

@@ -30,7 +30,7 @@ export const useRecipeById = (id: string) => {
       onSuccess: (data) => {
         // Optionnel : Invalider la liste des recettes pour forcer un rechargement
         queryClient.invalidateQueries({ queryKey: ['recipes'] });
-        // Ou mettre à jour manuellement le cache si tu préfères
+        
       },
       onError: (error) => {
         // Tu peux gérer l'erreur ici ou dans la page

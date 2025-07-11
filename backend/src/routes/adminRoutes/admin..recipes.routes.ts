@@ -2,6 +2,10 @@ import { Router } from 'express';
 import { handleCreateRecipe, handleUpdateRecipe, handleDeleteRecipe } from '../../controllers/recipe.controller';
 import {isAdmin} from '../../middlewares/isAdmin';
 import { isAuthenticated } from '../../middlewares/isAuthenticated';
+import upload from '../../utils/multerConfig';
+
+import { parseJsonFields } from '../../middlewares/parseJsonFields';
+
 
 const adminRecipeRouter = Router();
 
@@ -93,7 +97,7 @@ adminRecipeRouter.post('/',isAuthenticated, isAdmin, handleCreateRecipe);
  *       404:
  *         description: Recette non trouvée
  */
-adminRecipeRouter.patch('/:id', isAuthenticated, isAdmin, handleUpdateRecipe);
+adminRecipeRouter.patch('/:id', isAuthenticated, isAdmin, upload.single('image'),parseJsonFields(['ingredients', 'isValidated']), handleUpdateRecipe);
 
 /**
  * @swagger

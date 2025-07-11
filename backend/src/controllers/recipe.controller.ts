@@ -61,7 +61,8 @@ export async function handleUpdateRecipe(
   
       const recipeId = req.params.id;         // L'ID de la recette à modifier.
       const requestingUserId = req.user.userId; // L'ID de l'utilisateur connecté (pour les vérifications d'autorisation dans le service).
-      const updateData = req.body;            // Les données à mettre à jour (déjà validées par Zod et partielles).
+      const updateData = req.body;  
+      console.log('Body reçu (brut):', req.body);          // Les données à mettre à jour (déjà validées par Zod et partielles).
   
       // Appel au service pour mettre à jour la recette. Le service gérera l'autorisation.
       const updatedRecipe = await updateRecipeService(recipeId, requestingUserId, updateData);
@@ -73,6 +74,7 @@ export async function handleUpdateRecipe(
   
       // Réponse de succès : statut 200 (OK) et la recette mise à jour.
       res.status(200).json(updatedRecipe);
+      
     } catch (error) {
       // En cas d'erreur (ex: Recette non trouvée, Accès refusé), on la passe au gestionnaire d'erreurs.
       next(error);

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getIngredients } from '../../services/api/IngredientService';
-type Ingredient = {
+export type Ingredient = {
     id: string;
     name: string;
     createdAt: string;

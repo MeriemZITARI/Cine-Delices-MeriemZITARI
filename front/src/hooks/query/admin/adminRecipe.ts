@@ -11,6 +11,11 @@ export interface RecipeFilters {
   ingredientName?: string;
 }
 
+type UpdateRecipeAsAdminParams = {
+    recipeId: string;
+    updateData: FormData;
+  };
+
 export function useAdminRecipes(filters: RecipeFilters, enabled = true) {
   return useQuery<IRecipe[]>({
     queryKey: ['admin-recipes', filters],
@@ -20,7 +25,33 @@ export function useAdminRecipes(filters: RecipeFilters, enabled = true) {
   });
 }
 
-export function useAdminDeleteRecipe() {
+export function useUpdateRecipeAsAdmin() {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: async ({ recipeId, updateData }: UpdateRecipeAsAdminParams) => {
+        /*console.log('Envoi des données :', {
+            recipeId: recipeId,
+            updateData: FormData,
+          });*/
+        return await adminRecipeService.updateRecipe(recipeId, updateData);
+      },
+      onSuccess: (updatedRecipe: IRecipe) => {
+        queryClient.setQueryData<IRecipe[]>(
+          ['admin', 'recipes'],
+          (oldData) =>
+            oldData?.map((recipe) =>
+              recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+            ) ?? []
+        );
+      },
+      onError: (error) => {
+        console.error('Erreur lors de la mise à jour de la recette (admin) :', error);
+      },
+    });
+  }
+
+  export function useAdminDeleteRecipe() {
     const queryClient = useQueryClient();
   
     return useMutation({

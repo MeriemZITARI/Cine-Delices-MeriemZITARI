@@ -19,7 +19,6 @@ export async function handleGetAllIngredients(req: Request, res: Response, next:
   }
 
 
-
 // Chercher un ingrédient par son nom
 export async function handleSearchIngredient(req: Request, res: Response, next: NextFunction) {
   try {

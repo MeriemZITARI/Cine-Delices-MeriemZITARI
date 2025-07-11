@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MovieSearchModal from '../../components/MovieSearchModal';
-import { useIngredients } from '../../hooks/query/ingrédient';
+import { useIngredients } from '../../hooks/query/ingredient';
 import { useCategories } from '../../hooks/query/category';
 import { useCreateRecipe } from '../../hooks/query/recipe';
 import { Button } from '../../components/ui/button';
@@ -45,6 +45,9 @@ const AddRecipePage: React.FC = () => {
         i.name.toLowerCase().includes(ingredientInput.toLowerCase())
       )
     : [];
+    console.log("ingredients:", ingredients);
+    console.log("typeof ingredients:", typeof ingredients);
+    console.log("Array.isArray(ingredients):", Array.isArray(ingredients));
 
   // Ajouter un ingrédient à la liste sélectionnée
   const handleAddIngredient = (name: string) => {

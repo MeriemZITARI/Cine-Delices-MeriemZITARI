@@ -42,6 +42,7 @@ const ingredientRouter = Router();
  */
 ingredientRouter.get('/all', handleGetAllIngredients);
 
+
 /**
  * @swagger
  * /ingredients:

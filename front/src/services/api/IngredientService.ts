@@ -17,8 +17,9 @@ const API_URL = 'http://localhost:3000/api';
  */
 export const getIngredients = async (): Promise<Ingredient[]> => {
   try {
-    const response = await axios.get(`${API_URL}/ingredients/all`);
-    return response.data;
+    const response = await axios.get(`${API_URL}/ingredients/all?limit=9999999999`);
+    console.log('Ingrédients récupérés avec succès:', response.data.data);
+    return response.data.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des ingrédients:', error);
     throw error;
