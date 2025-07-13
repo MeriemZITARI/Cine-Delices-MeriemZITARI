@@ -5,6 +5,7 @@ import { useCategories } from '../../hooks/query/category';
 import { useCreateRecipe } from '../../hooks/query/recipe';
 import { Button } from '../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
 
 interface RecipeIngredient {
   id?: string;
@@ -126,6 +127,14 @@ if (ing.id ) {
       console.log('FormData avant envoi :', Array.from(formData.entries()));
     createRecipeMutation.mutate(formData, {
       onSuccess: () => {
+        toast.success("Recette créée avec succès ! Elle est en attente de validation.", {
+          duration: 7000,
+          position: "top-center",
+          style: {
+            background: "#4caf50",
+            color: "#fff",
+          },
+        });
         navigate('/recettes');
       },
       onError: () => {

@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import userService from '../../services/api/UserServices';
 import { IRecipe } from '../../types/Recipe';
 import { data } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 // ✅ Hook pour récupérer les infos utilisateur
 export const useMyAccount = () => {
@@ -59,10 +60,19 @@ export const useUpdateRecipe = () => {
         userService.updateRecipe(id, data),
   
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ['recipes', 'me'] }); // Invalide la liste des recettes pour recharger
+        queryClient.invalidateQueries({ queryKey: ['recipes', 'me'] });
+        toast.success("Recette modifiée avec succès, en attente de validation.", {
+          duration: 7000, // 7 secondes
+          position: "top-center",
+          style: {
+            background: "#4caf50",
+            color: "#fff",
+          },
+        }); // Invalide la liste des recettes pour recharger
       },
       onError: (error) => {
         console.error("Erreur lors de la mise à jour de la recette :", error);
+        toast.error("Erreur lors de la modification de la recette.");
       }
     });
   };

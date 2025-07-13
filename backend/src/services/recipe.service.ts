@@ -245,7 +245,12 @@ export async function updateRecipeService(recipeId: string, requestingUserId: st
     // 4. Exécuter la mise à jour dans la base de données.
     const updatedRecipe = await prisma.recipe.update({
       where: { id: recipeId }, // On trouve la recette par son ID
-      data: prismaUpdateData, // On lui donne les données à mettre à jour
+      // On utilise les données préparées pour la mise à jour.
+      // On force isValidated à false si l'utilisateur n'est pas admin.
+      data: {
+        ...prismaUpdateData,
+        ...(isAdmin ? {} : { isValidated: false }),
+      },
       // On inclut les relations dans la réponse pour avoir tous les détails de la recette mise à jour.
       include: {
         author: { select: {

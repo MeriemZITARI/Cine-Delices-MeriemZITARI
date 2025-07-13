@@ -10,7 +10,7 @@ interface ApiResponse<T> {
 export const recipeService = {
   async getRecipes(): Promise<ApiResponse<IRecipe[]>> {
     try {
-      const response = await axiosInstance.get('/api/recipes');
+      const response = await axiosInstance.get('/api/recipes?isValidated=true');
       return {
         success: true,
         data: response.data,

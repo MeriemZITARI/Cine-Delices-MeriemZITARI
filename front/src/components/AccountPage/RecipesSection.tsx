@@ -192,13 +192,14 @@ const handleRemoveIngredient = (index: number) => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-wrap justify-center gap-4">
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
             onClick={() => openModal(recipe)}
-            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg flex-1 cursor-pointer text-white hover:text-customYellow"
+            className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg cursor-pointer text-white hover:text-customYellow w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-[19%]"
           >
+             
             <div className="relative h-48">
               <RecipeImage
                 recipe={recipe}
@@ -218,6 +219,25 @@ const handleRemoveIngredient = (index: number) => {
                   {getDifficultyText(recipe.difficulty)}
                 </span>
               </div>
+
+              {/* Badge validation */}
+      {!recipe.isValidated ? (
+        <div
+          className="absolute bottom-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10"
+          title="Recette en cours de validation"
+        >
+          ❌
+        </div>
+      ) : (
+        <div
+          className="absolute bottom-2 right-2 text-green-500 text-sm z-10"
+          title="Recette validée"
+        >
+          ✔️
+        </div>
+      )}
+
+              
             </div>
           </div>
         ))}

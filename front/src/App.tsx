@@ -21,6 +21,7 @@ import MovieDetailPage from "./pages/MoviePage/MovieDetailsPage";
 import { useAuthUser } from "./hooks/query/auth";
 import AdminRoute from "./components/AdminRoute";
 import AdminDashboardPage from "./pages/AdminPage/AdminDashboardPage";
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   // Vérifie si l'utilisateur est authentifié
@@ -30,6 +31,7 @@ function App() {
     <SearchModalProvider>
       <div className="min-h-screen flex flex-col">
         <div id="modal-root"></div>
+        <Toaster position="top-right" reverseOrder={false} />
         <Header />
         <main className="flex-grow">
           <Routes>
