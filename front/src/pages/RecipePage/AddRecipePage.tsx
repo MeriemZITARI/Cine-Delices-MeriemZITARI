@@ -52,7 +52,9 @@ const AddRecipePage: React.FC = () => {
     if (!name.trim()) return;
     const quantityNumber = Number(quantityInput);
     if (isNaN(quantityNumber) || quantityNumber <= 0) return;
-
+    if (!unitInput.trim()) return;
+    
+    // Vérifier si l'ingrédient existe déjà dans la BDD
     const existingIngredient = ingredients.find(i => i.name.toLowerCase() === name.toLowerCase());
 
     setSelectedIngredients([
@@ -64,6 +66,12 @@ const AddRecipePage: React.FC = () => {
         unit: unitInput
       }
     ]);
+    console.log("Ingrédient ajouté :", {
+      id: existingIngredient?.id,
+      ingredientName: name,
+      quantity: quantityNumber,
+      unit: unitInput
+    });
 
     setIngredientInput("");
     setQuantityInput("");
@@ -275,7 +283,8 @@ if (ing.id ) {
                   key={i.id}
                   className="px-3 py-1 cursor-pointer hover:bg-gray-200"
                   onMouseDown={() => {
-                    handleAddIngredient(i.name);
+                    //handleAddIngredient(i.name);
+                    setIngredientInput(i.name);
                     setShowSuggestions(false);
                   }}
                 >
