@@ -91,9 +91,16 @@ const userService = {
   /**
  * ✏️ Met à jour une recette utilisateur par ID
  */
-async updateRecipe(id: string, data: Partial<IRecipe>): Promise<{ success: boolean; recipe: IRecipe }> {
+async updateRecipe(id: string, data: FormData): Promise<{ success: boolean; recipe: IRecipe }> {
   try {
-    const res = await axiosInstance.patch(`/api/recipes/${id}`, data);
+    console.log("🔎 Données envoyées à updateRecipe :", data.get('image'));
+    const res = await axiosInstance.patch(`/api/recipes/${id}`, data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      
+    });
+
     return res.data; // { success: true, recipe: {...} }
   } catch (error) {
     if (error instanceof AxiosError) {

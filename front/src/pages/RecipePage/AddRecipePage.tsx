@@ -45,9 +45,7 @@ const AddRecipePage: React.FC = () => {
         i.name.toLowerCase().includes(ingredientInput.toLowerCase())
       )
     : [];
-    console.log("ingredients:", ingredients);
-    console.log("typeof ingredients:", typeof ingredients);
-    console.log("Array.isArray(ingredients):", Array.isArray(ingredients));
+   
 
   // Ajouter un ingrédient à la liste sélectionnée
   const handleAddIngredient = (name: string) => {
@@ -116,7 +114,8 @@ if (ing.id ) {
     });
 
     formData.append("image", image);
-
+      // Log des données avant l'envoi pour débogage
+      console.log('FormData avant envoi :', Array.from(formData.entries()));
     createRecipeMutation.mutate(formData, {
       onSuccess: () => {
         navigate('/recettes');

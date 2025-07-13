@@ -75,6 +75,7 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
     formData.append('isValidated', String(isValidated));
     if (imageFile) formData.append('image', imageFile);
     formData.append('ingredients', JSON.stringify(ingredients));
+    console.log('FormData:', formData.get('ingredients'));
 
     try {
       await updateRecipeMutation.mutateAsync({

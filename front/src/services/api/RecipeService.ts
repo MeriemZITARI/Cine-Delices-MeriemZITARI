@@ -45,7 +45,7 @@ export const recipeService = {
     }
   },
 
-  async updateRecipe(id: string, recipe: Partial<IRecipe>): Promise<ApiResponse<IRecipe>> {
+  /*async updateRecipe(id: string, recipe: Partial<IRecipe>): Promise<ApiResponse<IRecipe>> {
     try {
       const response = await axiosInstance.patch(`/api/recipes/${id}`, recipe);
       
@@ -58,7 +58,29 @@ export const recipeService = {
       console.error('Erreur dans updateRecipe :', error);
       throw error;
     }
+  },*/
+
+  async updateRecipe(id: string, data: FormData): Promise<ApiResponse<IRecipe>> {
+    try {
+      console.log("🔎 Données envoyées à updateRecipe :", data);
+      const response = await axiosInstance.patch(`/api/recipes/${id}`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        
+      });
+  
+      return {
+        success: true,
+        data: response.data,
+        message: 'Recette mise à jour avec succès',
+      };
+    } catch (error) {
+      console.error('Erreur dans updateRecipe :', error);
+      throw error;
+    }
   },
+  
 
   async deleteRecipe(id: string): Promise<ApiResponse<void>> {
     const response = await axiosInstance.delete(`/api/recipes/${id}`);

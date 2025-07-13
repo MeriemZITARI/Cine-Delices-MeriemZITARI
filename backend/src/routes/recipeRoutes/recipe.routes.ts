@@ -6,6 +6,7 @@ import { validateRequest } from "../../middlewares/validateRequest";
 import { createRecipeSchema, updateRecipeSchema } from "../../validations/recipe";
 import swaggerJSDoc from "swagger-jsdoc";
 import upload from '../../utils/multerConfig';
+import { parseJsonFields } from '../../middlewares/parseJsonFields';
 
 const recipeRouter = Router();
 
@@ -102,7 +103,7 @@ recipeRouter.post('/', isAuthenticated, upload.single('image'), validateRequest(
  *       '200':
  *         description: Recette mise à jour avec succès.
  */
-recipeRouter.patch('/:id', isAuthenticated, validateRequest(updateRecipeSchema), handleUpdateRecipe);
+recipeRouter.patch('/:id', isAuthenticated,upload.single('image'),parseJsonFields(['duration', 'difficulty', 'ingredients']),  handleUpdateRecipe);
 
 /**
  * @swagger

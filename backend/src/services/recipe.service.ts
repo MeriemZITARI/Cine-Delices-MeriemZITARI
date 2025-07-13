@@ -218,6 +218,28 @@ export async function updateRecipeService(recipeId: string, requestingUserId: st
                 id: ingredientInfo.ingredientId } },
         })),
       };
+
+      //3.2 : Ensuite, on crée de nouvelles liaisons avec les ingrédients fournis dans la requête via la table de liaison RecipeHasIngredient
+      prismaUpdateData.ingredients = {
+        create: ingredients.map(ing => ({
+          quantity: ing.quantity,
+          unit: ing.unit,
+          // On utilise une condition pour choisir la bonne méthode Prisma
+          ingredient: ing.ingredientId
+            // CAS 1 : Si un ingredientId est fourni, on utilise "connect"
+            ? { connect: { id: ing.ingredientId } }
+            // CAS 2 : Sinon (un ingredientName est fourni), on utilise "connectOrCreate"
+            : { 
+                connectOrCreate: {
+                  // Prisma cherche un ingrédient avec ce nom...
+                  where: { name: ing.ingredientName! },
+                  // ...et s'il ne le trouve pas, il le crée avec ce même nom. 
+                  create: { name: ing.ingredientName! },
+                // On utilise l'opérateur "!" pour indiquer que ingredientName est défini ici.
+                }
+              }
+        }))};
+        
     }
   
     // 4. Exécuter la mise à jour dans la base de données.
@@ -235,6 +257,8 @@ export async function updateRecipeService(recipeId: string, requestingUserId: st
                 ingredient: true } }
       }
     });
+
+    
   
     return updatedRecipe; // La recette mise à jour.
   }

@@ -61,8 +61,35 @@ export async function handleUpdateRecipe(
   
       const recipeId = req.params.id;         // L'ID de la recette à modifier.
       const requestingUserId = req.user.userId; // L'ID de l'utilisateur connecté (pour les vérifications d'autorisation dans le service).
-      const updateData = req.body;  
-      console.log('Body reçu (brut):', req.body);          // Les données à mettre à jour (déjà validées par Zod et partielles).
+      console.log('ID de lutilisateur connecté :', requestingUserId);
+      /*const updateData = req.body;  
+      console.log('Body reçu (brut):', req.body);  
+       // Ajout de l'image si un fichier est uploadé
+    if (req.file) {
+      updateData.image = `http://localhost:3001/images-recettes/${req.file.filename}`;
+    }  */      // Les données à mettre à jour (déjà validées par Zod et partielles).
+
+    let updateData: any = { ...req.body };
+    // Si image est un objet vide (provenant du frontend), on l'enlève
+if (updateData.image && typeof updateData.image === 'object' && Object.keys(updateData.image).length === 0) {
+  delete updateData.image;
+}
+    console.log('Body reçu (après nettoyage):', updateData);
+    console.log('🧪 req.file:', req.file); // ← tu dois voir un objet (filename, mimetype, etc)
+    console.log('🧪 req.body:', req.body); // ← tu 
+console.log('Fichier uploadé update:', req.file);
+    // 🟡 Si une image a été envoyée, construis son URL
+    if (req.file) {
+      const imageUrl = `http://localhost:3001/images-recettes/${req.file.filename}`;
+      updateData.image = imageUrl;
+    }
+
+    // 🟡 `ingredients` arrive comme des chaînes si c’est un FormData (parser JSON à la main si besoin)
+    if (typeof updateData.ingredients === 'string') {
+      updateData.ingredients = JSON.parse(updateData.ingredients);
+    }
+
+    console.log('Données finales envoyées au service :', updateData);
   
       // Appel au service pour mettre à jour la recette. Le service gérera l'autorisation.
       const updatedRecipe = await updateRecipeService(recipeId, requestingUserId, updateData);
