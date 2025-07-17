@@ -94,7 +94,7 @@ ingredientRouter.post('/', isAuthenticated, isAdmin, handleCreateIngredient);
 /**
  * @swagger
  * /ingredients/{id}:
- *   put:
+ *   patch:
  *     summary: Mettre à jour un ingrédient
  *     description: Permet à un administrateur de modifier un ingrédient.
  *     tags:

@@ -33,8 +33,8 @@ export function useSignout() {
   return useMutation({
     mutationFn: authService.logout,
     onSuccess() {
-      queryClient.setQueryData(['authUser'], null);
-      navigate('/');
+       queryClient.clear(); // Réinitialise toutes les queries (authUser, recettes, etc.)
+      navigate('/', { replace: true }); //
     },
   });
 }

@@ -170,7 +170,7 @@ if (ing.id ) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto mt-6 p-6 bg-white rounded shadow">
+    <div className="max-w-4xl mx-auto mt-4 px-4 sm:px-6 py-6 bg-white rounded shadow">
       <h2 className="text-2xl font-bold mb-6 text-center">Ajouter une nouvelle recette</h2>
 
       <form onSubmit={handleSubmit}>
@@ -234,7 +234,7 @@ if (ing.id ) {
         <div className="mb-4">
           <label className="block mb-1 font-semibold">Image (.webp uniquement)</label>
           <input type="file" accept="image/webp" onChange={handleImageChange} />
-          {imagePreview && <img src={imagePreview} alt="Aperçu" className="mt-2 max-h-40 rounded" />}
+          {imagePreview && <img src={imagePreview} alt="Aperçu" className="mt-2 max-h-40 max-w-full rounded" />}
         </div>
 
         {/* Citation */}
@@ -249,9 +249,9 @@ if (ing.id ) {
         {/* Ingrédients */}
         <div className="mb-4">
           <label className="font-semibold block mb-1">Ingrédients</label>
-          <div className="flex gap-2 mb-2">
+          <div className="grid grid-cols-1 sm:grid-cols-[1fr_100px_100px_auto] gap-2 mb-2 items-center">
             <input
-              className="flex-1 border rounded px-3 py-2"
+              className="border rounded px-3 py-2 w-full"
               placeholder="Ajouter un ingrédient"
               value={ingredientInput}
               onChange={e => {
@@ -264,19 +264,20 @@ if (ing.id ) {
             <input
               type="number"
               min={0}
-              className="w-20 border rounded px-3 py-2"
+              className="w-1/3 min-w-[70px] border rounded px-3 py-2"
               placeholder="Quantité"
               value={quantityInput}
               onChange={e => setQuantityInput(e.target.value)}
             />
             <input
-              className="w-20 border rounded px-3 py-2"
+              className="border rounded px-3 py-2 w-full"
               placeholder="Unité"
               value={unitInput}
               onChange={e => setUnitInput(e.target.value)}
             />
             <Button
               type="button"
+              className="w-full sm:w-auto"
               disabled={!ingredientInput || !quantityInput || !unitInput}
               onClick={() => handleAddIngredient(ingredientInput)}
             >
@@ -343,7 +344,7 @@ if (ing.id ) {
           <label className="font-semibold block mb-1">Film lié (optionnel)</label>
           <Button type="button" onClick={() => setShowMovieSearch(true)}> Rechercher un film</Button>
           {selectedMovie && (
-            <div className="mt-2 p-2 border rounded flex items-center gap-3">
+            <div className="mt-2 p-2 border rounded flex flex-col sm:flex-row items-start sm:items-center gap-3">
               {selectedMovie.poster_path && (
                 <img
                   src={`https://image.tmdb.org/t/p/w92${selectedMovie.poster_path}`}
@@ -366,7 +367,7 @@ if (ing.id ) {
         </div>
 
         {/* Boutons */}
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4">
           <Button type="submit" disabled={createRecipeMutation.isPending}>
            {createRecipeMutation.isPending ? "Enregistrement..." : "Ajouter la recette"}
           </Button>
