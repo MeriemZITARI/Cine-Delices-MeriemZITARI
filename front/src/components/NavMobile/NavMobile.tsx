@@ -8,6 +8,10 @@ import { IRecipe } from "../../types/Recipe";
 import { useAuthUser } from "../../hooks/query/auth"; // ✅ Hook React Query
 import RecipeImage from "../RecipeImage";
 import getDifficultyText from "../../utils/getDifficulty";
+import { useNavigate } from "react-router-dom";
+import { useSignout } from "../../hooks/query/auth";
+import { FaSignOutAlt } from "react-icons/fa";
+
 
 interface NavMobileProps {
   className?: string;
@@ -15,6 +19,19 @@ interface NavMobileProps {
 
 const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
   const { data: authUser, isLoading } = useAuthUser(); // ✅ Auth state
+  const navigate = useNavigate();
+  const logoutMutation = useSignout();
+
+const handleLogout = async () => {
+  try {
+    await logoutMutation.mutateAsync();
+    setIsMenuOpen(false);
+    navigate('/');
+  } catch (error) {
+    console.error('Erreur lors de la déconnexion:', error);
+  }
+};
+
 
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
@@ -110,18 +127,49 @@ const NavMobile: React.FC<NavMobileProps> = ({ className }) => {
           </div>
 
           {isMenuOpen && (
-            <div className="absolute top-full left-0 w-full bg-white shadow-md z-50">
-              <ul className="flex justify-center py-2 text-xl" style={{ fontFamily: 'Broadway, sans-serif' }}>
+            <div className="absolute top-full left-0 w-full bg-customYellow shadow-md z-50">
+              <ul className="flex flex-col items-center py-4 space-y-3 text-xl" style={{ fontFamily: 'Broadway, sans-serif' }}>
                 <li className="mx-4">
-                  <Link to="/recettes" className="text-black font-medium">
+                  <Link to="/recettes" className="text-black hover:text-white hover:bg-black px-4 py-2 rounded-md transition-colors duration-200 ">
                     Recettes
                   </Link>
                 </li>
                 <li className="mx-4">
-                  <Link to="/films" className="text-black font-medium">
+                  <Link to="/films" className="text-black hover:text-white hover:bg-black px-4 py-2 rounded-md transition-colors duration-200">
                     Films
                   </Link>
                 </li>
+                {authUser && (
+        <li>
+          <Link
+            to="/ajouter-recette"
+            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded-md transition-colors duration-200"
+          >
+            Créer une recette
+          </Link>
+        </li>
+      )}
+       {authUser?.isAdmin && (
+        <li>
+          <Link
+            to="/admin"
+            className="text-black hover:text-white hover:bg-black px-4 py-2 rounded-md transition-colors duration-200"
+          >
+            Administration
+          </Link>
+        </li>
+      )}
+      {authUser && (
+  <li>
+    <button
+      onClick={handleLogout}
+      className="text-red-600 hover:text-white hover:bg-red-600 px-4 py-2 rounded-md transition-colors duration-200"
+    >
+      Se déconnecter
+    </button>
+  </li>
+)}
+
               </ul>
             </div>
           )}
