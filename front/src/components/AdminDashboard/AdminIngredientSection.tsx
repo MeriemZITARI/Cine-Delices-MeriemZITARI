@@ -172,6 +172,7 @@ const AdminIngredientsSection: React.FC = () => {
                       )}
                     </td>
                     <td className="px-4 py-2 border-b text-center space-x-2">
+                    <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                       {isEditing ? (
                         <button
                           className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
@@ -236,6 +237,7 @@ const AdminIngredientsSection: React.FC = () => {
 >
   Supprimer
 </button>
+</div>
 {successMessage && (
   <p className="mt-2 text-green-600 font-medium">{successMessage}</p>
 )}

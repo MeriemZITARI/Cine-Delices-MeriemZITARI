@@ -111,6 +111,7 @@ const AdminUsersSection: React.FC = () => {
   </div>
 )}
         {users && users.length > 0 && (
+        <div className="mt-6 overflow-x-auto">
           <table className="min-w-full border border-gray-300 rounded-md overflow-hidden mt-6">
             <thead className="bg-gray-100">
               <tr>
@@ -211,7 +212,9 @@ const AdminUsersSection: React.FC = () => {
         
                 {/* Actions */}
                 <td className="px-4 py-2 border-b border-gray-200 text-center space-x-2">
+                <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                   {isEditing ? (
+                   
                     <button
                       onClick={() => {
                         const updatedData = localEditedUsers[user.id];
@@ -275,6 +278,7 @@ const AdminUsersSection: React.FC = () => {
                     Supprimer
                     
                   </button>
+                  </div>
                 </td>
               </tr>
             );
@@ -283,6 +287,7 @@ const AdminUsersSection: React.FC = () => {
         
             )}
           </table>
+        </div>
         )}
       </div>
     </>

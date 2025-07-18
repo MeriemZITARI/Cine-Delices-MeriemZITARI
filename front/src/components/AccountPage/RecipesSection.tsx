@@ -245,8 +245,9 @@ const handleRemoveIngredient = (index: number) => {
 
       {isModalOpen && localRecipe &&
         ReactDOM.createPortal(
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2">
-            <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+          <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
+            <div className="min-h-screen flex items-start justify-center px-4 py-10">
+            <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
               <h2 className="text-xl font-bold mb-4">Modifier la recette</h2>
               <form onSubmit={(e) => { e.preventDefault(); handleUpdateRecipe(); }}>
                 {/* Champs texte standard */}
@@ -432,6 +433,7 @@ const handleRemoveIngredient = (index: number) => {
               {updateRecipeMutation.isError && (
                 <p className="text-red-500 mt-2">{(updateRecipeMutation.error as Error).message}</p>
               )}
+            </div>
             </div>
           </div>,
           document.getElementById('modal-root') as HTMLElement

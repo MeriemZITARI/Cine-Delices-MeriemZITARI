@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
 import { IRecipe } from '../../types/Recipe';
 import Button from '../Button/Button';
 import { useUpdateRecipeAsAdmin } from '../../hooks/query/admin/adminRecipe';
 import { ICategory } from '../../types/category';
-//import { IIngredient } from '../../types/ingredient';
-import {Ingredient} from '../../hooks/query/ingredient';
-
-// 
+import { Ingredient } from '../../hooks/query/ingredient';
 
 interface EditRecipeModalProps {
   isOpen: boolean;
@@ -75,12 +73,11 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
     formData.append('isValidated', String(isValidated));
     if (imageFile) formData.append('image', imageFile);
     formData.append('ingredients', JSON.stringify(ingredients));
-    console.log('FormData:', formData.get('ingredients'));
 
     try {
       await updateRecipeMutation.mutateAsync({
         recipeId: recipe.id,
-        updateData:formData,
+        updateData: formData,
       });
       onClose();
     } catch (err) {
@@ -90,9 +87,10 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2">
-      <div className="bg-white rounded-lg p-6 w-full max-w-lg">
+  // ✅ Portal pour forcer le rendu en dehors du DOM principal
+  return ReactDOM.createPortal(
+    <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto p-4">
+      <div className="bg-white rounded-lg p-6 w-full max-w-lg mx-auto mt-10 mb-10">
         <h2 className="text-xl font-bold mb-4">Modifier la recette (admin)</h2>
         <form onSubmit={handleSubmit}>
           <label className="block mb-2">
@@ -118,11 +116,11 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
           <fieldset className="mb-2">
             <legend className="text-sm font-medium">Ingrédients :</legend>
             {ingredients.map((ing, idx) => (
-              <div key={idx} className="flex gap-2 mb-1">
+              <div key={idx} className="flex flex-col sm:flex-row gap-2 mb-2">
                 <select
                   value={ing.ingredientId}
                   onChange={(e) => handleIngredientChange(idx, 'ingredientId', e.target.value)}
-                  className="flex-1 border px-2 py-1"
+                  className="w-full sm:flex-1 border rounded px-2 py-1"
                 >
                   {allIngredients.map((ingr) => (
                     <option key={ingr.id} value={ingr.id}>{ingr.name}</option>
@@ -133,14 +131,14 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
                   placeholder="Quantité"
                   value={ing.quantity}
                   onChange={(e) => handleIngredientChange(idx, 'quantity', parseFloat(e.target.value))}
-                  className="w-20 border px-2 py-1"
+                  className="w-full sm:w-20 border rounded px-2 py-1"
                 />
                 <input
                   type="text"
                   placeholder="Unité"
                   value={ing.unit}
                   onChange={(e) => handleIngredientChange(idx, 'unit', e.target.value)}
-                  className="w-24 border px-2 py-1"
+                  className="w-full sm:w-24 border rounded px-2 py-1"
                 />
               </div>
             ))}
@@ -162,7 +160,8 @@ const EditRecipeModal: React.FC<EditRecipeModalProps> = ({
           )}
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

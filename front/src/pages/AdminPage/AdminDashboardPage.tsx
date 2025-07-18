@@ -19,21 +19,21 @@ const AdminDashboardPage: React.FC = () => {
       </div>
 
       <div className="relative -mt-20">
-        <div className="flex justify-center gap-4 mt-8 mb-6">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-8 mb-6 px-2">
           <button
-            className={`px-4 py-2 rounded ${activeTab === 'users' ? 'bg-white text-black font-bold' : 'bg-gray-200 text-gray-600'}`}
+            className={`w-full sm:w-auto px-4 py-2 rounded border border-gray-300 transition-colors duration-200 ${activeTab === 'users' ? 'bg-white text-black font-bold shadow' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
             onClick={() => setActiveTab('users')}
           >
             Utilisateurs
           </button>
           <button
-            className={`px-4 py-2 rounded ${activeTab === 'recipes' ? 'bg-white text-black font-bold' : 'bg-gray-200 text-gray-600'}`}
+            className={`w-full sm:w-auto px-4 py-2 rounded border border-gray-300 transition-colors duration-200 ${activeTab === 'recipes' ? 'bg-white text-black font-bold shadow' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
             onClick={() => setActiveTab('recipes')}
           >
             Recettes
           </button>
           <button
-    className={`px-4 py-2 rounded ${activeTab === 'ingredients' ? 'bg-white text-black font-bold' : 'bg-gray-200 text-gray-600'}`}
+    className={`w-full sm:w-auto px-4 py-2 rounded border border-gray-300 transition-colors duration-200 ${activeTab === 'ingredients' ? 'bg-white text-black font-bold shadow' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`}
     onClick={() => setActiveTab('ingredients')}
   >
     Ingrédients

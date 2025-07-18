@@ -73,7 +73,7 @@ const statusRef = useRef<HTMLParagraphElement>(null);
   return (
     <div className="max-w-5xl mx-auto mt-8">
       <form
-  className="flex flex-wrap gap-4 mb-6"
+  className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
   onSubmit={(e) => {
     e.preventDefault();
     handleSearch();
@@ -146,6 +146,7 @@ const statusRef = useRef<HTMLParagraphElement>(null);
           ? `⚠️ ${recipes.filter((r) => r.isValidated === false).length} recette(s) en attente de validation`
           : '✅ Toutes les recettes sont validées'}
       </div>
+      <div className="overflow-x-auto">
           <table className="w-full mt-4 border border-gray-300 rounded overflow-hidden">
             <thead className="bg-gray-100">
               <tr>
@@ -170,7 +171,7 @@ const statusRef = useRef<HTMLParagraphElement>(null);
                     {recipe.isValidated ? '✅' : '❌'}
                   </td>
                   <td className="px-4 py-2 border-b text-center">
-                  <div className="flex justify-center gap-2">
+                  <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                     <button
                       onClick={() => openEditModal(recipe)}
                       className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
@@ -202,6 +203,7 @@ onError: (err) => {
               ))}
             </tbody>
           </table>
+          </div>
           </>
         )}
            {/* Modal d'édition */}
