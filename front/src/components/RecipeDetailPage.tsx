@@ -73,7 +73,7 @@ const RecipeDetailPage: React.FC = () => {
       movie={movie as IMovie}
       ingredients={formattedIngredients}
       instructions={instructions}
-      anecdote={recipe.anecdote || "Pas d'anecdote disponible pour cette recette."}
+      anecdote={recipe.quote || "Pas d'anecdote disponible pour cette recette."}
     />
   );
 };

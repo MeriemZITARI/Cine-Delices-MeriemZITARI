@@ -159,15 +159,14 @@ const HomePage = () => {
 
       <div className="container mx-auto px-4 py-12">
         {/* --- Section films et carrousel (toujours visible, non filtrée) --- */}
-<section className="mb-16" role="region" aria-labelledby="section-films">
-  <h2 className="text-2xl font-bold mb-6" id="section-films">
-    Films et Recettes à l'affiche
-  </h2>
-
+        <section className="mb-16" role="region" aria-labelledby="section-films">
   <div className="flex flex-col md:flex-row gap-8 w-full">
     {/* Film aléatoire : visible uniquement sur md+ */}
     {randomMovie && (
-      <div className="hidden md:block md:w-full lg:w-[30%]">
+      <div className="hidden md:flex flex-col md:w-full lg:w-[30%]">
+        <h2 className="text-2xl font-bold mb-6 text-gray-800" id="section-films">
+          Films inspirants
+        </h2>
         <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
           <div className="relative h-[320px] w-full flex items-center justify-center">
             <MoviePoster
@@ -188,6 +187,13 @@ const HomePage = () => {
 
     {/* Carrousel : visible sur toutes tailles */}
     <div className="w-full md:w-full lg:w-[70%]">
+      <h2
+        className="text-2xl font-bold mb-6 text-gray-800"
+        id="section-recettes-films"
+      >
+        Quand le cinéma rencontre la cuisine
+      </h2>
+
       {Array.isArray(latestRecipes) && latestRecipes.length > 0 ? (
         <RecipeCarouselNew recipes={latestRecipes} />
       ) : (
@@ -198,6 +204,7 @@ const HomePage = () => {
     </div>
   </div>
 </section>
+
 
 
         {/* --- Résultats de recherche (affichés seulement après une recherche) --- */}

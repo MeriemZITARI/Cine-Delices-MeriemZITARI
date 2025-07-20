@@ -33,7 +33,7 @@ const Footer: React.FC = () => {
               </svg>
             </a>
           </div>
-          <div className="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-8">
+          <div className="flex flex-row justify-center space-x-6">
             <Link to="/a-propos" className="hover:text-secondary">À propos</Link>
             <Link to="/contact" className="hover:text-secondary">Contact</Link>
             <Link to="/mentions-legales" className="hover:text-secondary">Mentions légales</Link>

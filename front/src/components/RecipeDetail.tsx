@@ -122,23 +122,7 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
       </div>
       {/* Anecdote */}
       <div className="container mx-auto px-4">
-        <hr
-          className="hidden sm:block border-t-2 border-red-400 border-dotted my-6 sm:my-8"
-          style={{
-            borderTopStyle: 'dotted',
-            borderTopWidth: '4px',
-            borderColor: '#f87171',
-            borderTopLeftRadius: 0,
-            borderTopRightRadius: 0,
-            borderImage: 'none',
-            borderTop: '4px dotted #f87171',
-            height: 0,
-            background: 'none',
-            margin: 0,
-            width: '100%',
-            borderSpacing: '16px',
-          }}
-        />
+       
       </div>
       <div className="my-4 flex justify-center">
         <div className="w-full" style={{maxWidth: 'calc(40rem + 3cm)'}}>
@@ -151,9 +135,9 @@ const RecipeDetail: React.FC<RecipeDetailProps> = ({
         </div>
       </div>
       {/* Trait rouge au-dessus du footer */}
-      <div className="container mx-auto px-4 mt-6 mb-4">
+      {/*<div className="container mx-auto px-4 mt-6 mb-4">
         <hr className="hidden sm:block border-t-2 border-red-400 my-0" />
-      </div>
+      </div>*/}
     </div>
   );
 };
