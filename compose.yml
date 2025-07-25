@@ -20,6 +20,7 @@ services:
     environment:
       - JWT_SECRET= un_super_secret
       - DATABASE_URL=postgresql://cine:cine@database:5432/cine
+      - TMDB_API_KEY=1923f2b998e0a232766db7ede4e6c1b9
     
 
 
@@ -63,6 +64,8 @@ services:
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
       - VITE_USE_POLLING=true
+      - VITE_TMDB_API_KEY=1923f2b998e0a232766db7ede4e6c1b9
+      - VITE_OMDB_API_KEY=24f1bf71
 
 # volumes pour garder les données après le redémarrage du conteneur
 volumes:

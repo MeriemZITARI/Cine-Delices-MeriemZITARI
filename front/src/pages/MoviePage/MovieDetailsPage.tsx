@@ -77,7 +77,7 @@ if (movie?.description && /<\/?[a-z][\s\S]*>/i.test(movie.description)) {
               href={movie.imdbLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:underline"
+              className="text-blue-600 hover:underline"
               aria-label={`Voir le film ${movie.title} sur IMDB (ouvre dans un nouvel onglet)`}
             >
               Voir sur IMDB

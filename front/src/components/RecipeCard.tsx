@@ -22,7 +22,7 @@ const RecipeCard: React.FC<RecipeCardProps> = ({
         <p className="text-gray-700 mb-4">{description}</p>
         <Link
           to={`/recettes/${id}`}
-          className="text-blue-500 hover:underline"
+          className="text-blue-600 hover:underline"
         >
           Voir la recette
         </Link>
