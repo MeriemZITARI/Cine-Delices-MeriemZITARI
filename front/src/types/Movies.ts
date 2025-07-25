@@ -10,7 +10,7 @@ export interface IMovie {
   imdbLink: string;
   moviedbId?: string;
   releaseDate: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
   recipes?: IRecipe[];
 }

@@ -14,7 +14,7 @@ export interface IRecipe {
         name: string;
       };
     }[];
-    instructions: string[];
+    instructions: string;
     image: string;
     duration: number;
     difficulty: number;
@@ -30,6 +30,8 @@ export interface IRecipe {
       username: string;
       firstName?: string;
       lastName?: string;
+      createdAt?: Date;
+      updatedAt?: Date;
     };
     createdAt: Date;
     updatedAt: Date;

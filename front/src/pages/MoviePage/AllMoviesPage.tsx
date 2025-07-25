@@ -68,7 +68,7 @@ const AllMoviesPage: React.FC = () => {
                 <p className="text-gray-600">{movie.description}</p>
                 <Link
                   to={`/films/${movie.id}`}
-                  className="text-blue-500 hover:underline mt-2 inline-block"
+                  className="text-blue-600 hover:underline mt-2 inline-block"
                 >
                   Voir les détails
                 </Link>

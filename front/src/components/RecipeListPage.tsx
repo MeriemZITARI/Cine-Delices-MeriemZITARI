@@ -139,11 +139,10 @@ const RecipeDetailPage: React.FC = () => {
           ? {
               id: recipe.movie.id,
               title: recipe.movie.title,
-              year: recipe.movie.releaseDate?.split("-")[0] || "",
+              releaseDate: recipe.movie.releaseDate?.split("-")[0] || "",
               description: recipe.movie.description || "",
               imdbLink: recipe.movie.imdbLink || "",
-              poster: recipe.movie.imageUrl,
-              anecdote: recipe.movie.quote || ""
+             
             }
           : undefined
       }
