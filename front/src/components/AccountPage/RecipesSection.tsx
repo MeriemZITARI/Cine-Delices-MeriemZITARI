@@ -187,65 +187,79 @@ const handleRemoveIngredient = (index: number) => {
   setSelectedIngredients(selectedIngredients.filter((_, i) => i !== index));
 };
 
-  if (isLoading) return <p className="text-gray-500 text-sm mt-2">Chargement des recettes...</p>;
-  if (isError) return <p className="text-red-500 font-bold mt-6">{(error as Error).message}</p>;
+  if (isLoading) return <p className="text-gray-500 text-sm mt-2" role ="status" aria-live="polite">Chargement des recettes...</p>;
+  if (isError) return <p className="text-red-500 font-bold mt-6" role="alert" aria-live="assertive">{(error as Error).message}</p>;
 
   return (
     <>
-      <div className="flex flex-wrap justify-center gap-4">
+      <section
+        className="flex flex-wrap justify-center gap-4"
+        aria-label="Liste de vos recettes"
+      >
         {recipes.map((recipe) => (
           <div
             key={recipe.id}
             onClick={() => openModal(recipe)}
+            role="button"
+            tabIndex={0}
+            aria-label={`Modifier la recette ${recipe.title}`}
+            onKeyDown={(e) =>
+              (e.key === 'Enter' || e.key === ' ') && openModal(recipe)
+            }
             className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg cursor-pointer text-white hover:text-customYellow w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-[19%]"
           >
-             
             <div className="relative h-48">
               <RecipeImage
                 recipe={recipe}
-                alt={recipe.title}
+                alt={`Image de la recette ${recipe.title}`} // ✅ Alt explicite pour lecteur d'écran
                 className="w-full h-full object-cover"
               />
               <div className="absolute top-0 left-0 w-full bg-gradient-to-b from-gray-800/70 to-transparent p-2">
-                <h3 className="font-bold text-xl break-words leading-tight">{recipe.title}</h3>
+                <h3 className="font-bold text-xl break-words leading-tight">
+                  {recipe.title}
+                </h3>
               </div>
               <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black/70 to-transparent p-2 flex flex-col gap-1 text-xs font-bold">
                 <span className="flex items-center gap-2">
-                  <span className="text-customYellow"><FaClock /></span>
+                  <span className="text-customYellow">
+                    <FaClock aria-hidden="true" />
+                  </span>
                   {recipe.duration} min
                 </span>
                 <span className="flex items-center gap-2">
-                  <span className="text-customYellow"><FaTools /></span>
+                  <span className="text-customYellow">
+                    <FaTools aria-hidden="true" />
+                  </span>
                   {getDifficultyText(recipe.difficulty)}
                 </span>
               </div>
 
               {/* Badge validation */}
-      {!recipe.isValidated ? (
-        <div
-          className="absolute bottom-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10"
-          title="Recette en cours de validation"
-        >
-          ❌
-        </div>
-      ) : (
-        <div
-          className="absolute bottom-2 right-2 text-green-500 text-sm z-10"
-          title="Recette validée"
-        >
-          ✔️
-        </div>
-      )}
-
-              
+              {!recipe.isValidated ? (
+                <div
+                  className="absolute bottom-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10"
+                  title="Recette en cours de validation"
+                  aria-label="Recette non validée"
+                >
+                  ❌
+                </div>
+              ) : (
+                <div
+                  className="absolute bottom-2 right-2 text-green-500 text-sm z-10"
+                  title="Recette validée"
+                  aria-label="Recette validée"
+                >
+                  ✔️
+                </div>
+              )}
             </div>
           </div>
         ))}
-      </div>
+      </section>
 
       {isModalOpen && localRecipe &&
         ReactDOM.createPortal(
-          <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto">
+          <div className="fixed inset-0 bg-black/50 z-50 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="edit-recipe-title">
             <div className="min-h-screen flex items-start justify-center px-4 py-10">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6">
               <h2 className="text-xl font-bold mb-4">Modifier la recette</h2>
@@ -278,6 +292,7 @@ const handleRemoveIngredient = (index: number) => {
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">Image</label>
                   <input
+                    id="image-input"
                     type="file"
                     accept="image/*"
                     onChange={(e) => {
@@ -349,11 +364,14 @@ const handleRemoveIngredient = (index: number) => {
 
           {/* Suggestions ingrédients */}
           {showSuggestions && ingredientSuggestions.length > 0 && (
-            <ul className="border rounded max-h-40 overflow-y-auto bg-white">
+            <ul className="border rounded max-h-40 overflow-y-auto bg-white" role="listbox" aria-label="Suggestions d’ingrédients">
               {ingredientSuggestions.map((i) => (
                 <li
                   key={i.id}
+                  role="option"
                   className="px-3 py-1 cursor-pointer hover:bg-gray-200"
+                  tabIndex={0}
+                 aria-selected="false"
                   onMouseDown={() => {
                     handleAddIngredient(i.name);
                     setShowSuggestions(false);
@@ -366,13 +384,14 @@ const handleRemoveIngredient = (index: number) => {
           )}
 
           {/* Liste ingrédients sélectionnés */}
-          <ul className="mt-2">
+          <ul className="mt-2" aria-label="Liste des ingrédients sélectionnés">
             {selectedIngredients.map((ing, index) => (
               <li key={index} className="flex justify-between items-center py-1 border-b">
                 <span>{`${ing.ingredientName || ""} - ${ing.quantity} ${ing.unit}`}</span>
                 <button
                   type="button"
                   className="text-red-500"
+                  aria-label={`Supprimer ${ing.ingredientName}`}
                   onClick={() => handleRemoveIngredient(index)}
                 >
                   Supprimer

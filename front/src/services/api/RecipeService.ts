@@ -1,12 +1,10 @@
 import type { IRecipe } from '../../types/Recipe';
 import { axiosInstance } from '../../utils/axios';
-
 interface ApiResponse<T> {
   data: T;
   message?: string;
   success: boolean;
 }
-
 export const recipeService = {
   async getRecipes(): Promise<ApiResponse<IRecipe[]>> {
     try {

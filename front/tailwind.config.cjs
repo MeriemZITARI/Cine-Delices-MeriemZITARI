@@ -3,8 +3,9 @@ module.exports = {
     theme: {
       extend: {
         colors: {
-          customRed: '#E53935',
+          customRed: '#da3734',
           customYellow: '#FFD43B',
+          'customRed-hover': '#b72f2c'
         },
       },
     },

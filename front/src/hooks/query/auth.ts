@@ -45,5 +45,6 @@ export function useAuthUser() {
     queryFn: authService.getCurrentUser,
     retry: false,
     refetchInterval: 5 * 60 * 1000, // toutes les 5 minutes
+   
   });
 }

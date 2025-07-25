@@ -37,7 +37,7 @@ const RecipeDetailPage: React.FC = () => {
         // Ajout de plus de console.log pour déboguer
         console.log("Données brutes de la recette:", recipeData);
         console.log("Type de instructions:", typeof recipeData.instructions);
-        console.log("Type de anecdote:", typeof recipeData.anecdote);
+        console.log("Type de anecdote:", typeof recipeData.quote);
         console.log("Description:", recipeData.description);
 
         if (!recipeData) {
@@ -63,7 +63,7 @@ const RecipeDetailPage: React.FC = () => {
         const formattedRecipe = {
           ...recipeData,
           instructions: recipeData.description || "Aucune instruction disponible",  // Modification ici
-          anecdote: recipeData.anecdote || "Pas d'anecdote disponible pour cette recette."
+          anecdote: recipeData.quote || "Pas d'anecdote disponible pour cette recette."
         };
 
         setRecipe(formattedRecipe);
@@ -115,7 +115,7 @@ const RecipeDetailPage: React.FC = () => {
   const instructions = recipe.description || "Aucune instruction disponible";  // Modification ici
 
   // Formatage de l'anecdote avec vérification
-  const anecdote = recipe.anecdote || "Pas d'anecdote disponible pour cette recette.";
+  const anecdote = recipe.quote || "Pas d'anecdote disponible pour cette recette.";
 
   // Ajout d'un console.log avant le rendu
   console.log("Instructions formatées:", instructions);
@@ -143,7 +143,7 @@ const RecipeDetailPage: React.FC = () => {
               description: recipe.movie.description || "",
               imdbLink: recipe.movie.imdbLink || "",
               poster: recipe.movie.imageUrl,
-              anecdote: recipe.movie.anecdote || ""
+              anecdote: recipe.movie.quote || ""
             }
           : undefined
       }

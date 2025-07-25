@@ -77,7 +77,10 @@ const RegisterPage: React.FC = () => {
                 placeholder="Dupont"
                 autoComplete="family-name"
                 required
+                aria-describedby="lastNameHelp"
               />
+                
+              <span id="lastName" className="sr-only">Saisissez votre nom</span>
             </div>
             <div className="flex-1">
               <label className="block text-sm font-medium mb-1" htmlFor="firstName">Prénom</label>
@@ -91,7 +94,9 @@ const RegisterPage: React.FC = () => {
                 placeholder="Jean"
                 autoComplete="given-name"
                 required
+                 aria-describedby="firstNameHelp"
               />
+              <span id="firstName" className="sr-only">Saisissez votre prénom</span>
             </div>
           </div>
 
@@ -108,7 +113,9 @@ const RegisterPage: React.FC = () => {
               placeholder="email@exemple.com"
               autoComplete="email"
               required
+              aria-describedby="emailHelp"
             />
+            <span id="emailHelp" className="sr-only">Entrez une adresse e-mail valide, comme jean@example.com</span>
           </div>
 
           <div className="mb-6 relative">
@@ -123,12 +130,14 @@ const RegisterPage: React.FC = () => {
               placeholder="********"
               autoComplete="new-password"
               required
+              aria-describedby="passwordHelp"
             />
+            <span id="passwordHelp" className="sr-only">Votre mot de passe doit contenir au moins 8 caractères</span>
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              tabIndex={-1}
+              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>

@@ -2,7 +2,7 @@ import { loginUser } from '../login.service';
 import { prisma } from '../../client/prismaClient';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-
+// Importer les modules nécessaires pour les tests
 jest.mock('../../client/prismaClient', () => ({
   prisma: {
     user: {

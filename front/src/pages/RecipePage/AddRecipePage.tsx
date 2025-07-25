@@ -131,7 +131,7 @@ if (ing.id ) {
           duration: 7000,
           position: "top-center",
           style: {
-            background: "#4caf50",
+            background: "#3A833B",
             color: "#fff",
           },
         });
@@ -177,14 +177,23 @@ if (ing.id ) {
 
         {/* Titre et durée */}
         <div className="flex flex-col md:flex-row gap-6 mb-4">
+          
+        <label htmlFor="title" className="sr-only">Titre de la recette</label>
           <input
+            id="title"
             className="flex-1 border rounded px-3 py-2"
             placeholder="Titre de la recette"
             value={name}
             onChange={e => setName(e.target.value)}
             required
+            aria-describedby="title-help"
           />
+          <span id="title-help" className="sr-only">
+            Donnez un nom clair et représentatif à votre recette.
+          </span>
+          <label htmlFor="duration" className="sr-only">Durée en minutes</label>
           <input
+            id="duration"
             type="number"
             min={0}
             className="w-32 border rounded px-3 py-2"
@@ -195,20 +204,29 @@ if (ing.id ) {
         </div>
 
         {/* Description */}
+        <label htmlFor="desc" className="sr-only">Description de la recette</label>
         <textarea
+          id="desc"
           className="w-full border rounded px-3 py-2 mb-4"
           placeholder="Description"
           rows={3}
           value={desc}
           onChange={e => setDesc(e.target.value)}
+          aria-describedby="desc-help"
         />
+        <span id="desc-help" className="sr-only">
+          Décrivez les étapes ou informations utiles sur votre recette.
+        </span>
 
         {/* Difficulté et nombre de personnes */}
+        <label className="sr-only">Difficulté et nombre de personnes</label>
         <div className="flex flex-col md:flex-row gap-6 mb-4">
           <select
+            id="difficulty"
             className="flex-1 border rounded px-3 py-2"
             value={difficulty}
             onChange={e => setDifficulty(e.target.value)}
+            aria-label="Sélectionner la difficulté"
             required
           >
             <option value="">Difficulté</option>
@@ -218,39 +236,51 @@ if (ing.id ) {
             <option value="4">4 - Confirmé </option>
             <option value="5">5 - Difficile</option>
           </select>
+          <label htmlFor="servings" className="sr-only">Nombre de personnes</label>
 
           <input
+            id="servings"
             type="number"
             min={1}
             className="flex-1 border rounded px-3 py-2"
             placeholder="Nombre de personnes"
             value={servings}
             onChange={e => setServings(e.target.value)}
+            aria-label="Nombre de personnes"
             required
           />
+          <span id="servings" className="sr-only"> nombre de personnes estimé pour la recette</span>
         </div>
 
         {/* Image */}
         <div className="mb-4">
           <label className="block mb-1 font-semibold">Image (.webp uniquement)</label>
-          <input type="file" accept="image/webp" onChange={handleImageChange} />
+          <input id="image" type="file" accept="image/webp" onChange={handleImageChange}  aria-describedby="image-help"/>
+          <span id="image-help" className="sr-only">Téléversez une image au format .webp</span>
           {imagePreview && <img src={imagePreview} alt="Aperçu" className="mt-2 max-h-40 max-w-full rounded" />}
         </div>
 
         {/* Citation */}
+        <label htmlFor="citation" className="sr-only">Citation</label>
         <input
+         id="citation"
           type="text"
           placeholder="Citation (optionnel)"
           className="w-full border rounded px-3 py-2 mb-4"
           value={movieDescription}
           onChange={e => setMovieDescription(e.target.value)}
+          aria-describedby="citation-help"
         />
+        <span id="citation-help" className="sr-only">Ajoutez une citation du film liée à la recette si vous le souhaitez</span>
 
         {/* Ingrédients */}
         <div className="mb-4">
           <label className="font-semibold block mb-1">Ingrédients</label>
           <div className="grid grid-cols-1 sm:grid-cols-[1fr_100px_100px_auto] gap-2 mb-2 items-center">
+             {/* Ingrédient nom */}
+          <label htmlFor="ingredient" className="sr-only">Nom de l’ingrédient</label>
             <input
+            id="ingredient"
               className="border rounded px-3 py-2 w-full"
               placeholder="Ajouter un ingrédient"
               value={ingredientInput}
@@ -260,21 +290,33 @@ if (ing.id ) {
               }}
               onFocus={() => setShowSuggestions(true)}
               onBlur={() => setTimeout(() => setShowSuggestions(false), 150)} // délai pour pouvoir cliquer sur suggestion
+              aria-describedby="ingredient-help"
             />
+            <span id="ingredient-help" className="sr-only">Saisissez le nom de l’ingrédient</span>
+              {/* Quantité */}
+            <label htmlFor="quantity" className="sr-only">Quantité</label>
             <input
+              id="quantity"
               type="number"
               min={0}
               className="w-1/3 min-w-[70px] border rounded px-3 py-2"
               placeholder="Quantité"
               value={quantityInput}
               onChange={e => setQuantityInput(e.target.value)}
+              aria-describedby="quantity-help"
             />
+            <span id="quantity-help" className="sr-only">Quantité de l’ingrédient</span>
+             {/* Unité */}
+             <label htmlFor="unit" className="sr-only">Unité</label>
             <input
+              id="unit"
               className="border rounded px-3 py-2 w-full"
               placeholder="Unité"
               value={unitInput}
               onChange={e => setUnitInput(e.target.value)}
+              aria-describedby="unit-help"
             />
+             <span id="unit-help" className="sr-only">Unité de mesure de l’ingrédient</span>
             <Button
               type="button"
               className="w-full sm:w-auto"
@@ -323,20 +365,23 @@ if (ing.id ) {
 
         {/* Catégorie */}
         <div className="mb-4">
-          <label className="font-semibold block mb-1">Catégorie</label>
+        <label htmlFor="category" className="font-semibold block mb-1">Catégorie</label>
           {loadingCategories && <p>Chargement des catégories...</p>}
           {errorCategories && <p>Erreur chargement catégories</p>}
           <select
+            id="category"
             className="w-full border rounded px-3 py-2"
             value={category}
             onChange={e => setCategory(e.target.value)}
             required
+            aria-describedby="category-help"
           >
             <option value="">Sélectionner une catégorie</option>
             {categories.map(cat => (
               <option key={cat.id} value={cat.id}>{cat.name}</option>
             ))}
           </select>
+          <span id="category-help" className="sr-only">Choisissez la catégorie correspondant à la recette</span>
         </div>
 
         {/* Film lié */}

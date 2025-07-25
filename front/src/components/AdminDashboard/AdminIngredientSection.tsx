@@ -113,7 +113,7 @@ const AdminIngredientsSection: React.FC = () => {
       );
     }
   }}
-  className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+  className="bg-green-800 hover:bg-green-700 text-white px-4 py-2 rounded"
 >
   Ajouter
 </button>
@@ -175,7 +175,7 @@ const AdminIngredientsSection: React.FC = () => {
                     <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                       {isEditing ? (
                         <button
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                          className="bg-green-800 hover:bg-green-700 text-white px-3 py-1 rounded"
                           onClick={() => {
                             const updatedData = localEditedIngredients[ingredient.id];
                             updateIngredient.mutate(

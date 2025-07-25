@@ -100,26 +100,28 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* En-tête avec le formulaire de recherche */}
-      <div className="bg-customYellow py-8" role="region" aria-label="En-tête et recherche">
+      <header className="bg-customYellow py-8" role="region" aria-label="En-tête et recherche">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0 rounded-lg overflow-hidden shadow-md">
             {/* Recette du jour - Plus grande sur desktop */}
             {featuredRecipe && (
               <Link
                 to={`/recettes/${featuredRecipe.id}`}
-                className="group order-2 lg:order-1 lg:flex-1 relative overflow-hidden shadow-lg" aria-labelledby="featured-title" // Fournit un ID pour lier au titre
+                className="group order-2 lg:order-1 lg:flex-1 relative overflow-hidden shadow-lg " aria-labelledby="featured-title" // Fournit un ID pour lier au titre
               >
-                <div className="absolute inset-x-0 top-0 bg-gradient-to-b from-black/70 to-transparent text-white px-4 py-2">
-                  <h2 id="featured-title" className="text-2xl lg:text-4xl font-bold group-hover:text-customYellow">
-                    La recette du jour !
-                  </h2>
-                </div>
+                
                 <RecipeImage
                   recipe={featuredRecipe}
                   alt= {`Image de la recette : ${featuredRecipe.title}`} // Texte plus descriptif
                   className="w-full h-48 lg:h-[400px] object-cover"
                 />
-                <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-gradient-to-t from-black/70 to-transparent">
+                
+                <div className="absolute inset-0 flex flex-col justify-end p-4 text-white bg-black/45">
+                <div className="absolute inset-x-0 top-0 text-white px-4 py-2 ">
+                  <h2 id="featured-title" className="text-2xl lg:text-4xl font-bold  group-hover:text-customYellow">
+                    La recette du jour !
+                  </h2>
+                </div>
                   <h1 className="text-lg lg:text-2xl font-bold mb-2 drop-shadow-md group-hover:text-customYellow">
                     {featuredRecipe.title}
                   </h1>
@@ -142,7 +144,7 @@ const HomePage = () => {
             )}
 
             {/* Formulaire de recherche */}
-            <div className="order-1 hidden lg:block lg:order-2 lg:w-[380px] mb-6 lg:mb-0">
+            <aside className="order-1 hidden lg:block lg:order-2 lg:w-[380px] mb-6 lg:mb-0">
               <SearchForm
                 onSubmit={handleSearch}
                 searchTerm={searchTerm}
@@ -152,21 +154,21 @@ const HomePage = () => {
                 selectedType={selectedType}
                 onTypeSelect={setSelectedType}
               />
-            </div>
+            </aside>
           </div>
         </div>
-      </div>
+      </header>
 
       <div className="container mx-auto px-4 py-12">
         {/* --- Section films et carrousel (toujours visible, non filtrée) --- */}
         <section className="mb-16" role="region" aria-labelledby="section-films">
-  <div className="flex flex-col md:flex-row gap-8 w-full">
-    {/* Film aléatoire : visible uniquement sur md+ */}
-    {randomMovie && (
-      <div className="hidden md:flex flex-col md:w-full lg:w-[30%]">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800" id="section-films">
+          <div className="flex flex-col md:flex-row gap-8 w-full">
+          {/* Film aléatoire : visible uniquement sur md+ */}
+          {randomMovie && (
+            <article className="hidden md:flex flex-col md:w-full lg:w-[30%]">
+            <h2 className="text-2xl font-bold mb-6 text-gray-800" id="section-films">
           Films inspirants
-        </h2>
+            </h2>
         <div className="bg-white rounded-lg shadow-md overflow-hidden h-full flex flex-col items-center justify-center">
           <div className="relative h-[320px] w-full flex items-center justify-center">
             <MoviePoster
@@ -182,7 +184,7 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </article>
     )}
 
     {/* Carrousel : visible sur toutes tailles */}

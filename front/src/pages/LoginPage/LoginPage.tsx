@@ -55,6 +55,8 @@ const LoginPage: React.FC = () => {
       <div className="w-full max-w-md mx-auto">
         <h1 className="text-2xl sm:text-3xl font-bold text-center mb-6 font-broadway">Connexion</h1>
         <form onSubmit={handleSubmit} className="bg-white border border-gray-300 rounded-lg p-4 sm:p-8 shadow-md">
+  
+          {/* Email */}
           <div className="mb-4">
             <label className="block text-sm font-medium mb-1" htmlFor="email">Adresse e-mail</label>
             <input
@@ -67,10 +69,13 @@ const LoginPage: React.FC = () => {
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
               placeholder="email@exemple.com"
               autoComplete="email"
+              aria-describedby="emailHelp"
               required
             />
+            <span id="emailHelp" className="sr-only">Entrez votre adresse e-mail, comme jean@example.com</span>
           </div>
-
+  
+          {/* Mot de passe */}
           <div className="mb-6 relative">
             <label className="block text-sm font-medium mb-1" htmlFor="password">Mot de passe</label>
             <input
@@ -82,23 +87,35 @@ const LoginPage: React.FC = () => {
               className="w-full border border-gray-300 rounded px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-red-300"
               placeholder="********"
               autoComplete="current-password"
+              aria-describedby="passwordHelp"
               required
             />
+            <span id="passwordHelp" className="sr-only">Entrez votre mot de passe pour accéder à votre compte</span>
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
               className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              tabIndex={-1}
+              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
           </div>
-
-          {error && <div className="text-red-500 text-sm mb-3 text-center">{error}</div>}
-
+  
+          {/* Erreur */}
+          {error && (
+            <div
+              className="text-red-500 text-sm mb-3 text-center"
+              role="alert"
+              aria-live="polite"
+            >
+              {error}
+            </div>
+          )}
+  
           <Button text="Se connecter" type="submit" className="w-full" />
         </form>
-
+  
+        {/* Liens complémentaires */}
         <div className="text-center mt-4 space-y-2">
           <Link to="/creer-compte" className="block text-xs text-gray-700 underline hover:text-red-500">
             Pas encore de compte ? Inscrivez-vous
@@ -110,6 +127,7 @@ const LoginPage: React.FC = () => {
       </div>
     </div>
   );
+  
 };
 
 export default LoginPage;

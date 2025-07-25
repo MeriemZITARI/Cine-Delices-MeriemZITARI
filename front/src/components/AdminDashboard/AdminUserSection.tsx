@@ -204,7 +204,7 @@ const AdminUsersSection: React.FC = () => {
                       <option value="false">Utilisateur</option>
                     </select>
                   ) : (
-                    <span className={user.isAdmin ? "text-green-600" : "text-gray-500"}>
+                    <span className={user.isAdmin ? "text-green-800" : "text-gray-500"}>
                       {user.isAdmin ? "Admin" : "Utilisateur"}
                     </span>
                   )}
@@ -236,7 +236,7 @@ const AdminUsersSection: React.FC = () => {
                           }
                         );
                       }}
-                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                      className="bg-green-800 hover:bg-green-700 text-white px-3 py-1 rounded"
                     >
                       Sauvegarder
                     </button>

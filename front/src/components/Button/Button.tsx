@@ -7,7 +7,7 @@ export default function Button({
   return (
     <button 
     className={`${
-      className?.includes('bg-') ? '' : 'bg-customRed hover:bg-red-600'
+      className?.includes('bg-') ? '' : 'bg-customRed hover:bg-customRed-hover'
     } text-white font-bold rounded px-4 py-2 whitespace-nowrap max-h-10 ${className}`}
     {...props}
     type={type}

@@ -132,7 +132,7 @@ const statusRef = useRef<HTMLParagraphElement>(null);
   <p
     ref={statusRef}
     className={`text-center mt-4 font-semibold ${
-      statusType === 'success' ? 'text-green-600' : 'text-red-600'
+      statusType === 'success' ? 'text-green-800' : 'text-red-600'
     }`}
   >
     {statusMessage}
@@ -174,7 +174,7 @@ const statusRef = useRef<HTMLParagraphElement>(null);
                   <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
                     <button
                       onClick={() => openEditModal(recipe)}
-                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded"
+                      className="bg-green-800 hover:bg-green-700 text-white px-3 py-1 rounded"
                     >
                       Éditer
                     </button>

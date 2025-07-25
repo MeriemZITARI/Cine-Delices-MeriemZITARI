@@ -6,7 +6,8 @@ import { getRecipesByAuthorIdService } from "services/user.service";
 import path from 'path';
 
 
-// --- Gérer la création d'une nouvelle recette ---
+/*Gérer la création d'une nouvelle recette 
+Route: POST /api/recipes*/
 export async function handleCreateRecipe(
   req: Request<{}, {}, CreateRecipeInput>,
   res: Response,
@@ -136,9 +137,13 @@ export async function handleGetRecipeById(
       next(error);
     }
   }
-  
 
-  export async function handleGetAllRecipes(
+
+/**
+ * Gère la récupération de toutes les recettes avec des filtres.
+ * Route: GET /api/recipes
+*/
+export async function handleGetAllRecipes(
     req: Request,
     res: Response,
     next: NextFunction
@@ -151,7 +156,8 @@ export async function handleGetRecipeById(
       if (!validationResult.success) {
         return res.status(400).json({
           message: "Les paramètres de filtrage sont invalides.",
-          errors: validationResult.error.flatten().fieldErrors,// ici flatten() permet de transformer les erreurs en un objet plus simple contenant les messages d'erreur pour chaque champ.
+          errors: validationResult.error.flatten().fieldErrors,// ici flatten() permet de transformer les erreurs en un objet 
+          //plus simple contenant les messages d'erreur pour chaque champ.
         });
       }
   

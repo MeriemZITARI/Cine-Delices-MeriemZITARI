@@ -11,10 +11,19 @@ const MovieDetailPage: React.FC = () => {
   const navigate = useNavigate();
 
   const { data: movie, isLoading, isError } = useMovieById(id || '');
+{/*console.log('🧐 Description du film :', movie?.description);
+
+if (movie?.description && /<\/?[a-z][\s\S]*>/i.test(movie.description)) {
+  console.log('⚠️ movie.description contient potentiellement du HTML');
+} else {
+  console.log('✅ movie.description semble être du texte brut');
+}*/}
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen"  role="status" 
+      aria-live="polite"
+      aria-busy="true">
         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-red-500" />
       </div>
     );
@@ -22,8 +31,8 @@ const MovieDetailPage: React.FC = () => {
 
   if (isError || !movie) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="text-center">
+      <main className="flex flex-col items-center justify-center min-h-screen p-4">
+        <section className="text-center">
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">Oups !</h2>
           <p className="text-gray-600 mb-4">Film introuvable</p>
           <button
@@ -32,24 +41,24 @@ const MovieDetailPage: React.FC = () => {
           >
             Retourner aux films
           </button>
-        </div>
-      </div>
+        </section>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50">
       {/* En-tête du film */}
-      <div className="bg-customYellow py-8">
+      <header className="bg-customYellow py-8" role="banner">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-bold text-center mb-6">{movie.title}</h1>
         </div>
-      </div>
+      </header>
 
       {/* Détails du film */}
-      <div className="container mx-auto max-w-4xl p-4">
-        <div className="bg-white rounded-lg shadow-md p-4">
-          <div className="w-full h-64 flex items-center justify-center rounded-md mb-4">
+      <article className="container mx-auto max-w-4xl p-4" aria-labelledby="movie-title">
+        <section className="bg-white rounded-lg shadow-md p-4">
+          <div className="w-full h-64 flex items-center justify-center rounded-md mb-4" role="img" aria-label={`Image du film ${movie.title}`}>
             <MovieImage
               movie={movie}
               alt={movie.title}
@@ -69,15 +78,16 @@ const MovieDetailPage: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:underline"
+              aria-label={`Voir le film ${movie.title} sur IMDB (ouvre dans un nouvel onglet)`}
             >
               Voir sur IMDB
             </a>
           </p>
-        </div>
-      </div>
+        </section>
+      </article>
 
       {/* Recettes associées */}
-      <div className="container mx-auto p-4">
+      <section className="container mx-auto p-4" aria-labelledby="recipes-title">
         <h2 className="text-2xl font-semibold mt-6 mb-4">Recettes associées</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {movie.recipes && movie.recipes.length > 0 ? (
@@ -96,8 +106,8 @@ const MovieDetailPage: React.FC = () => {
             </p>
           )}
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

@@ -161,11 +161,13 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* En-tête avec le formulaire de recherche */}
-      <div className="bg-customYellow py-8">
+      <header className="bg-customYellow py-8" role="banner">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row lg:items-start lg:gap-0 rounded-lg overflow-hidden shadow-md">
             {/* Recette du jour - Plus grande sur desktop */}
+            
             {featuredRecipe && (
+              <article aria-label={`Recette du jour : ${featuredRecipe.title}`}>
               <Link
                 to={`/recettes/${featuredRecipe.id}`}
                 className="group order-2 lg:order-1 lg:flex-1 relative overflow-hidden shadow-lg"
@@ -198,10 +200,12 @@ const HomePage: React.FC = () => {
                   </div>
                 </div>
               </Link>
+              </article>
             )}
 
             {/* Formulaire de recherche */}
-            <div className="order-1 hidden lg:block lg:order-2 lg:w-[380px] mb-6 lg:mb-0">
+            <section className="order-1 hidden lg:block lg:order-2 lg:w-[380px] mb-6 lg:mb-0" aria-labelledby="search-heading">
+              <h2 id="search-heading" className="sr-only">Recherche de recettes</h2>
               <SearchForm
                 onSubmit={handleSearch}
                 searchTerm={searchTerm}
@@ -211,10 +215,10 @@ const HomePage: React.FC = () => {
                 selectedType={selectedType}
                 onTypeSelect={setSelectedType}
               />
-            </div>
+            </section>
           </div>
         </div>
-      </div>
+      </header>
       
       <div className="container mx-auto px-4 py-12">
         {/* --- Section films et carrousel (toujours visible, non filtrée) --- */}

@@ -4,6 +4,17 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
+    headers: {
+      'Content-Security-Policy':
+        "default-src 'self'; " +
+        "img-src 'self' data: http://localhost:3001 https://m.media-amazon.com https://image.tmdb.org; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+        "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; " +
+        "connect-src 'self' http://localhost:3001 https://www.omdbapi.com https://api.themoviedb.org ws://localhost:3000; " +
+        "font-src 'self' https://fonts.gstatic.com; " +
+        "object-src 'none';"
+    },
+    
     port: 3000,
     open: true,
     proxy: {

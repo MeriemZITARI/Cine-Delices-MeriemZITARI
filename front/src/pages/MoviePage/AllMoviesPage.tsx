@@ -6,10 +6,13 @@ import SearchFormMovie from '../../components/SearchForm/SearchFormMovie';
 import { useState } from 'react';
 
 const AllMoviesPage: React.FC = () => {
+
+  // Utilisation du hook personnalisé pour récupérer tous les films
   const { data: movies = [], isLoading, isError } = useAllMovies();
+  // État local pour la recherche
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Appliquer le filtre localement (optionnel)
+  // Appliquer le filtre localement 
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     movie.description.toLowerCase().includes(searchTerm.toLowerCase())

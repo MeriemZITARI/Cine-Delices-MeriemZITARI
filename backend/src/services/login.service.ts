@@ -28,7 +28,7 @@ export async function loginUser(data: LoginInput) {
     if (!process.env.JWT_SECRET) {
         throw new Error('JWT_SECRET n\'est pas défini dans les variables d\'environnement.');
     }
-
+    // Créer le token JWT avec l'ID de l'utilisateur et son rôle (isAdmin)
     const token = jwt.sign(
         { userId: user.id, isAdmin: user.isAdmin },
         process.env.JWT_SECRET,
@@ -39,4 +39,5 @@ export async function loginUser(data: LoginInput) {
     const { password, ...userWithoutPassword } = user;
 
     return { user: userWithoutPassword, token };
+    
 }
