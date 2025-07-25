@@ -14,7 +14,7 @@ services:
       - key: TMDB_API_KEY
         value: 1923f2b998e0a232766db7ede4e6c1b9
 
-  - type: static
+  - type: web
     name: frontend
     env: static
     plan: free
@@ -23,7 +23,7 @@ services:
     rootDir: front
     envVars:
       - key: VITE_API_BASE_URL
-        value: https://backend.onrender.com/api
+        value: https://backend-XXXX.onrender.com/api  # À mettre à jour après déploiement
       - key: VITE_TMDB_API_KEY
         value: 1923f2b998e0a232766db7ede4e6c1b9
       - key: VITE_OMDB_API_KEY
