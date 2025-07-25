@@ -2,7 +2,7 @@ services:
   - type: web
     name: backend
     env: docker
-    plan: free
+    plan: Free
     dockerfilePath: ./backend/Dockerfile
     envVars:
       - key: DATABASE_URL
@@ -17,7 +17,7 @@ services:
   - type: web
     name: frontend
     env: static
-    plan: free
+    plan: Free
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     rootDir: front
@@ -31,4 +31,4 @@ services:
 
 databases:
   - name: cine-db
-    plan: free
+    plan: Free
