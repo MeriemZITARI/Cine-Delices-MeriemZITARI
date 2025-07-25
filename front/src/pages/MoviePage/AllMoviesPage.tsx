@@ -15,7 +15,7 @@ const AllMoviesPage: React.FC = () => {
   // Appliquer le filtre localement 
   const filteredMovies = movies.filter((movie) =>
     movie.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    movie.description.toLowerCase().includes(searchTerm.toLowerCase())
+    movie.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {

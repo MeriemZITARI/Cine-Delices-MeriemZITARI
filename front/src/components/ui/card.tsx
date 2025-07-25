@@ -1,7 +1,7 @@
 // Composants de carte UI réutilisables pour l'application
 // Utilise React.forwardRef pour la flexibilité et l'accessibilité
 // Utilise la fonction utilitaire cn pour la gestion conditionnelle des classes CSS
-
+/*
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cn } from "@/lib/utils";
@@ -116,3 +116,4 @@ export {
   CardDescription,
   CardContent,
 };
+*/
