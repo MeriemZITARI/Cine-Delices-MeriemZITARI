@@ -31,12 +31,6 @@ RUN npm run build
 RUN mkdir -p dist/generated && cp -r generated/prisma dist/generated/prisma
 
 
-# Appliquer les migrations (déployer la dernière migration)
-RUN npx prisma migrate deploy
-
-# Seed la base de données
-RUN npx prisma db seed
-
 # Exposer le port sur lequel l'application écoute
 EXPOSE 3001
 
