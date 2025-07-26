@@ -13,20 +13,19 @@ COPY package.json package-lock.json ./
 # Installer les dépendances
 RUN npm install
 
-# Copier le dossier prisma (contenant schema.prisma)
-COPY prisma ./prisma
+# Copier le reste des fichiers du projet dans le conteneur
+COPY . .
 
 # Générer le client Prisma
 RUN npx prisma generate
 
-# Copier le reste des fichiers du projet dans le conteneur
-COPY . .
+
 
 # Compiler le code TypeScript
 RUN npm run build
 
-# Copier le dossier generated dans dist/generated pour que Prisma client soit accessible en prod
-RUN cp -r ../generated ./dist/generated
+# Copier les fichiers générés Prisma vers le dossier dist (nécessaire si output = ../generated/prisma)
+RUN mkdir -p dist/generated && cp -r generated/prisma dist/generated/prisma
 
 # Exposer le port sur lequel l'application écoute
 EXPOSE 3001
