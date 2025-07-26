@@ -1,3 +1,4 @@
+/*
 import React, { useEffect, useState } from 'react';
 import { recipeService } from '../services/api/RecipeService';
 import type { IRecipe } from '../types/Recipe';
@@ -144,3 +145,4 @@ const TestApi: React.FC = () => {
 };
 
 export default TestApi;
+*/

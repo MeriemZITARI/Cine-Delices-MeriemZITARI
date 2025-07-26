@@ -1,3 +1,4 @@
+/*
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import RecipeImage from "./RecipeImage";
@@ -122,3 +123,4 @@ const RecipeCarousel: React.FC<RecipeCarouselProps> = ({
 };
 
 export default RecipeCarousel;
+*/

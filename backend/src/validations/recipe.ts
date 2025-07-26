@@ -30,7 +30,7 @@ const _baseRecipeSchema = z.object({
         }
         return val;
       },
-      z.string().optional()
+      z.string()
     ),
     isValidated: z.boolean().optional(),// champs qui sera géré seulement par l'admin
     quote: z.string().max(255, "La citation ne doit pas dépasser 255 caractères"),

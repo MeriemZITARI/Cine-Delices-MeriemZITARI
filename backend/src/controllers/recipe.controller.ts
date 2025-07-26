@@ -21,7 +21,7 @@ export async function handleCreateRecipe(
     const userId = req.user.userId;
 
     // Vérifier si un fichier a été uploadé
-    let imageUrl;
+    let imageUrl : string = '';
     if (req.file) {
       console.log('Fichier uploadé :', req.file);
       imageUrl = `http://localhost:3001/images-recettes/${req.file.filename}`;
