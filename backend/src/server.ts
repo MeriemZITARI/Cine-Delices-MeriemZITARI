@@ -21,7 +21,7 @@ const PORT = process.env.PORT || 3001;
   
 
 
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: ['http://localhost:3000', 'https://frontend-o5gt.onrender.com'], credentials: true }));
 
 // Middleware pour servir les fichiers statiques (images, CSS, JS) depuis le dossier 'public'
 app.use(express.static('public'));
