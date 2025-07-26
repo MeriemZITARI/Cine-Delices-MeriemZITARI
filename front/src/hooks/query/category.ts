@@ -1,6 +1,6 @@
 // hooks/useCategories.ts
 import { useQuery } from '@tanstack/react-query';
-import { getCategories } from '../../services/api/CategoryService';
+import { categoryService } from '../../services/api/CategoryService';
  export interface Category {
     id: string;
     name: string;
@@ -11,7 +11,7 @@ import { getCategories } from '../../services/api/CategoryService';
 export const useCategories = () => {
   return useQuery<Category[], Error>({
     queryKey: ['categories'],
-    queryFn: getCategories,
+    queryFn: categoryService.getCategories,
     staleTime: 5 * 60 * 1000,
   });
 };

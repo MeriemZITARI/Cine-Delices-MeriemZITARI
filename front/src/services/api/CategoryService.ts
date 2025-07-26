@@ -13,7 +13,7 @@ export const categoryService = {
     return response.data;
   }
 };
-export const getCategories = async (): Promise<Category[]> => {
+/*export const getCategories = async (): Promise<Category[]> => {
   const response = await axiosInstance.get("http://localhost:3001/api/categories");
   return response.data;
-};
+};*/
