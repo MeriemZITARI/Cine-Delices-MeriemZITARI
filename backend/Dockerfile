@@ -13,6 +13,9 @@ COPY package.json package-lock.json ./
 # Installer les dépendances
 RUN npm install
 
+# Corriger automatiquement les vulnérabilités (facultatif mais utile)
+RUN npm audit fix
+
 # Copier le reste des fichiers du projet dans le conteneur
 COPY . .
 
