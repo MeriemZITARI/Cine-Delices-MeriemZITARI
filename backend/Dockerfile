@@ -23,6 +23,9 @@ COPY . .
 # Compiler le code TypeScript
 RUN npm run build
 
+# Copier le dossier generated dans dist/generated pour que Prisma client soit accessible en prod
+RUN cp -r ../generated ./dist/generated
+
 # Exposer le port sur lequel l'application écoute
 EXPOSE 3001
 
