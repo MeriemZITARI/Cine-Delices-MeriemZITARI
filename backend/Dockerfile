@@ -10,6 +10,11 @@ COPY package.json package-lock.json ./
 
 # Installer les dépendances
 RUN npm install
+
+# Générer le client Prisma
+RUN npx prisma generate
+
+# Installer OpenSSL (si nécessaire)
 RUN apk add --no-cache openssl libressl-dev
 
 # Copier le reste des fichiers du projet dans le conteneur
@@ -22,4 +27,4 @@ RUN npm run build
 EXPOSE 3001
 
 # Définir la commande pour démarrer l'application
-CMD ["npm","start"]
+CMD ["npm","run", "start"]
