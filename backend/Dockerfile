@@ -22,4 +22,4 @@ RUN npm run build
 EXPOSE 3001
 
 # Définir la commande pour démarrer l'application
-CMD ["npm","run", "start"]
+CMD ["npm","start"]
