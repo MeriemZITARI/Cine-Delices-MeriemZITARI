@@ -23,7 +23,7 @@ router.use('/auth', authRoutes);
 router.use('/auth', loginRoutes); 
 
 // routes de recettes
-router.use('/recipes', recipeRoutes);
+router.use('/recipes/', recipeRoutes);
 
 // routes de catégories
 router.use('/categories', categoryRoutes);

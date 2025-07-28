@@ -9,7 +9,7 @@ import upload from '../../utils/multerConfig';
 import { parseJsonFields } from '../../middlewares/parseJsonFields';
 
 const recipeRouter = Router();
-
+console.log("🧩 Rescipes Router chargé");
 /**
  * @swagger
  * /recipes:
@@ -69,7 +69,22 @@ recipeRouter.get('/:id', handleGetRecipeById);
  *       '201':
  *         description: Recette créée avec succès.
  */
-recipeRouter.post('/', isAuthenticated, upload.single('image'), validateRequest(createRecipeSchema), handleCreateRecipe);
+/*recipeRouter.post('/', (req, res, next) => {
+    console.log('➡️ Requête reçue dans POST /recipes');
+    next();
+  }, isAuthenticated, upload.single('image'),validateRequest(createRecipeSchema),  handleCreateRecipe);*/
+
+recipeRouter.post('/', (req, res, next) => {
+    console.log('➡️ Requête reçue dans POST /recipes');
+    next();
+  }, isAuthenticated, upload.single('image'),(req, res, next) => {
+    console.log('➡️ Apres execution de upload.single("image")', req.file);
+    next();
+  }
+  ,parseJsonFields(['duration', 'difficulty', 'servings']), handleCreateRecipe);
+ 
+
+
 
 /**
  * @swagger
@@ -103,7 +118,10 @@ recipeRouter.post('/', isAuthenticated, upload.single('image'), validateRequest(
  *       '200':
  *         description: Recette mise à jour avec succès.
  */
-recipeRouter.patch('/:id', isAuthenticated,upload.single('image'),parseJsonFields(['duration', 'difficulty', 'ingredients']),  handleUpdateRecipe);
+recipeRouter.patch('/:id', (req, res, next) => {
+    console.log('➡️ Requête reçue dans PATCH /recipes');
+    next();
+  }, isAuthenticated,upload.single('image'),parseJsonFields(['duration', 'difficulty', 'ingredients']),  handleUpdateRecipe);
 
 /**
  * @swagger

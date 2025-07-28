@@ -38,7 +38,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     // On attache les informations décodées à la requête.
     // TypeScript sait maintenant que req.user doit avoir un userId et un isAdmin.
     req.user = decoded as JwtPayload;
-    
+    console.log('Token vérifié avec succès:', req.user);
     // Tout est bon, on passe au prochain middleware ou au contrôleur.
     next();
   } catch (err) {

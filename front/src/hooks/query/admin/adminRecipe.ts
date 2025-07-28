@@ -37,13 +37,21 @@ export function useUpdateRecipeAsAdmin() {
         return await adminRecipeService.updateRecipe(recipeId, updateData);
       },
       onSuccess: (updatedRecipe: IRecipe) => {
+        // Invalidation des requêtes pour forcer le rechargement des données
+        queryClient.invalidateQueries({ queryKey: ['admin-recipes'] });
+        queryClient.invalidateQueries({ queryKey: ['recipes'] });
+        // Mise à jour du cache local pour la recette modifiée
         queryClient.setQueryData<IRecipe[]>(
-          ['admin', 'recipes'],
+          ['recipes', 'me'],
           (oldData) =>
-            oldData?.map((recipe) =>
-              recipe.id === updatedRecipe.id ? updatedRecipe : recipe
-            ) ?? []
+            {
+              if (!Array.isArray(oldData)) return oldData;
+              return oldData.map((recipe) =>
+                recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+              );
+            }
         );
+        
       },
       onError: (error) => {
         console.error('Erreur lors de la mise à jour de la recette (admin) :', error);

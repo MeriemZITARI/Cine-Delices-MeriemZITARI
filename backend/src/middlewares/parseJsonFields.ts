@@ -17,7 +17,7 @@ export function parseJsonFields(fields: string[]) {
         }
       }
     }
-
+ 
     next();
   };
 }

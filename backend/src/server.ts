@@ -37,7 +37,13 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 10000 }));
 setupSwagger(app);
 
 // Routes principales de l'API
+app.use((req, res, next) => {
+  console.log('🧭 Requête reçue :', req.method, req.originalUrl);
+  next();
+});
+
 app.use('/api', router);
+
 
 // --- 3. MIDDLEWARE 404 : route non trouvée ---
 app.use(notFoundHandler());

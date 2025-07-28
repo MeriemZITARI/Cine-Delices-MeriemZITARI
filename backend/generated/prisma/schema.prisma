@@ -60,7 +60,7 @@ model Recipe {
   description String   @db.Text // Description de la recette
   duration    Int // Durée en minutes
   difficulty  Int // Difficulté sur 5
-  image       String
+  image       String?
   quote       String
   isValidated Boolean  @default(false) // Indique si la recette a été validée par un admin
   createdAt   DateTime @default(now())

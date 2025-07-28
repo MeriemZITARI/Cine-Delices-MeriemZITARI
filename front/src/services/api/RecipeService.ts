@@ -27,11 +27,14 @@ export const recipeService = {
 
   async createRecipe(recipeData: FormData): Promise<ApiResponse<IRecipe>> {
     try {
+      console.log("🔍 Données envoyées à createRecipe service front :", Array.from(recipeData.entries()));
+      //const response = await axiosInstance.post('/api/recipes', recipeData);
       const response = await axiosInstance.post('/api/recipes', recipeData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log("🔍 Réponse de createRecipe service front :", response.data);
       return {
         success: true,
         data: response.data,

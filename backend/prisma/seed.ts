@@ -263,7 +263,7 @@ async function main() {
 7. Laissez refroidir et enveloppez dans des feuilles de mallorn.`,
         duration: 60,
         difficulty: 2,
-        image: 'http://localhost:3001/images-recettes/pains_Lemba.webp',
+        image: 'pains_Lemba.webp',
         quote: 'Un seul petit morceau suffit à nourrir un homme adulte pour toute une journée de marche. Les Elfes nous en ont fait don. - Legolas',
         
         userId: adminUser.id,
@@ -293,7 +293,7 @@ async function main() {
         description: '1. Lavez et coupez tous les légumes en fines tranches.\n2. Faites revenir l\'oignon et l\'ail.\n3. Disposez les tranches de légumes en cercles concentriques.\n4. Assaisonnez d\'huile d\'olive, sel, poivre et herbes.\n5. Couvrez et laissez mijoter à feu doux 45 minutes.\n6. Terminez par 10 minutes au four pour caraméliser.',
         duration: 90,
         difficulty: 4,
-        image: 'http://localhost:3001/images-recettes/ratatouille.webp',
+        image: 'ratatouille.webp',
         quote: 'N\'importe qui peut cuisiner, mais seul un grand chef peut cuisiner avec son cœur. - Chef Auguste Gusteau',
         
         userId: regularUser.id,
@@ -328,7 +328,7 @@ async function main() {
 5. Servez chaud avec une touche de crème fouettée.`,
         duration: 30,
         difficulty: 2,
-        image: 'http://localhost:3001/images-recettes/biereaubeurre.webp',
+        image: 'biereaubeurre.webp',
         quote: 'Oh, c\'est la meilleure chose que j\'ai jamais bue! - Harry Potter lors de sa première visite aux Trois Balais',
         
         userId: adminUser.id,
@@ -362,7 +362,7 @@ async function main() {
 6. Servez chaud avec une pincée de cacao en poudre.`,
         duration: 20,
         difficulty: 3,
-        image: 'http://localhost:3001/images-recettes/chocolat_chaud.webp',
+        image: 'chocolat_chaud.webp',
         quote: 'Le chocolat possède des vertus magiques qui peuvent transformer une journée ordinaire en moment extraordinaire.',
         isValidated: true,
         
@@ -399,7 +399,7 @@ async function main() {
 8. Servez chaud avec des pommes de terre.`,
         duration: 180,
         difficulty: 4,
-        image: 'http://localhost:3001/images-recettes/boeuf_bourguignon.webp',
+        image: 'boeuf_bourguignon.webp',
         quote: 'En cuisine, il n\'y a pas d\'erreurs, seulement des accidents créatifs!',
         isValidated: true,
         
@@ -438,7 +438,7 @@ async function main() {
 8. Servez immédiatement avec la sauce.`,
         duration: 150,
         difficulty: 5,
-        image: 'http://localhost:3001/images-recettes/caille-sarcophage.webp',
+        image: 'caille-sarcophage.webp',
         quote: 'La cuisine est un acte d\'amour.',
         isValidated: true,
         
@@ -475,7 +475,7 @@ async function main() {
 7. Servez avec des légumes de saison.`,
         duration: 45,
         difficulty: 3,
-        image: 'http://localhost:3001/images-recettes/Saumon_en_croute.webp',
+        image: 'Saumon_en_croute.webp',
         quote: 'La cuisine, c\'est comme la musique, il faut trouver la bonne harmonie.',
         isValidated: true,
         
@@ -514,7 +514,7 @@ async function main() {
 8. Servez avec du riz ou des tagliatelles.`,
         duration: 60,
         difficulty: 4,
-        image: 'http://localhost:3001/images-recettes/poulet-aux-morilles.webp',
+        image: 'poulet-aux-morilles.webp',
         quote: 'La cuisine présidentielle doit être à l\'image de la France : excellente.',
         isValidated: true,
         
@@ -552,7 +552,7 @@ async function main() {
 8. Glacez avec du miel chaud.`,
         duration: 75,
         difficulty: 3,
-        image: 'http://localhost:3001/images-recettes/Tarte_pommes.webp',
+        image: 'Tarte_pommes.webp',
         quote: 'N\'importe qui peut cuisiner, mais seuls les téméraires peuvent exceller.',
         isValidated: true,
         
@@ -590,7 +590,7 @@ async function main() {
 8. Servez avec des croûtons dorés.`,
         duration: 45,
         difficulty: 2,
-        image: 'http://localhost:3001/images-recettes/Velouté_potiron.webp',
+        image: 'Velouté_potiron.webp',
         quote: 'Un festin digne de Poudlard!',
         isValidated: true,
         

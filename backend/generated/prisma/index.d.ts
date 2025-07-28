@@ -4380,11 +4380,13 @@ export namespace Prisma {
   export type RecipeAvgAggregateOutputType = {
     duration: number | null
     difficulty: number | null
+    servings: number | null
   }
 
   export type RecipeSumAggregateOutputType = {
     duration: number | null
     difficulty: number | null
+    servings: number | null
   }
 
   export type RecipeMinAggregateOutputType = {
@@ -4393,6 +4395,7 @@ export namespace Prisma {
     description: string | null
     duration: number | null
     difficulty: number | null
+    servings: number | null
     image: string | null
     quote: string | null
     isValidated: boolean | null
@@ -4409,6 +4412,7 @@ export namespace Prisma {
     description: string | null
     duration: number | null
     difficulty: number | null
+    servings: number | null
     image: string | null
     quote: string | null
     isValidated: boolean | null
@@ -4425,6 +4429,7 @@ export namespace Prisma {
     description: number
     duration: number
     difficulty: number
+    servings: number
     image: number
     quote: number
     isValidated: number
@@ -4440,11 +4445,13 @@ export namespace Prisma {
   export type RecipeAvgAggregateInputType = {
     duration?: true
     difficulty?: true
+    servings?: true
   }
 
   export type RecipeSumAggregateInputType = {
     duration?: true
     difficulty?: true
+    servings?: true
   }
 
   export type RecipeMinAggregateInputType = {
@@ -4453,6 +4460,7 @@ export namespace Prisma {
     description?: true
     duration?: true
     difficulty?: true
+    servings?: true
     image?: true
     quote?: true
     isValidated?: true
@@ -4469,6 +4477,7 @@ export namespace Prisma {
     description?: true
     duration?: true
     difficulty?: true
+    servings?: true
     image?: true
     quote?: true
     isValidated?: true
@@ -4485,6 +4494,7 @@ export namespace Prisma {
     description?: true
     duration?: true
     difficulty?: true
+    servings?: true
     image?: true
     quote?: true
     isValidated?: true
@@ -4588,7 +4598,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings: number
+    image: string | null
     quote: string
     isValidated: boolean
     createdAt: Date
@@ -4623,6 +4634,7 @@ export namespace Prisma {
     description?: boolean
     duration?: boolean
     difficulty?: boolean
+    servings?: boolean
     image?: boolean
     quote?: boolean
     isValidated?: boolean
@@ -4644,6 +4656,7 @@ export namespace Prisma {
     description?: boolean
     duration?: boolean
     difficulty?: boolean
+    servings?: boolean
     image?: boolean
     quote?: boolean
     isValidated?: boolean
@@ -4663,6 +4676,7 @@ export namespace Prisma {
     description?: boolean
     duration?: boolean
     difficulty?: boolean
+    servings?: boolean
     image?: boolean
     quote?: boolean
     isValidated?: boolean
@@ -4700,7 +4714,8 @@ export namespace Prisma {
       description: string
       duration: number
       difficulty: number
-      image: string
+      servings: number
+      image: string | null
       quote: string
       isValidated: boolean
       createdAt: Date
@@ -5110,6 +5125,7 @@ export namespace Prisma {
     readonly description: FieldRef<"Recipe", 'String'>
     readonly duration: FieldRef<"Recipe", 'Int'>
     readonly difficulty: FieldRef<"Recipe", 'Int'>
+    readonly servings: FieldRef<"Recipe", 'Int'>
     readonly image: FieldRef<"Recipe", 'String'>
     readonly quote: FieldRef<"Recipe", 'String'>
     readonly isValidated: FieldRef<"Recipe", 'Boolean'>
@@ -7488,6 +7504,7 @@ export namespace Prisma {
     description: 'description',
     duration: 'duration',
     difficulty: 'difficulty',
+    servings: 'servings',
     image: 'image',
     quote: 'quote',
     isValidated: 'isValidated',
@@ -7821,7 +7838,8 @@ export namespace Prisma {
     description?: StringFilter<"Recipe"> | string
     duration?: IntFilter<"Recipe"> | number
     difficulty?: IntFilter<"Recipe"> | number
-    image?: StringFilter<"Recipe"> | string
+    servings?: IntFilter<"Recipe"> | number
+    image?: StringNullableFilter<"Recipe"> | string | null
     quote?: StringFilter<"Recipe"> | string
     isValidated?: BoolFilter<"Recipe"> | boolean
     createdAt?: DateTimeFilter<"Recipe"> | Date | string
@@ -7841,7 +7859,8 @@ export namespace Prisma {
     description?: SortOrder
     duration?: SortOrder
     difficulty?: SortOrder
-    image?: SortOrder
+    servings?: SortOrder
+    image?: SortOrderInput | SortOrder
     quote?: SortOrder
     isValidated?: SortOrder
     createdAt?: SortOrder
@@ -7864,7 +7883,8 @@ export namespace Prisma {
     description?: StringFilter<"Recipe"> | string
     duration?: IntFilter<"Recipe"> | number
     difficulty?: IntFilter<"Recipe"> | number
-    image?: StringFilter<"Recipe"> | string
+    servings?: IntFilter<"Recipe"> | number
+    image?: StringNullableFilter<"Recipe"> | string | null
     quote?: StringFilter<"Recipe"> | string
     isValidated?: BoolFilter<"Recipe"> | boolean
     createdAt?: DateTimeFilter<"Recipe"> | Date | string
@@ -7884,7 +7904,8 @@ export namespace Prisma {
     description?: SortOrder
     duration?: SortOrder
     difficulty?: SortOrder
-    image?: SortOrder
+    servings?: SortOrder
+    image?: SortOrderInput | SortOrder
     quote?: SortOrder
     isValidated?: SortOrder
     createdAt?: SortOrder
@@ -7908,7 +7929,8 @@ export namespace Prisma {
     description?: StringWithAggregatesFilter<"Recipe"> | string
     duration?: IntWithAggregatesFilter<"Recipe"> | number
     difficulty?: IntWithAggregatesFilter<"Recipe"> | number
-    image?: StringWithAggregatesFilter<"Recipe"> | string
+    servings?: IntWithAggregatesFilter<"Recipe"> | number
+    image?: StringNullableWithAggregatesFilter<"Recipe"> | string | null
     quote?: StringWithAggregatesFilter<"Recipe"> | string
     isValidated?: BoolWithAggregatesFilter<"Recipe"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Recipe"> | Date | string
@@ -8265,7 +8287,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -8282,7 +8305,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -8299,7 +8323,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8316,7 +8341,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8333,7 +8359,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -8349,7 +8376,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8362,7 +8390,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8790,6 +8819,7 @@ export namespace Prisma {
     description?: SortOrder
     duration?: SortOrder
     difficulty?: SortOrder
+    servings?: SortOrder
     image?: SortOrder
     quote?: SortOrder
     isValidated?: SortOrder
@@ -8803,6 +8833,7 @@ export namespace Prisma {
   export type RecipeAvgOrderByAggregateInput = {
     duration?: SortOrder
     difficulty?: SortOrder
+    servings?: SortOrder
   }
 
   export type RecipeMaxOrderByAggregateInput = {
@@ -8811,6 +8842,7 @@ export namespace Prisma {
     description?: SortOrder
     duration?: SortOrder
     difficulty?: SortOrder
+    servings?: SortOrder
     image?: SortOrder
     quote?: SortOrder
     isValidated?: SortOrder
@@ -8827,6 +8859,7 @@ export namespace Prisma {
     description?: SortOrder
     duration?: SortOrder
     difficulty?: SortOrder
+    servings?: SortOrder
     image?: SortOrder
     quote?: SortOrder
     isValidated?: SortOrder
@@ -8840,6 +8873,7 @@ export namespace Prisma {
   export type RecipeSumOrderByAggregateInput = {
     duration?: SortOrder
     difficulty?: SortOrder
+    servings?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -9143,6 +9177,10 @@ export namespace Prisma {
     divide?: number
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
   export type UserUpdateOneRequiredWithoutRecipesNestedInput = {
     create?: XOR<UserCreateWithoutRecipesInput, UserUncheckedCreateWithoutRecipesInput>
     connectOrCreate?: UserCreateOrConnectWithoutRecipesInput
@@ -9181,10 +9219,6 @@ export namespace Prisma {
     update?: RecipeHasIngredientUpdateWithWhereUniqueWithoutRecipeInput | RecipeHasIngredientUpdateWithWhereUniqueWithoutRecipeInput[]
     updateMany?: RecipeHasIngredientUpdateManyWithWhereWithoutRecipeInput | RecipeHasIngredientUpdateManyWithWhereWithoutRecipeInput[]
     deleteMany?: RecipeHasIngredientScalarWhereInput | RecipeHasIngredientScalarWhereInput[]
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type RecipeHasIngredientUncheckedUpdateManyWithoutRecipeNestedInput = {
@@ -9478,7 +9512,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9494,7 +9529,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9539,7 +9575,8 @@ export namespace Prisma {
     description?: StringFilter<"Recipe"> | string
     duration?: IntFilter<"Recipe"> | number
     difficulty?: IntFilter<"Recipe"> | number
-    image?: StringFilter<"Recipe"> | string
+    servings?: IntFilter<"Recipe"> | number
+    image?: StringNullableFilter<"Recipe"> | string | null
     quote?: StringFilter<"Recipe"> | string
     isValidated?: BoolFilter<"Recipe"> | boolean
     createdAt?: DateTimeFilter<"Recipe"> | Date | string
@@ -9555,7 +9592,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9571,7 +9609,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9613,7 +9652,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9629,7 +9669,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9936,7 +9977,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -9952,7 +9994,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -10005,7 +10048,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10021,7 +10065,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10064,7 +10109,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -10079,7 +10125,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10095,7 +10142,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10111,7 +10159,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10126,7 +10175,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -10141,7 +10191,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10157,7 +10208,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10173,7 +10225,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10188,7 +10241,8 @@ export namespace Prisma {
     description: string
     duration: number
     difficulty: number
-    image: string
+    servings?: number
+    image?: string | null
     quote: string
     isValidated?: boolean
     createdAt?: Date | string
@@ -10203,7 +10257,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10219,7 +10274,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10235,7 +10291,8 @@ export namespace Prisma {
     description?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
     difficulty?: IntFieldUpdateOperationsInput | number
-    image?: StringFieldUpdateOperationsInput | string
+    servings?: IntFieldUpdateOperationsInput | number
+    image?: NullableStringFieldUpdateOperationsInput | string | null
     quote?: StringFieldUpdateOperationsInput | string
     isValidated?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

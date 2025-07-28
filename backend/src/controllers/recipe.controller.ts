@@ -19,20 +19,40 @@ export async function handleCreateRecipe(
     }
 
     const userId = req.user.userId;
+    //Vérifier données reçues 
+    console.log("✅ Données reçues req.body pour validation Zod :", req.body);
+    console.log("✅ Données reçues req.file pour validation Zod :", req.file?.filename);
+    
+   // let imageName = '';
+
+    let recipeData : any = {...req.body };
+
+    if (recipeData.image && typeof recipeData.image === 'object' && Object.keys(recipeData.image).length === 0) {
+      delete recipeData.image;
+    }
+    
+    //recipeData.image = imageName; // Ajout du nom de l'image
 
     // Vérifier si un fichier a été uploadé
-    let imageUrl : string = '';
+   
     if (req.file) {
-      console.log('Fichier uploadé :', req.file);
-      imageUrl = `http://localhost:3001/images-recettes/${req.file.filename}`;
+      console.log('Fichier uploadé :', req.file.filename);
+      recipeData.image = req.file.filename; // On garde juste le nom du fichier
     } else {
       console.log('Aucun fichier uploadé');
     }
+   // Convertir quantity en number
+if (Array.isArray(recipeData.ingredients)) {
+  recipeData.ingredients = recipeData.ingredients.map((ing : any) => ({
+    ...ing,
+    quantity: Number(ing.quantity),
+  }));
+} else {
+  return res.status(400).json({ message: "'ingredients' doit être un tableau valide." });
+}
+    
 
-    const recipeData = {
-      ...req.body,
-      image: imageUrl, // Ajout de l'URL de l'image
-    };
+    
 
     console.log('Données après traitement :', recipeData);
 
@@ -79,10 +99,9 @@ if (updateData.image && typeof updateData.image === 'object' && Object.keys(upda
     console.log('🧪 req.file:', req.file); // ← tu dois voir un objet (filename, mimetype, etc)
     console.log('🧪 req.body:', req.body); // ← tu 
 console.log('Fichier uploadé update:', req.file);
-    // 🟡 Si une image a été envoyée, construis son URL
-    if (req.file) {
-      const imageUrl = `http://localhost:3001/images-recettes/${req.file.filename}`;
-      updateData.image = imageUrl;
+    // 🟡 Si une image a été envoyée, on met à jours le nom
+    if (req.file) {  
+      updateData.image = req.file.filename; // On garde juste le nom du fichier
     }
 
     // 🟡 `ingredients` arrive comme des chaînes si c’est un FormData (parser JSON à la main si besoin)

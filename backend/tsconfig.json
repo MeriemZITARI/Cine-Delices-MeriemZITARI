@@ -4,16 +4,16 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": ".",
     "baseUrl": "./src",
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "importHelpers": true,
-"allowJs": true,
-"types": ["jest", "node"]
+    "allowJs": true,
+    "types": ["jest", "node"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*","prisma/**/*"],
   "exclude": ["node_modules"]
 }

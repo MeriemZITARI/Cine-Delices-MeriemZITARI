@@ -24,12 +24,17 @@ export const useRecipeById = (id: string) => {
 
   export const useCreateRecipe = () => {
     const queryClient = useQueryClient();
-  
+    
     return useMutation<ApiResponse<IRecipe>, Error, FormData>({
-      mutationFn: (formData: FormData) => recipeService.createRecipe(formData),
+      mutationFn: (formData: FormData) => {
+        console.log('🧪 [HOOK] FormData envoyé →', Array.from(formData.entries()));
+        return recipeService.createRecipe(formData);
+      },
+      
       onSuccess: (data) => {
         // Optionnel : Invalider la liste des recettes pour forcer un rechargement
         queryClient.invalidateQueries({ queryKey: ['recipes'] });
+        
         
       },
       onError: (error) => {

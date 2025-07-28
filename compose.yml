@@ -7,6 +7,7 @@ services:
     # exposer le port 3000 de l'api dans le conteneur
     ports:
       - "3001:3001"
+      - "5555:5555" # pour le debug prisma studio
     # nom du conteneur
     container_name: backend
     # dépendre du conteneur de la base de données

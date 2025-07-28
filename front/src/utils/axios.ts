@@ -10,3 +10,14 @@ export const axiosInstance = axios.create({
   },
   withCredentials: true,
 });
+
+// 💡 Intercepteur de requêtes pour logger le contenu des FormData
+axiosInstance.interceptors.request.use((config) => {
+  if (config.data instanceof FormData) {
+    console.log('📤 [Axios] Intercepteur → Contenu du FormData :');
+    for (const [key, value] of config.data.entries()) {
+      console.log(`  ${key}:`, value);
+    }
+  }
+  return config;
+});
