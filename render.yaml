@@ -6,7 +6,7 @@ services:
     rootDir: backend
     dockerfilePath: ./Dockerfile
     envVars:
-      - fromGroup: CinéDélice-Prod-envVars
+      - fromGroup: CineDelice-Prod-envVars
 
 
   - type: web
@@ -16,7 +16,7 @@ services:
     staticPublishPath: dist
     rootDir: front
     envVars:
-      - fromGroup: CinéDélice-Prod-envVars
+      - fromGroup: CineDelice-Prod-envVars
 
 databases:
   - name: cine-db
