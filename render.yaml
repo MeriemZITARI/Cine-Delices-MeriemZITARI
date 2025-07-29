@@ -10,10 +10,7 @@ services:
         fromDatabase:
           name: cine-db
           property: connectionString
-      - key: JWT_SECRET
-        synchronize: false
-      - key: TMDB_API_KEY
-        synchronize: false
+
 
   - type: web
     name: frontend
@@ -23,11 +20,7 @@ services:
     rootDir: front
     envVars:
       - key: VITE_API_URL
-        value: https://backend-XXXX.onrender.com/api  # À mettre à jour après déploiement
-      - key: VITE_TMDB_API_KEY
-        synchronize: false
-      - key: VITE_OMDB_API_KEY
-        synchronize: false
+        value: https://backend-0yid.onrender.com  # À mettre à jour après déploiement
 
 databases:
   - name: cine-db
