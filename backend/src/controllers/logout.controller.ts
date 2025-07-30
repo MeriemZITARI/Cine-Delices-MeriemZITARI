@@ -6,7 +6,7 @@ export async function handleLogout(req: Request, res: Response) {
       // Supprimer le cookie contenant le token
       res.clearCookie('access_token', {
         httpOnly: true,
-        secure: process.env.COOKIE_SAMESITE === "none", // quand c'est 'true', envoyer le cookie seulement via HTTPS (pour la production)
+        secure: process.env.COOKIE_SAMESITE === 'none', // quand c'est 'true', envoyer le cookie seulement via HTTPS (pour la production)
         sameSite: process.env.COOKIE_SAMESITE  as 'none' | 'lax' | 'strict', // Protège contre les attaques CSRF :  'strict' pour l'environnement de développement, et 'none' permet de fonctionner en production avec des requêtes cross-site, dans ce cas, il faut que secure soit à 'true'
       });
   
