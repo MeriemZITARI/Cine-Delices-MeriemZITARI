@@ -36,8 +36,8 @@ describe('handleLogin', () => {
     expect(loginUser).toHaveBeenCalledWith({ email: 'test@example.com', password: 'password123' });
     expect(res.cookie).toHaveBeenCalledWith('access_token', mockToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: process.env.COOKIE_SAMESITE === 'none',
+      sameSite: process.env.COOKIE_SAMESITE  as 'none' | 'lax' | 'strict',
       maxAge: 3600000,
     });
     expect(res.status).toHaveBeenCalledWith(200);
