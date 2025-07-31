@@ -1,4 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
 
@@ -22,11 +23,18 @@ import { useAuthUser } from "./hooks/query/auth";
 import AdminRoute from "./components/AdminRoute";
 import AdminDashboardPage from "./pages/AdminPage/AdminDashboardPage";
 import { Toaster } from 'react-hot-toast';
+import { getCsrfToken} from "./services/csrfService";
 
 function App() {
   // Vérifie si l'utilisateur est authentifié
   // et déclenche la requête pour récupérer les données de l'utilisateur
   useAuthUser(); // Hook pour récupérer l'utilisateur authentifié
+  //  Récupération du token CSRF au chargement de l'app
+  useEffect(() => {
+    getCsrfToken().catch((err) => {
+      console.error("Erreur lors de la récupération du token CSRF :", err);
+    });
+  }, []);
   return (
     <SearchModalProvider>
       <div className="min-h-screen flex flex-col">

@@ -1,10 +1,12 @@
 import type { IUser, IRegisterCredentials } from '../../types/Auth';
 import { axiosInstance } from '../../utils/axios';
 import { AxiosError } from 'axios';
+import { getCsrfToken } from '../csrfService';
 
 const authService = {
   async login(data: { email: string; password: string }) {
     try {
+      await getCsrfToken(); // ← récupération du token avant POST
       const response = await axiosInstance.post('/api/auth/login', data);
       if (!response.data || !response.data.user) {
         throw new Error('Utilisateur non trouvé');
@@ -21,6 +23,7 @@ const authService = {
 
   async register(credentials: IRegisterCredentials) {
     try {
+      await getCsrfToken(); // ← récupération du token avant POST
       const res = await axiosInstance.post('/api/auth/register', credentials);
       if (!res.data || !res.data.user) {
         throw new Error('Échec de l\'inscription, utilisateur non créé');
